@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Website in Chrome",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:57604/",
+            "webRoot": "${workspaceFolder}/TicketResolver",
+            "preLaunchTask": "Run IIS Express"
+        }
+    ]
+}
