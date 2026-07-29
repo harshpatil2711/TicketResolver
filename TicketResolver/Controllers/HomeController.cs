@@ -4,10 +4,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Web.Mvc;
 using TicketResolver.DAL;
+using TicketResolver.Filters;
 using TicketResolver.ViewModels;
 
 namespace TicketResolver.Controllers
 {
+    [RoleAuthorize]
     public class HomeController : Controller
     {
         private readonly DashboardDAL dashboardDAL = new DashboardDAL();
@@ -40,9 +42,6 @@ namespace TicketResolver.Controllers
 
         public ActionResult Index()
         {
-            if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("Login", "Auth");
-
             var ds = dashboardDAL.GetStats(CurrentUserId, CurrentRoleId);
             var row = ds.Tables[0].Rows[0];
 
@@ -56,10 +55,39 @@ namespace TicketResolver.Controllers
                 ClosedTickets = Convert.ToInt32(row["ClosedTickets"]),
                 ReopenedTickets = Convert.ToInt32(row["ReopenedTickets"]),
                 RecentTickets = GetRecentTickets(),
-                UnassignedTickets = GetUnassignedTickets()
+                UnassignedTickets = GetUnassignedTickets(),
+                Priorities = masterDAL.GetPriorities(),
+                Statuses = masterDAL.GetStatuses()
             };
 
             return View(model);
+        }
+
+        public JsonResult GetChartData(int? priorityId)
+        {
+            int? createdBy = null;
+            int? assignedTo = null;
+            if (CurrentRoleId == 3)
+                createdBy = CurrentUserId;
+            else if (CurrentRoleId == 2)
+                assignedTo = CurrentUserId;
+
+            var ds = ticketDAL.Search(null, null, priorityId, null, assignedTo, createdBy, 1, 500);
+            var statusGroups = ds.Tables[0].Rows.Cast<DataRow>()
+                .GroupBy(r => new { Id = Convert.ToInt32(r["StatusIdVal"]), Name = r["StatusName"].ToString() })
+                .Select(g => new { label = g.Key.Name, value = g.Count() })
+                .ToList();
+
+            var colors = new[] { "#0d6efd","#ffc107","#0dcaf0","#6f42c1","#198754","#dc3545","#2b3e50" };
+            var result = new System.Collections.Generic.List<object>();
+            int ci = 0;
+            foreach (var g in statusGroups)
+            {
+                result.Add(new { g.label, g.value, color = colors[ci % colors.Length] });
+                ci++;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         private System.Collections.Generic.List<TicketListItemViewModel> GetUnassignedTickets()

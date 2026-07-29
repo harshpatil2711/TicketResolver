@@ -2,11 +2,13 @@ using System;
 using System.Security.Claims;
 using System.Web.Mvc;
 using TicketResolver.DAL;
+using TicketResolver.Filters;
 using TicketResolver.Helpers;
 using TicketResolver.ViewModels;
 
 namespace TicketResolver.Controllers
 {
+    [RoleAuthorize]
     public class ProfileController : Controller
     {
         private readonly AuthDAL authDAL = new AuthDAL();

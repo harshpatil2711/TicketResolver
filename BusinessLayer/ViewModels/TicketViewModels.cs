@@ -138,5 +138,7 @@ namespace TicketResolver.ViewModels
         public int ReopenedTickets { get; set; }
         public List<TicketListItemViewModel> RecentTickets { get; set; }
         public List<TicketListItemViewModel> UnassignedTickets { get; set; }
+        public List<TicketPriority> Priorities { get; set; }
+        public List<TicketStatus> Statuses { get; set; }
     }
 }

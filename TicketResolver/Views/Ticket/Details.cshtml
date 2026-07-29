@@ -2,28 +2,28 @@
 @{
     ViewBag.Title = "Ticket " + Model.TicketNumber;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var role = ((System.Security.Claims.ClaimsPrincipal)User).FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
-    var userId = int.Parse(((System.Security.Claims.ClaimsPrincipal)User).FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
-    var isAdmin = role == "Administrator";
-    var isSupport = role == "Support Executive";
-    var isAdmin = role == "Administrator";
-    var isSupport = role == "Support Executive";
-    var isEmployee = role == "Employee";
+    var cp = (System.Security.Claims.ClaimsPrincipal)User;
+    var role = cp.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+    var userId = int.Parse(cp.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+    var isStaff = role == "Administrator" || role == "Support Executive";
+    var isOwner = Model.CreatedBy == userId;
 }
-<div class="page-header">
-    <h5 class="page-title">@Model.TicketNumber - @Model.Subject</h5>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="fw-bold mb-0" style="color:#333;">@Model.TicketNumber - @Model.Subject</h5>
     <div>
         <a href="@Url.Action("Index")" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left"></i> Back</a>
-        @if (Model.CreatedBy == userId || isAdmin)
+        @if (isOwner || role == "Administrator")
         {
             <a href="@Url.Action("Edit", new { id = Model.TicketId })" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-pen"></i> Edit</a>
         }
-        @if (isAdmin || isSupport)
+        @if (isStaff)
         {
             <a href="@Url.Action("Assign", new { id = Model.TicketId })" class="btn btn-outline-info btn-sm"><i class="fa-solid fa-user-plus"></i> Assign</a>
         }
     </div>
 </div>
+
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -31,12 +31,13 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 }
+
 <div class="row">
     <div class="col-md-8">
-        <div class="card mb-3">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <span>Details</span>
-                @if (!Model.IsTerminalState && (isAdmin || isSupport))
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <span class="fw-semibold">Details</span>
+                @if (!Model.IsTerminalState && isStaff)
                 {
                     <div class="dropdown">
                         <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">Change Status</button>
@@ -82,12 +83,15 @@
                     </div>
                 }
                 <hr />
-                <h6>Description</h6>
+                <h6 class="fw-semibold">Description</h6>
                 <p class="mb-0" style="white-space:pre-wrap;">@Model.Description</p>
             </div>
         </div>
-        <div class="card mb-3">
-            <div class="card-header">Comments (@Model.Comments.Count)</div>
+
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white">
+                <span class="fw-semibold">Comments (@Model.Comments.Count)</span>
+            </div>
             <div class="card-body" id="commentsContainer">
                 @if (Model.Comments.Count == 0)
                 {
@@ -108,20 +112,23 @@
                     </div>
                 }
             </div>
-            <div class="card-footer">
+            <div class="card-footer bg-white border-top-0">
                 @Html.AntiForgeryToken()
                 <textarea id="commentText" class="form-control mb-2" rows="3" placeholder="Write a comment..."></textarea>
                 <div class="form-check mb-2">
                     <input type="checkbox" class="form-check-input" id="isInternalNote" />
                     <label class="form-check-label" for="isInternalNote">Internal Note (visible only to staff)</label>
                 </div>
-                <button type="button" class="btn btn-primary btn-sm" id="addCommentBtn" style="background-color:#2b3e50;border:none;">Add Comment</button>
+                <button type="button" class="btn btn-green btn-sm" id="addCommentBtn">Add Comment</button>
             </div>
         </div>
     </div>
+
     <div class="col-md-4">
-        <div class="card mb-3">
-            <div class="card-header">Status History</div>
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white">
+                <span class="fw-semibold">Status History</span>
+            </div>
             <div class="card-body p-0">
                 @if (Model.History.Count == 0)
                 {
@@ -138,8 +145,11 @@
                 </ul>
             </div>
         </div>
-        <div class="card mb-3">
-            <div class="card-header">Attachments (@Model.Attachments.Count)</div>
+
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white">
+                <span class="fw-semibold">Attachments (@Model.Attachments.Count)</span>
+            </div>
             <div class="card-body">
                 @if (Model.Attachments.Count == 0)
                 {
@@ -155,98 +165,20 @@
                 <form id="uploadForm" enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
                     <input type="file" name="file" class="form-control form-control-sm mb-2" />
-                    <button type="button" class="btn btn-sm btn-outline-primary" id="uploadBtn"><i class="fa-solid fa-upload"></i> Upload</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="uploadBtn"><i class="fa-solid fa-upload"></i> Upload</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 <form id="statusForm" method="post" style="display:none;">
     @Html.AntiForgeryToken()
     <input type="hidden" name="ticketId" id="statusTicketId" />
     <input type="hidden" name="newStatusId" id="statusNewStatusId" />
     <input type="hidden" name="changeReason" id="statusChangeReason" />
 </form>
+
 @section scripts {
-    <script>
-        var ticketId = @Model.TicketId;
-        var role = '@role';
-        var userId = @userId;
-
-        $('#addCommentBtn').click(function () {
-            var text = $('#commentText').val().trim();
-            if (!text) { Swal.fire('Validation', 'Please enter a comment.', 'warning'); return; }
-            $.ajax({
-                url: '@Url.Action("AddComment", "Ticket")',
-                type: 'POST',
-                data: {
-                    ticketId: ticketId,
-                    commentText: text,
-                    isInternalNote: $('#isInternalNote').is(':checked'),
-                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                },
-                success: function () {
-                    $('#commentText').val('');
-                    $('#isInternalNote').prop('checked', false);
-                    Swal.fire({ icon: 'success', title: 'Comment added!', showConfirmButton: false, timer: 1500 });
-                    location.reload();
-                },
-                error: function () { Swal.fire('Error', 'Could not add comment.', 'error'); }
-            });
-        });
-
-        $('.change-status').click(function (e) {
-            e.preventDefault();
-            var statusId = $(this).data('statusid');
-            var ticketId = $(this).data('ticketid');
-            Swal.fire({
-                title: 'Change Status',
-                input: 'text',
-                inputLabel: 'Reason (optional)',
-                showCancelButton: true,
-                confirmButtonText: 'Change',
-                confirmButtonColor: '#2b3e50'
-            }).then(function (result) {
-                if (result.isConfirmed) {
-                    $('#statusTicketId').val(ticketId);
-                    $('#statusNewStatusId').val(statusId);
-                    $('#statusChangeReason').val(result.value || '');
-                    $('#statusForm').submit();
-                }
-            });
-        });
-
-        $('#statusForm').on('submit', function (e) {
-            e.preventDefault();
-            $.ajax({
-                url: '@Url.Action("ChangeStatus", "Ticket")',
-                type: 'POST',
-                data: $(this).serialize(),
-                success: function () {
-                    Swal.fire({ icon: 'success', title: 'Status updated!', showConfirmButton: false, timer: 1500 });
-                    location.reload();
-                },
-                error: function () { Swal.fire('Error', 'Could not change status.', 'error'); }
-            });
-        });
-
-        $('#uploadBtn').click(function () {
-            var formData = new FormData();
-            formData.append('ticketId', ticketId);
-            formData.append('file', $('#uploadForm input[type="file"]')[0].files[0]);
-            formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
-            $.ajax({
-                url: '@Url.Action("UploadAttachment", "Ticket")',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function () {
-                    Swal.fire({ icon: 'success', title: 'File uploaded!', showConfirmButton: false, timer: 1500 });
-                    location.reload();
-                },
-                error: function () { Swal.fire('Error', 'Could not upload file.', 'error'); }
-            });
-        });
-    </script>
+    <script src="@Url.Content("~/Scripts/ticket-details.js")"></script>
 }

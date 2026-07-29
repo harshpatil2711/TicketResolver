@@ -2,10 +2,12 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using TicketResolver.DAL;
+using TicketResolver.Filters;
 using TicketResolver.Models;
 
 namespace TicketResolver.Controllers
 {
+    [RoleAuthorize(1)]
     public class MasterDataController : Controller
     {
         private readonly MasterDAL masterDAL = new MasterDAL();

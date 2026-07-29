@@ -4,8 +4,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="page-header">
-    <h5 class="page-title">Edit User</h5>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="fw-bold mb-0" style="color:#333;">Edit User</h5>
     <a href="@Url.Action("Index")" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left"></i> Back</a>
 </div>
 
@@ -17,7 +17,7 @@
     </div>
 }
 
-<div class="card">
+<div class="card border-0 shadow-sm">
     <div class="card-body">
         @using (Html.BeginForm("Edit", "User", FormMethod.Post))
         {
@@ -27,41 +27,41 @@
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    @Html.LabelFor(m => m.FirstName, new { @class = "form-label" })
+                    @Html.LabelFor(m => m.FirstName, new { @class = "form-label fw-semibold" })
                     @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-md-6">
-                    @Html.LabelFor(m => m.LastName, new { @class = "form-label" })
+                    @Html.LabelFor(m => m.LastName, new { @class = "form-label fw-semibold" })
                     @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="mb-3">
-                @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+                @Html.LabelFor(m => m.Email, new { @class = "form-label fw-semibold" })
                 @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
             </div>
 
             <div class="mb-3">
-                @Html.LabelFor(m => m.Mobile, new { @class = "form-label" })
+                @Html.LabelFor(m => m.Mobile, new { @class = "form-label fw-semibold" })
                 @Html.TextBoxFor(m => m.Mobile, new { @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.Mobile, "", new { @class = "text-danger" })
             </div>
 
             <div class="mb-3">
-                @Html.LabelFor(m => m.RoleId, "Role", new { @class = "form-label" })
+                @Html.LabelFor(m => m.RoleId, "Role", new { @class = "form-label fw-semibold" })
                 @Html.DropDownListFor(m => m.RoleId, new SelectList(Model.Roles, "RoleId", "RoleName"), "Select Role", new { @class = "form-select" })
                 @Html.ValidationMessageFor(m => m.RoleId, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-check mb-3">
                 @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
-                @Html.LabelFor(m => m.IsActive, "Active", new { @class = "form-check-label" })
+                @Html.LabelFor(m => m.IsActive, "Active", new { @class = "form-check-label fw-semibold" })
             </div>
 
-            <button type="submit" class="btn btn-primary px-4" style="background-color:#2b3e50;border:none;">Save</button>
+            <button type="submit" class="btn btn-green px-4">Save</button>
         }
     </div>
 </div>

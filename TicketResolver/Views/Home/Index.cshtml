@@ -6,154 +6,146 @@
     var isStaff = role == "Administrator" || role == "Support Executive";
 }
 
-<div class="page-header">
-    <h5 class="page-title">Dashboard</h5>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="fw-bold mb-0" style="color:#333;">Dashboard</h5>
+    <span class="alert-banner"><i class="fa-regular fa-bell me-1"></i> Welcome back, @ViewContext.ViewData["fullName"]!</span>
 </div>
 
-<div class="row g-3 mb-4">
-    <div class="col-md-3">
-        <div class="card text-white" style="background-color:#2b3e50;">
-            <div class="card-body text-center">
-                <h2 class="mb-0">@Model.TotalTickets</h2>
-                <div class="small">Total Tickets</div>
-            </div>
-        </div>
+<div class="stats-grid mb-4">
+    <div class="stat-card p-3 bg-white rounded shadow-sm" style="border-left-color:#28a745;">
+        <div class="stat-title">Total Tickets</div>
+        <div class="stat-value">@Model.TotalTickets</div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-primary">
-            <div class="card-body text-center">
-                <h2 class="mb-0">@Model.NewTickets</h2>
-                <div class="small">New</div>
-            </div>
-        </div>
+    <div class="stat-card p-3 bg-white rounded shadow-sm" style="border-left-color:#dc3545;">
+        <div class="stat-title">New Tickets</div>
+        <div class="stat-value">@Model.NewTickets</div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-warning">
-            <div class="card-body text-center">
-                <h2 class="mb-0">@Model.AssignedTickets</h2>
-                <div class="small">Assigned</div>
-            </div>
-        </div>
+    <div class="stat-card p-3 bg-white rounded shadow-sm" style="border-left-color:#ffc107;">
+        <div class="stat-title">Open Tickets</div>
+        <div class="stat-value">@Model.AssignedTickets</div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-info">
-            <div class="card-body text-center">
-                <h2 class="mb-0">@Model.InProgressTickets</h2>
-                <div class="small">In Progress</div>
-            </div>
-        </div>
+    <div class="stat-card p-3 bg-white rounded shadow-sm" style="border-left-color:#17a2b8;">
+        <div class="stat-title">In Progress</div>
+        <div class="stat-value">@Model.InProgressTickets</div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-white" style="background-color:#6f42c1;">
-            <div class="card-body text-center">
-                <h2 class="mb-0">@Model.ResolvedTickets</h2>
-                <div class="small">Resolved</div>
-            </div>
-        </div>
+    <div class="stat-card p-3 bg-white rounded shadow-sm" style="border-left-color:#17a2b8;">
+        <div class="stat-title">Resolved</div>
+        <div class="stat-value">@Model.ResolvedTickets</div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-success">
-            <div class="card-body text-center">
-                <h2 class="mb-0">@Model.ClosedTickets</h2>
-                <div class="small">Closed</div>
-            </div>
-        </div>
+    <div class="stat-card p-3 bg-white rounded shadow-sm" style="border-left-color:#fd7e14;">
+        <div class="stat-title">Closed</div>
+        <div class="stat-value">@Model.ClosedTickets</div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-danger">
-            <div class="card-body text-center">
-                <h2 class="mb-0">@Model.ReopenedTickets</h2>
-                <div class="small">Reopened</div>
-            </div>
-        </div>
+    <div class="stat-card p-3 bg-white rounded shadow-sm" style="border-left-color:#28a745;">
+        <div class="stat-title">Solved</div>
+        <div class="stat-value">@Model.ResolvedTickets</div>
+    </div>
+    <div class="stat-card p-3 bg-white rounded shadow-sm" style="border-left-color:#ffc107;">
+        <div class="stat-title">Reopened</div>
+        <div class="stat-value">@Model.ReopenedTickets</div>
     </div>
 </div>
 
-<div class="card">
-    <div class="card-header d-flex justify-content-between">
-        <span>Recent Tickets</span>
-        <a href="@Url.Action("Index", "Ticket")" class="btn btn-sm btn-outline-primary">View All</a>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-hover mb-0">
+<div class="dashboard-grid">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white fw-bold" style="color:#333;">Recent Tickets</div>
+        <table class="custom-table table table-borderless mb-0">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>Ticket #</th>
+                    <th>Name</th>
                     <th>Subject</th>
-                    <th>Category</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>Created By</th>
                     <th>Assigned To</th>
-                    <th>Created</th>
-                    <th></th>
+                    <th>Updated</th>
+                    <th>Action</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 @if (Model.RecentTickets.Count == 0)
                 {
-                    <tr><td colspan="9" class="text-center text-muted py-4">No tickets found.</td></tr>
+                    <tr><td colspan="8" class="empty-msg">No recent tickets found.</td></tr>
                 }
                 @foreach (var ticket in Model.RecentTickets)
                 {
                     <tr>
-                        <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="fw-bold text-decoration-none">@ticket.TicketNumber</a></td>
-                        <td>@ticket.Subject</td>
-                        <td>@ticket.CategoryName</td>
-                        <td>@ticket.PriorityName</td>
-                        <td><span class="badge bg-secondary">@ticket.StatusName</span></td>
+                        <td>@ticket.TicketId</td>
+                        <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="fw-bold text-decoration-none" style="color:#2b3e50;">@ticket.TicketNumber</a></td>
                         <td>@ticket.CreatedByName</td>
+                        <td>@ticket.Subject</td>
                         <td>@(ticket.AssignedToName ?? "-")</td>
-                        <td class="text-muted small">@ticket.CreatedDate.ToString("dd-MMM-yyyy")</td>
-                        <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="btn btn-sm btn-outline-primary"><i class="fa-regular fa-eye"></i></a></td>
+                        <td class="small text-muted">@ticket.CreatedDate.ToString("dd-MMM-yyyy")</td>
+                        <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="btn btn-sm btn-outline-secondary"><i class="fa-regular fa-eye"></i></a></td>
+                        <td><span class="badge bg-secondary">@ticket.StatusName</span></td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white fw-bold" style="color:#333;">
+            <select id="chartPriority" class="form-select form-select-sm float-end" style="width:auto;">
+                <option value="">All Priorities</option>
+                @foreach (var p in Model.Priorities)
+                {
+                    <option value="@p.PriorityId">@p.PriorityName</option>
+                }
+            </select>
+            Ticket Status
+        </div>
+        <div class="card-body text-center" style="min-height:240px;">
+            <canvas id="ticketPieChart" height="180"></canvas>
+        </div>
+        <div class="chart-legend" id="chartLegend"></div>
+    </div>
 </div>
 
 @if (isStaff)
 {
-    <div class="card mt-3">
-        <div class="card-header d-flex justify-content-between">
-            <span>Unassigned Tickets (New)</span>
-            <a href="@Url.Action("Index", "Ticket")" class="btn btn-sm btn-outline-primary">View All</a>
+    <div class="card border-0 shadow-sm mt-4">
+        <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center" style="color:#333;">
+            <span>Unassigned Tickets</span>
+            <a href="@Url.Action("Index", "Ticket")" class="btn btn-sm btn-outline-secondary">View All</a>
         </div>
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead>
+        <table class="custom-table table table-borderless mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Ticket #</th>
+                    <th>Name</th>
+                    <th>Subject</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.UnassignedTickets.Count == 0)
+                {
+                    <tr><td colspan="8" class="empty-msg">No unassigned tickets.</td></tr>
+                }
+                @foreach (var ticket in Model.UnassignedTickets)
+                {
                     <tr>
-                        <th>Ticket #</th>
-                        <th>Subject</th>
-                        <th>Category</th>
-                        <th>Priority</th>
-                        <th>Status</th>
-                        <th>Created By</th>
-                        <th>Created</th>
-                        <th></th>
+                        <td>@ticket.TicketId</td>
+                        <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="fw-bold text-decoration-none" style="color:#2b3e50;">@ticket.TicketNumber</a></td>
+                        <td>@ticket.CreatedByName</td>
+                        <td>@ticket.Subject</td>
+                        <td>@ticket.PriorityName</td>
+                        <td><span class="badge bg-secondary">@ticket.StatusName</span></td>
+                        <td class="small text-muted">@ticket.CreatedDate.ToString("dd-MMM-yyyy")</td>
+                        <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="btn btn-sm btn-outline-secondary"><i class="fa-regular fa-eye"></i></a></td>
                     </tr>
-                </thead>
-                <tbody>
-                    @if (Model.UnassignedTickets.Count == 0)
-                    {
-                        <tr><td colspan="8" class="text-center text-muted py-4">No unassigned tickets.</td></tr>
-                    }
-                    @foreach (var ticket in Model.UnassignedTickets)
-                    {
-                        <tr>
-                            <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="fw-bold text-decoration-none">@ticket.TicketNumber</a></td>
-                            <td>@ticket.Subject</td>
-                            <td>@ticket.CategoryName</td>
-                            <td>@ticket.PriorityName</td>
-                            <td><span class="badge bg-secondary">@ticket.StatusName</span></td>
-                            <td>@ticket.CreatedByName</td>
-                            <td class="text-muted small">@ticket.CreatedDate.ToString("dd-MMM-yyyy")</td>
-                            <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="btn btn-sm btn-outline-primary"><i class="fa-regular fa-eye"></i></a></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
     </div>
+}
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="@Url.Content("~/Scripts/dashboard.js")"></script>
 }

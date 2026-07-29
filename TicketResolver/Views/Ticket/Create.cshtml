@@ -4,50 +4,54 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="page-header">
-    <h5 class="page-title">Create New Ticket</h5>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="fw-bold mb-0" style="color:#333;">Create New Ticket</h5>
     <a href="@Url.Action("Index")" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left"></i> Back</a>
 </div>
 
-<div class="card">
+<div class="card border-0 shadow-sm">
     <div class="card-body">
-        @using (Html.BeginForm("Create", "Ticket", FormMethod.Post, new { @class = "ticket-form", enctype = "multipart/form-data" }))
+        @using (Html.BeginForm("Create", "Ticket", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
 
             <div class="mb-3">
-                @Html.LabelFor(m => m.Subject, new { @class = "form-label" })
+                @Html.LabelFor(m => m.Subject, new { @class = "form-label fw-semibold" })
                 @Html.TextBoxFor(m => m.Subject, new { @class = "form-control", placeholder = "Brief subject of your issue" })
                 @Html.ValidationMessageFor(m => m.Subject, "", new { @class = "text-danger" })
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    @Html.LabelFor(m => m.CategoryId, "Category", new { @class = "form-label" })
+                    @Html.LabelFor(m => m.CategoryId, "Category", new { @class = "form-label fw-semibold" })
                     @Html.DropDownListFor(m => m.CategoryId, new SelectList(Model.Categories, "CategoryId", "CategoryName"), "Select Category", new { @class = "form-select" })
                     @Html.ValidationMessageFor(m => m.CategoryId, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-md-6">
-                    @Html.LabelFor(m => m.PriorityId, "Priority", new { @class = "form-label" })
+                    @Html.LabelFor(m => m.PriorityId, "Priority", new { @class = "form-label fw-semibold" })
                     @Html.DropDownListFor(m => m.PriorityId, new SelectList(Model.Priorities, "PriorityId", "PriorityName"), "Select Priority", new { @class = "form-select" })
                     @Html.ValidationMessageFor(m => m.PriorityId, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="mb-3">
-                @Html.LabelFor(m => m.Description, new { @class = "form-label" })
+                @Html.LabelFor(m => m.Description, new { @class = "form-label fw-semibold" })
                 @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 6, placeholder = "Describe your issue in detail" })
                 @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Attachments</label>
+                <label class="form-label fw-semibold">Attachments</label>
                 <input type="file" name="files" class="form-control" multiple />
-                <div class="form-text">Optional files to attach (any format).</div>
+                <div class="form-text text-muted">Optional files to attach (any format).</div>
             </div>
 
-            <button type="submit" class="btn btn-primary px-4" style="background-color:#2b3e50;border:none;">Submit Ticket</button>
+            <button type="submit" class="btn btn-green px-4">Submit Ticket</button>
         }
     </div>
 </div>
+
+@section scripts {
+    <script src="@Url.Content("~/Scripts/ticket-create.js")"></script>
+}

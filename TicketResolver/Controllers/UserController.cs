@@ -3,11 +3,13 @@ using System.Data;
 using System.Linq;
 using System.Web.Mvc;
 using TicketResolver.DAL;
+using TicketResolver.Filters;
 using TicketResolver.Helpers;
 using TicketResolver.ViewModels;
 
 namespace TicketResolver.Controllers
 {
+    [RoleAuthorize(1, 2)]
     public class UserController : Controller
     {
         private readonly AuthDAL authDAL = new AuthDAL();
@@ -41,6 +43,7 @@ namespace TicketResolver.Controllers
             return View(model);
         }
 
+        [RoleAuthorize(1)]
         public ActionResult Create()
         {
             var model = new UserCreateViewModel
@@ -76,6 +79,7 @@ namespace TicketResolver.Controllers
             }
         }
 
+        [RoleAuthorize(1)]
         public ActionResult Edit(int id)
         {
             var user = authDAL.GetUserById(id);

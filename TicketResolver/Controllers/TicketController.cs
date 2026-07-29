@@ -307,6 +307,19 @@ namespace TicketResolver.Controllers
             try
             {
                 ticketDAL.Assign(model.TicketId, model.AssignedTo, CurrentUserId, model.ChangeReason);
+
+                var ticket = ticketDAL.GetById(model.TicketId);
+                var assignee = authDAL.GetUserById(model.AssignedTo);
+                var assignedBy = authDAL.GetUserById(CurrentUserId);
+                var template = EmailTemplates.LoadTemplate(Server.MapPath("~/EmailTemplates/NotificationEmail.html"));
+
+                if (assignee != null)
+                {
+                    var body = EmailTemplates.PopulateNotificationTemplate(template, assignee.FirstName, ticket.TicketNumber,
+                        "A ticket has been assigned to you.", assignedBy?.FirstName ?? "System");
+                    EmailHelper.SendEmail(assignee.Email, $"Ticket {ticket.TicketNumber} - Assigned to you", body);
+                }
+
                 TempData["SuccessMessage"] = "Ticket assigned successfully.";
                 return RedirectToAction("Details", new { id = model.TicketId });
             }
@@ -325,12 +338,67 @@ namespace TicketResolver.Controllers
             try
             {
                 ticketDAL.UpdateStatus(ticketId, newStatusId, CurrentUserId, changeReason);
+
+                var ticket = ticketDAL.GetById(ticketId);
+                var creator = authDAL.GetUserById(ticket.CreatedBy);
+                var actor = authDAL.GetUserById(CurrentUserId);
+                var statuses = masterDAL.GetStatuses();
+                var newStatusName = statuses.FirstOrDefault(s => s.StatusId == newStatusId)?.StatusName ?? "Unknown";
+                var template = EmailTemplates.LoadTemplate(Server.MapPath("~/EmailTemplates/NotificationEmail.html"));
+
+                if (creator != null)
+                {
+                    var body = EmailTemplates.PopulateNotificationTemplate(template, creator.FirstName, ticket.TicketNumber,
+                        $"Ticket status changed to {newStatusName}.", actor?.FirstName ?? "System");
+                    EmailHelper.SendEmail(creator.Email, $"Ticket {ticket.TicketNumber} - Status: {newStatusName}", body);
+                }
+
+                if (ticket.AssignedTo.HasValue && ticket.AssignedTo != ticket.CreatedBy)
+                {
+                    var assignee = authDAL.GetUserById(ticket.AssignedTo.Value);
+                    if (assignee != null)
+                    {
+                        var body = EmailTemplates.PopulateNotificationTemplate(template, assignee.FirstName, ticket.TicketNumber,
+                            $"Ticket status changed to {newStatusName}.", actor?.FirstName ?? "System");
+                        EmailHelper.SendEmail(assignee.Email, $"Ticket {ticket.TicketNumber} - Status: {newStatusName}", body);
+                    }
+                }
+
                 return Json(new { success = true });
             }
             catch
             {
                 return Json(new { success = false, error = "Could not change status." });
             }
+        }
+
+        public ActionResult Export(string searchTerm, int? categoryId, int? priorityId, int? statusId)
+        {
+            int? createdBy = null;
+            int? assignedTo = null;
+            if (CurrentRole == "Employee")
+                createdBy = CurrentUserId;
+            else if (CurrentRole == "Support Executive")
+                assignedTo = CurrentUserId;
+
+            var ds = ticketDAL.Search(searchTerm, categoryId, priorityId, statusId, assignedTo, createdBy, 1, 9999);
+            var csv = new System.Text.StringBuilder();
+            csv.AppendLine("Ticket#,Subject,Category,Priority,Status,CreatedBy,AssignedTo,CreatedDate");
+
+            foreach (DataRow r in ds.Tables[0].Rows)
+            {
+                csv.AppendLine(string.Join(",",
+                    r["TicketNumber"],
+                    "\"" + r["Subject"].ToString().Replace("\"", "\"\"") + "\"",
+                    r["CategoryName"],
+                    r["PriorityName"],
+                    r["StatusName"],
+                    r["CreatedByName"],
+                    r["AssignedToName"],
+                    Convert.ToDateTime(r["CreatedDate"]).ToString("yyyy-MM-dd")));
+            }
+
+            return File(new System.Text.UTF8Encoding().GetBytes(csv.ToString()), "text/csv", "Tickets.csv");
         }
 
         private int GetRoleId()
