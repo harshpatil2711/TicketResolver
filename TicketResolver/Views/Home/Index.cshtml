@@ -1,31 +1,159 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model TicketResolver.ViewModels.DashboardViewModel
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var role = ((System.Security.Claims.ClaimsPrincipal)User).FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+    var isStaff = role == "Administrator" || role == "Support Executive";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+<div class="page-header">
+    <h5 class="page-title">Dashboard</h5>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card text-white" style="background-color:#2b3e50;">
+            <div class="card-body text-center">
+                <h2 class="mb-0">@Model.TotalTickets</h2>
+                <div class="small">Total Tickets</div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body text-center">
+                <h2 class="mb-0">@Model.NewTickets</h2>
+                <div class="small">New</div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body text-center">
+                <h2 class="mb-0">@Model.AssignedTickets</h2>
+                <div class="small">Assigned</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body text-center">
+                <h2 class="mb-0">@Model.InProgressTickets</h2>
+                <div class="small">In Progress</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white" style="background-color:#6f42c1;">
+            <div class="card-body text-center">
+                <h2 class="mb-0">@Model.ResolvedTickets</h2>
+                <div class="small">Resolved</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body text-center">
+                <h2 class="mb-0">@Model.ClosedTickets</h2>
+                <div class="small">Closed</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger">
+            <div class="card-body text-center">
+                <h2 class="mb-0">@Model.ReopenedTickets</h2>
+                <div class="small">Reopened</div>
+            </div>
+        </div>
     </div>
 </div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <span>Recent Tickets</span>
+        <a href="@Url.Action("Index", "Ticket")" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Ticket #</th>
+                    <th>Subject</th>
+                    <th>Category</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Created By</th>
+                    <th>Assigned To</th>
+                    <th>Created</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.RecentTickets.Count == 0)
+                {
+                    <tr><td colspan="9" class="text-center text-muted py-4">No tickets found.</td></tr>
+                }
+                @foreach (var ticket in Model.RecentTickets)
+                {
+                    <tr>
+                        <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="fw-bold text-decoration-none">@ticket.TicketNumber</a></td>
+                        <td>@ticket.Subject</td>
+                        <td>@ticket.CategoryName</td>
+                        <td>@ticket.PriorityName</td>
+                        <td><span class="badge bg-secondary">@ticket.StatusName</span></td>
+                        <td>@ticket.CreatedByName</td>
+                        <td>@(ticket.AssignedToName ?? "-")</td>
+                        <td class="text-muted small">@ticket.CreatedDate.ToString("dd-MMM-yyyy")</td>
+                        <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="btn btn-sm btn-outline-primary"><i class="fa-regular fa-eye"></i></a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (isStaff)
+{
+    <div class="card mt-3">
+        <div class="card-header d-flex justify-content-between">
+            <span>Unassigned Tickets (New)</span>
+            <a href="@Url.Action("Index", "Ticket")" class="btn btn-sm btn-outline-primary">View All</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Ticket #</th>
+                        <th>Subject</th>
+                        <th>Category</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Created By</th>
+                        <th>Created</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.UnassignedTickets.Count == 0)
+                    {
+                        <tr><td colspan="8" class="text-center text-muted py-4">No unassigned tickets.</td></tr>
+                    }
+                    @foreach (var ticket in Model.UnassignedTickets)
+                    {
+                        <tr>
+                            <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="fw-bold text-decoration-none">@ticket.TicketNumber</a></td>
+                            <td>@ticket.Subject</td>
+                            <td>@ticket.CategoryName</td>
+                            <td>@ticket.PriorityName</td>
+                            <td><span class="badge bg-secondary">@ticket.StatusName</span></td>
+                            <td>@ticket.CreatedByName</td>
+                            <td class="text-muted small">@ticket.CreatedDate.ToString("dd-MMM-yyyy")</td>
+                            <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="btn btn-sm btn-outline-primary"><i class="fa-regular fa-eye"></i></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

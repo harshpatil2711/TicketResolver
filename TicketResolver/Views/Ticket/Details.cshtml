@@ -1,0 +1,252 @@
+@model TicketResolver.ViewModels.TicketDetailViewModel
+@{
+    ViewBag.Title = "Ticket " + Model.TicketNumber;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var role = ((System.Security.Claims.ClaimsPrincipal)User).FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+    var userId = int.Parse(((System.Security.Claims.ClaimsPrincipal)User).FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+    var isAdmin = role == "Administrator";
+    var isSupport = role == "Support Executive";
+    var isAdmin = role == "Administrator";
+    var isSupport = role == "Support Executive";
+    var isEmployee = role == "Employee";
+}
+<div class="page-header">
+    <h5 class="page-title">@Model.TicketNumber - @Model.Subject</h5>
+    <div>
+        <a href="@Url.Action("Index")" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        @if (Model.CreatedBy == userId || isAdmin)
+        {
+            <a href="@Url.Action("Edit", new { id = Model.TicketId })" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-pen"></i> Edit</a>
+        }
+        @if (isAdmin || isSupport)
+        {
+            <a href="@Url.Action("Assign", new { id = Model.TicketId })" class="btn btn-outline-info btn-sm"><i class="fa-solid fa-user-plus"></i> Assign</a>
+        }
+    </div>
+</div>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Details</span>
+                @if (!Model.IsTerminalState && (isAdmin || isSupport))
+                {
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">Change Status</button>
+                        <ul class="dropdown-menu">
+                            @foreach (var s in Model.Statuses.Where(s => s.StatusId != Model.StatusId))
+                            {
+                                <li><a class="dropdown-item change-status" href="#" data-statusid="@s.StatusId" data-ticketid="@Model.TicketId">@s.StatusName</a></li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-sm-3 text-muted">Status</div>
+                    <div class="col-sm-9"><span class="badge bg-secondary" id="currentStatus">@Model.StatusName</span></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3 text-muted">Priority</div>
+                    <div class="col-sm-9">@Model.PriorityName</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3 text-muted">Category</div>
+                    <div class="col-sm-9">@Model.CategoryName</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3 text-muted">Created By</div>
+                    <div class="col-sm-9">@Model.CreatedByName</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3 text-muted">Assigned To</div>
+                    <div class="col-sm-9" id="assignedToDisplay">@(Model.AssignedToName ?? "Unassigned")</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3 text-muted">Created</div>
+                    <div class="col-sm-9">@Model.CreatedDate.ToString("dd-MMM-yyyy hh:mm tt")</div>
+                </div>
+                @if (Model.ResolvedDate.HasValue)
+                {
+                    <div class="row mb-2">
+                        <div class="col-sm-3 text-muted">Resolved</div>
+                        <div class="col-sm-9">@Model.ResolvedDate.Value.ToString("dd-MMM-yyyy hh:mm tt")</div>
+                    </div>
+                }
+                <hr />
+                <h6>Description</h6>
+                <p class="mb-0" style="white-space:pre-wrap;">@Model.Description</p>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-header">Comments (@Model.Comments.Count)</div>
+            <div class="card-body" id="commentsContainer">
+                @if (Model.Comments.Count == 0)
+                {
+                    <p class="text-muted mb-0" id="noComments">No comments yet.</p>
+                }
+                @foreach (var comment in Model.Comments)
+                {
+                    <div class="mb-3 p-3 bg-light rounded @(comment.IsInternalNote ? "border-start border-warning border-3" : "")">
+                        <div class="d-flex justify-content-between">
+                            <strong>@comment.UserName (@comment.RoleName)</strong>
+                            <small class="text-muted">@comment.CreatedDate.ToString("dd-MMM-yyyy hh:mm tt")</small>
+                        </div>
+                        @if (comment.IsInternalNote)
+                        {
+                            <span class="badge bg-warning text-dark mb-1">Internal Note</span>
+                        }
+                        <p class="mb-0 mt-1" style="white-space:pre-wrap;">@comment.CommentText</p>
+                    </div>
+                }
+            </div>
+            <div class="card-footer">
+                @Html.AntiForgeryToken()
+                <textarea id="commentText" class="form-control mb-2" rows="3" placeholder="Write a comment..."></textarea>
+                <div class="form-check mb-2">
+                    <input type="checkbox" class="form-check-input" id="isInternalNote" />
+                    <label class="form-check-label" for="isInternalNote">Internal Note (visible only to staff)</label>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm" id="addCommentBtn" style="background-color:#2b3e50;border:none;">Add Comment</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-header">Status History</div>
+            <div class="card-body p-0">
+                @if (Model.History.Count == 0)
+                {
+                    <p class="text-muted p-3 mb-0">No history available.</p>
+                }
+                <ul class="list-group list-group-flush" id="historyList">
+                    @foreach (var h in Model.History)
+                    {
+                        <li class="list-group-item small">
+                            <div>@h.ChangeReason</div>
+                            <div class="text-muted">@h.CreatedDate.ToString("dd-MMM-yyyy hh:mm tt")</div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-header">Attachments (@Model.Attachments.Count)</div>
+            <div class="card-body">
+                @if (Model.Attachments.Count == 0)
+                {
+                    <p class="text-muted mb-0" id="noAttachments">No attachments.</p>
+                }
+                <ul class="list-unstyled mb-3" id="attachmentList">
+                    @foreach (var file in Model.Attachments)
+                    {
+                        <li><i class="fa-regular fa-file"></i> <a href="@Url.Action("Download", "Ticket", new { id = file.AttachmentId })">@file.OriginalFileName</a></li>
+                    }
+                </ul>
+                <hr />
+                <form id="uploadForm" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <input type="file" name="file" class="form-control form-control-sm mb-2" />
+                    <button type="button" class="btn btn-sm btn-outline-primary" id="uploadBtn"><i class="fa-solid fa-upload"></i> Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<form id="statusForm" method="post" style="display:none;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="ticketId" id="statusTicketId" />
+    <input type="hidden" name="newStatusId" id="statusNewStatusId" />
+    <input type="hidden" name="changeReason" id="statusChangeReason" />
+</form>
+@section scripts {
+    <script>
+        var ticketId = @Model.TicketId;
+        var role = '@role';
+        var userId = @userId;
+
+        $('#addCommentBtn').click(function () {
+            var text = $('#commentText').val().trim();
+            if (!text) { Swal.fire('Validation', 'Please enter a comment.', 'warning'); return; }
+            $.ajax({
+                url: '@Url.Action("AddComment", "Ticket")',
+                type: 'POST',
+                data: {
+                    ticketId: ticketId,
+                    commentText: text,
+                    isInternalNote: $('#isInternalNote').is(':checked'),
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function () {
+                    $('#commentText').val('');
+                    $('#isInternalNote').prop('checked', false);
+                    Swal.fire({ icon: 'success', title: 'Comment added!', showConfirmButton: false, timer: 1500 });
+                    location.reload();
+                },
+                error: function () { Swal.fire('Error', 'Could not add comment.', 'error'); }
+            });
+        });
+
+        $('.change-status').click(function (e) {
+            e.preventDefault();
+            var statusId = $(this).data('statusid');
+            var ticketId = $(this).data('ticketid');
+            Swal.fire({
+                title: 'Change Status',
+                input: 'text',
+                inputLabel: 'Reason (optional)',
+                showCancelButton: true,
+                confirmButtonText: 'Change',
+                confirmButtonColor: '#2b3e50'
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    $('#statusTicketId').val(ticketId);
+                    $('#statusNewStatusId').val(statusId);
+                    $('#statusChangeReason').val(result.value || '');
+                    $('#statusForm').submit();
+                }
+            });
+        });
+
+        $('#statusForm').on('submit', function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '@Url.Action("ChangeStatus", "Ticket")',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function () {
+                    Swal.fire({ icon: 'success', title: 'Status updated!', showConfirmButton: false, timer: 1500 });
+                    location.reload();
+                },
+                error: function () { Swal.fire('Error', 'Could not change status.', 'error'); }
+            });
+        });
+
+        $('#uploadBtn').click(function () {
+            var formData = new FormData();
+            formData.append('ticketId', ticketId);
+            formData.append('file', $('#uploadForm input[type="file"]')[0].files[0]);
+            formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
+            $.ajax({
+                url: '@Url.Action("UploadAttachment", "Ticket")',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function () {
+                    Swal.fire({ icon: 'success', title: 'File uploaded!', showConfirmButton: false, timer: 1500 });
+                    location.reload();
+                },
+                error: function () { Swal.fire('Error', 'Could not upload file.', 'error'); }
+            });
+        });
+    </script>
+}

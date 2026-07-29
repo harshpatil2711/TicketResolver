@@ -1,0 +1,51 @@
+@model TicketResolver.ViewModels.VerifyOtpViewModel
+@{
+    ViewBag.Title = "Verify OTP";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var email = ViewBag.Email ?? Model.Email;
+    var purpose = ViewBag.Purpose ?? Model.Purpose;
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-header">
+            <i class="fa-solid fa-shield-halved" style="font-size:2.5rem;color:#2b3e50;margin-bottom:10px;"></i>
+            <h2>Verify OTP</h2>
+            <p>A one-time code was sent to <strong>@email</strong></p>
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+        }
+
+        @using (Html.BeginForm("VerifyOtp", "Auth", FormMethod.Post, new { @class = "otp-form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("Email", email)
+            @Html.Hidden("Purpose", purpose)
+
+            <div class="validation-summary-errors">@Html.ValidationSummary(true, "")</div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.OtpCode, "Enter OTP Code")
+                @Html.TextBoxFor(m => m.OtpCode, new { @class = "form-control text-center", placeholder = "000000", maxlength = 6, autocomplete = "off", style = "font-size:1.5rem;letter-spacing:8px;font-weight:bold;" })
+                @Html.ValidationMessageFor(m => m.OtpCode, "", new { @class = "text-danger" })
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2" style="background-color:#2b3e50;border:none;">Verify & Continue</button>
+        }
+
+        <p class="auth-link mt-3">
+            Didn't receive the code?
+            @using (Html.BeginForm("ResendOtp", "Auth", FormMethod.Post, new { style = "display:inline", @class = "resend-form" }))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="email" value="@email" />
+                <input type="hidden" name="purpose" value="@purpose" />
+                <a href="javascript:void(0)" onclick="resendOtp(this)">Resend OTP</a>
+            }
+        </p>
+    </div>
+</div>
+

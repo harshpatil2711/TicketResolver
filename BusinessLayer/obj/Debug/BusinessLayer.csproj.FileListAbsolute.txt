@@ -1,4 +1,5 @@
 D:\C#Practice\TicketResolver\BusinessLayer\obj\Debug\BusinessLayer.csprojResolveAssemblyReference.cache
+D:\C#Practice\TicketResolver\BusinessLayer\obj\Debug\BusinessLayer.dll
 D:\C#Practice\TicketResolver\BusinessLayer\bin\Debug\BusinessLayer.dll
 D:\C#Practice\TicketResolver\BusinessLayer\bin\Debug\BusinessLayer.pdb
 D:\C#Practice\TicketResolver\BusinessLayer\bin\Debug\BCrypt.Net-Next.dll
@@ -33,5 +34,4 @@ D:\C#Practice\TicketResolver\BusinessLayer\bin\Debug\System.IdentityModel.Tokens
 D:\C#Practice\TicketResolver\BusinessLayer\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 D:\C#Practice\TicketResolver\BusinessLayer\bin\Debug\System.Memory.xml
 D:\C#Practice\TicketResolver\BusinessLayer\bin\Debug\System.Buffers.xml
-D:\C#Practice\TicketResolver\BusinessLayer\obj\Debug\BusinessLayer.dll
 D:\C#Practice\TicketResolver\BusinessLayer\obj\Debug\BusinessLayer.pdb

@@ -1,0 +1,46 @@
+@model TicketResolver.ViewModels.ProfileIndexViewModel
+@{
+    ViewBag.Title = "My Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <h5 class="page-title">My Profile</h5>
+    <div>
+        <a href="@Url.Action("Edit")" class="btn btn-primary btn-sm" style="background-color:#2b3e50;border:none;"><i class="fa-solid fa-pen"></i> Edit</a>
+        <a href="@Url.Action("ChangePassword")" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-key"></i> Change Password</a>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row mb-2">
+            <div class="col-sm-3 text-muted">Name</div>
+            <div class="col-sm-9">@Model.FirstName @Model.LastName</div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-3 text-muted">Email</div>
+            <div class="col-sm-9">@Model.Email</div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-3 text-muted">Mobile</div>
+            <div class="col-sm-9">@(Model.Mobile ?? "-")</div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-3 text-muted">Role</div>
+            <div class="col-sm-9">@Model.RoleName</div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-3 text-muted">Member Since</div>
+            <div class="col-sm-9">@Model.CreatedDate.ToString("dd-MMM-yyyy")</div>
+        </div>
+    </div>
+</div>

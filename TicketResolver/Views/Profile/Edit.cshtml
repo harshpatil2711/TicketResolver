@@ -1,0 +1,49 @@
+@model TicketResolver.ViewModels.ProfileEditViewModel
+@{
+    ViewBag.Title = "Edit Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <h5 class="page-title">Edit Profile</h5>
+    <a href="@Url.Action("Index")" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left"></i> Back</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("Edit", "Profile", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+
+            @Html.HiddenFor(m => m.UserId)
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    @Html.LabelFor(m => m.FirstName, new { @class = "form-label" })
+                    @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    @Html.LabelFor(m => m.LastName, new { @class = "form-label" })
+                    @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.Mobile, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.Mobile, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Mobile, "", new { @class = "text-danger" })
+            </div>
+
+            <button type="submit" class="btn btn-primary px-4" style="background-color:#2b3e50;border:none;">Save</button>
+        }
+    </div>
+</div>

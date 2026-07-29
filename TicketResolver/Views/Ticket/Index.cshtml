@@ -1,0 +1,106 @@
+@model TicketResolver.ViewModels.TicketSearchViewModel
+@{
+    ViewBag.Title = "Tickets";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var role = ((System.Security.Claims.ClaimsPrincipal)User).FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+}
+
+<div class="page-header">
+    <h5 class="page-title">Tickets</h5>
+    <a href="@Url.Action("Create")" class="btn btn-success btn-sm"><i class="fa-solid fa-plus"></i> Create Ticket</a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card mb-3">
+    <div class="card-header">Search & Filter</div>
+    <div class="card-body">
+        @using (Html.BeginForm("Index", "Ticket", FormMethod.Get))
+        {
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <input type="text" name="searchTerm" class="form-control" placeholder="Search ticket # or subject" value="@Model.SearchTerm" />
+                </div>
+                <div class="col-md-2">
+                    @Html.DropDownList("categoryId", new SelectList(Model.Categories, "CategoryId", "CategoryName", Model.CategoryId), "All Categories", new { @class = "form-select" })
+                </div>
+                <div class="col-md-2">
+                    @Html.DropDownList("priorityId", new SelectList(Model.Priorities, "PriorityId", "PriorityName", Model.PriorityId), "All Priorities", new { @class = "form-select" })
+                </div>
+                <div class="col-md-2">
+                    @Html.DropDownList("statusId", new SelectList(Model.Statuses, "StatusId", "StatusName", Model.StatusId), "All Statuses", new { @class = "form-select" })
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-search"></i></button>
+                </div>
+                <div class="col-md-2">
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary w-100">Clear</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">@Model.TotalCount Ticket(s) found</div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Ticket #</th>
+                    <th>Subject</th>
+                    <th>Category</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Created By</th>
+                    <th>Assigned To</th>
+                    <th>Created</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Results.Count == 0)
+                {
+                    <tr><td colspan="9" class="text-center text-muted py-4">No tickets found.</td></tr>
+                }
+                @foreach (var ticket in Model.Results)
+                {
+                    <tr>
+                        <td><a href="@Url.Action("Details", new { id = ticket.TicketId })" class="fw-bold text-decoration-none">@ticket.TicketNumber</a></td>
+                        <td>@ticket.Subject</td>
+                        <td>@ticket.CategoryName</td>
+                        <td>@ticket.PriorityName</td>
+                        <td><span class="badge bg-secondary">@ticket.StatusName</span></td>
+                        <td>@ticket.CreatedByName</td>
+                        <td>@ticket.AssignedToName</td>
+                        <td class="text-muted small">@ticket.CreatedDate.ToString("dd-MMM-yyyy")</td>
+                        <td>
+                            <a href="@Url.Action("Details", new { id = ticket.TicketId })" class="btn btn-sm btn-outline-primary"><i class="fa-regular fa-eye"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (Model.TotalCount > Model.PageSize)
+    {
+        <div class="card-footer">
+            <nav>
+                <ul class="pagination pagination-sm mb-0 justify-content-center">
+                    @for (int i = 1; i <= Math.Ceiling((double)Model.TotalCount / Model.PageSize); i++)
+                    {
+                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { searchTerm = Model.SearchTerm, categoryId = Model.CategoryId, priorityId = Model.PriorityId, statusId = Model.StatusId, page = i })">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    }
+</div>

@@ -1,0 +1,48 @@
+@model TicketResolver.ViewModels.TicketEditViewModel
+@{
+    ViewBag.Title = "Edit Ticket";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <h5 class="page-title">Edit Ticket</h5>
+    <a href="@Url.Action("Details", new { id = Model.TicketId })" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left"></i> Back</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("Edit", "Ticket", FormMethod.Post, new { @class = "ticket-form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.TicketId)
+            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.Subject, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.Subject, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Subject, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    @Html.LabelFor(m => m.CategoryId, "Category", new { @class = "form-label" })
+                    @Html.DropDownListFor(m => m.CategoryId, new SelectList(Model.Categories, "CategoryId", "CategoryName"), "Select Category", new { @class = "form-select" })
+                    @Html.ValidationMessageFor(m => m.CategoryId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    @Html.LabelFor(m => m.PriorityId, "Priority", new { @class = "form-label" })
+                    @Html.DropDownListFor(m => m.PriorityId, new SelectList(Model.Priorities, "PriorityId", "PriorityName"), "Select Priority", new { @class = "form-select" })
+                    @Html.ValidationMessageFor(m => m.PriorityId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.Description, new { @class = "form-label" })
+                @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 6 })
+                @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+            </div>
+
+            <button type="submit" class="btn btn-primary px-4" style="background-color:#2b3e50;border:none;">Save Changes</button>
+        }
+    </div>
+</div>

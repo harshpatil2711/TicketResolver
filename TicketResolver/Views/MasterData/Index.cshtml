@@ -1,0 +1,242 @@
+@model TicketResolver.Controllers.MasterDataViewModel
+@{
+    ViewBag.Title = "Master Data";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul class="nav nav-tabs mb-3" id="masterTabs">
+    <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#categories">Categories</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#priorities">Priorities</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#statuses">Statuses</a></li>
+</ul>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">@TempData["Success"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">@TempData["Error"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+}
+
+<div class="tab-content">
+    <div class="tab-pane active" id="categories">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <span>Categories</span>
+                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#addCategoryModal"><i class="fa-solid fa-plus"></i> Add</button>
+            </div>
+            <table class="table table-hover mb-0">
+                <thead><tr><th>Name</th><th></th></tr></thead>
+                <tbody>
+                    @foreach (var c in Model.Categories)
+                    {
+                        <tr>
+                            <td>@c.CategoryName</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary edit-category" data-id="@c.CategoryId" data-name="@c.CategoryName"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-sm btn-outline-danger delete-category" data-id="@c.CategoryId"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="tab-pane" id="priorities">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <span>Priorities</span>
+                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#addPriorityModal"><i class="fa-solid fa-plus"></i> Add</button>
+            </div>
+            <table class="table table-hover mb-0">
+                <thead><tr><th>Name</th><th>Sequence</th><th></th></tr></thead>
+                <tbody>
+                    @foreach (var p in Model.Priorities)
+                    {
+                        <tr>
+                            <td>@p.PriorityName</td>
+                            <td>@p.Sequence</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary edit-priority" data-id="@p.PriorityId" data-name="@p.PriorityName" data-sequence="@p.Sequence"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-sm btn-outline-danger delete-priority" data-id="@p.PriorityId"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="tab-pane" id="statuses">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <span>Statuses</span>
+                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#addStatusModal"><i class="fa-solid fa-plus"></i> Add</button>
+            </div>
+            <table class="table table-hover mb-0">
+                <thead><tr><th>Name</th><th>Terminal</th><th></th></tr></thead>
+                <tbody>
+                    @foreach (var s in Model.Statuses)
+                    {
+                        <tr>
+                            <td>@s.StatusName</td>
+                            <td>@(s.IsTerminalState ? "Yes" : "No")</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary edit-status" data-id="@s.StatusId" data-name="@s.StatusName" data-terminal="@s.IsTerminalState.ToString().ToLower()"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-sm btn-outline-danger delete-status" data-id="@s.StatusId"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@* Add Category Modal *@
+<div class="modal fade" id="addCategoryModal">
+    <div class="modal-dialog"><div class="modal-content">
+        @using (Html.BeginForm("AddCategory", "MasterData", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-header"><h5 class="modal-title">Add Category</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <input name="categoryName" class="form-control" placeholder="Category name" required />
+            </div>
+            <div class="modal-footer"><button type="submit" class="btn btn-primary">Add</button></div>
+        }
+    </div></div>
+</div>
+
+@* Edit Category Modal *@
+<div class="modal fade" id="editCategoryModal">
+    <div class="modal-dialog"><div class="modal-content">
+        @using (Html.BeginForm("UpdateCategory", "MasterData", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="categoryId" id="editCategoryId" />
+            <div class="modal-header"><h5 class="modal-title">Edit Category</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <input name="categoryName" id="editCategoryName" class="form-control" required />
+            </div>
+            <div class="modal-footer"><button type="submit" class="btn btn-primary">Save</button></div>
+        }
+    </div></div>
+</div>
+
+@* Add Priority Modal *@
+<div class="modal fade" id="addPriorityModal">
+    <div class="modal-dialog"><div class="modal-content">
+        @using (Html.BeginForm("AddPriority", "MasterData", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-header"><h5 class="modal-title">Add Priority</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <div class="mb-2"><input name="priorityName" class="form-control" placeholder="Priority name" required /></div>
+                <div><input name="sequence" type="number" class="form-control" placeholder="Sequence" required /></div>
+            </div>
+            <div class="modal-footer"><button type="submit" class="btn btn-primary">Add</button></div>
+        }
+    </div></div>
+</div>
+
+@* Edit Priority Modal *@
+<div class="modal fade" id="editPriorityModal">
+    <div class="modal-dialog"><div class="modal-content">
+        @using (Html.BeginForm("UpdatePriority", "MasterData", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="priorityId" id="editPriorityId" />
+            <div class="modal-header"><h5 class="modal-title">Edit Priority</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <div class="mb-2"><input name="priorityName" id="editPriorityName" class="form-control" required /></div>
+                <div><input name="sequence" id="editPrioritySequence" type="number" class="form-control" required /></div>
+            </div>
+            <div class="modal-footer"><button type="submit" class="btn btn-primary">Save</button></div>
+        }
+    </div></div>
+</div>
+
+@* Add Status Modal *@
+<div class="modal fade" id="addStatusModal">
+    <div class="modal-dialog"><div class="modal-content">
+        @using (Html.BeginForm("AddStatus", "MasterData", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-header"><h5 class="modal-title">Add Status</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <div class="mb-2"><input name="statusName" class="form-control" placeholder="Status name" required /></div>
+                <div class="form-check">
+                    <input type="checkbox" name="isTerminalState" class="form-check-input" value="true" id="addIsTerminal" />
+                    <label class="form-check-label" for="addIsTerminal">Terminal State</label>
+                </div>
+            </div>
+            <div class="modal-footer"><button type="submit" class="btn btn-primary">Add</button></div>
+        }
+    </div></div>
+</div>
+
+@* Edit Status Modal *@
+<div class="modal fade" id="editStatusModal">
+    <div class="modal-dialog"><div class="modal-content">
+        @using (Html.BeginForm("UpdateStatus", "MasterData", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="statusId" id="editStatusId" />
+            <div class="modal-header"><h5 class="modal-title">Edit Status</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <div class="mb-2"><input name="statusName" id="editStatusName" class="form-control" required /></div>
+                <div class="form-check">
+                    <input type="checkbox" name="isTerminalState" class="form-check-input" value="true" id="editIsTerminal" />
+                    <label class="form-check-label" for="editIsTerminal">Terminal State</label>
+                </div>
+            </div>
+            <div class="modal-footer"><button type="submit" class="btn btn-primary">Save</button></div>
+        }
+    </div></div>
+</div>
+
+@Html.AntiForgeryToken()
+
+@section scripts {
+    <script>
+        $('.edit-category').click(function () {
+            $('#editCategoryId').val($(this).data('id'));
+            $('#editCategoryName').val($(this).data('name'));
+            new bootstrap.Modal($('#editCategoryModal')).show();
+        });
+        $('.edit-priority').click(function () {
+            $('#editPriorityId').val($(this).data('id'));
+            $('#editPriorityName').val($(this).data('name'));
+            $('#editPrioritySequence').val($(this).data('sequence'));
+            new bootstrap.Modal($('#editPriorityModal')).show();
+        });
+        $('.edit-status').click(function () {
+            $('#editStatusId').val($(this).data('id'));
+            $('#editStatusName').val($(this).data('name'));
+            $('#editIsTerminal').prop('checked', $(this).data('terminal') === 'true');
+            new bootstrap.Modal($('#editStatusModal')).show();
+        });
+
+        $('.delete-category, .delete-priority, .delete-status').click(function () {
+            var btn = $(this);
+            var isCategory = btn.hasClass('delete-category');
+            var isPriority = btn.hasClass('delete-priority');
+            var url = isCategory ? '@Url.Action("DeleteCategory")' : isPriority ? '@Url.Action("DeletePriority")' : '@Url.Action("DeleteStatus")';
+            var id = btn.data('id');
+            Swal.fire({
+                title: 'Confirm Delete',
+                text: 'Are you sure?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Delete'
+            }).then(function (r) {
+                if (!r.isConfirmed) return;
+                $.post(url, { id: id, __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() })
+                    .done(function () { location.reload(); })
+                    .fail(function () { Swal.fire('Error', 'Delete failed.', 'error'); });
+            });
+        });
+    </script>
+}

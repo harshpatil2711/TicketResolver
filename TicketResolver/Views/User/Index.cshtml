@@ -1,0 +1,107 @@
+@model TicketResolver.ViewModels.UserSearchViewModel
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <h5 class="page-title">Users</h5>
+    <a href="@Url.Action("Create")" class="btn btn-success btn-sm"><i class="fa-solid fa-plus"></i> Create User</a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card mb-3">
+    <div class="card-header">Search</div>
+    <div class="card-body">
+        @using (Html.BeginForm("Index", "User", FormMethod.Get))
+        {
+            <div class="row g-2">
+                <div class="col-md-4">
+                    <input type="text" name="searchTerm" class="form-control" placeholder="Search name or email" value="@Model.SearchTerm" />
+                </div>
+                <div class="col-md-2">
+                    @Html.DropDownList("roleId", new SelectList(Model.Roles, "RoleId", "RoleName", Model.RoleId), "All Roles", new { @class = "form-select" })
+                </div>
+                <div class="col-md-2">
+                    @Html.DropDownList("isActive", new SelectList(new[] { new { Value = "", Text = "All" }, new { Value = "true", Text = "Active" }, new { Value = "false", Text = "Inactive" } }, "Value", "Text", Model.IsActive?.ToString()), new { @class = "form-select" })
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-search"></i></button>
+                </div>
+                <div class="col-md-3">
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary w-100">Clear</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">@Model.TotalCount User(s) found</div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Results.Count == 0)
+                {
+                    <tr><td colspan="7" class="text-center text-muted py-4">No users found.</td></tr>
+                }
+                @foreach (var user in Model.Results)
+                {
+                    <tr>
+                        <td>@user.FullName</td>
+                        <td>@user.Email</td>
+                        <td>@(user.Mobile ?? "-")</td>
+                        <td>@user.RoleName</td>
+                        <td>
+                            @if (user.IsActive)
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Inactive</span>
+                            }
+                        </td>
+                        <td class="text-muted small">@user.CreatedDate.ToString("dd-MMM-yyyy")</td>
+                        <td>
+                            <a href="@Url.Action("Edit", new { id = user.UserId })" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (Model.TotalCount > Model.PageSize)
+    {
+        <div class="card-footer">
+            <nav>
+                <ul class="pagination pagination-sm mb-0 justify-content-center">
+                    @for (int i = 1; i <= Math.Ceiling((double)Model.TotalCount / Model.PageSize); i++)
+                    {
+                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { searchTerm = Model.SearchTerm, roleId = Model.RoleId, isActive = Model.IsActive, page = i })">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    }
+</div>

@@ -7,11 +7,12 @@ namespace TicketResolver.Models
         public int AttachmentId { get; set; }
         public int TicketId { get; set; }
         public int? CommentId { get; set; }
-        public string FileName { get; set; }
-        public string FilePath { get; set; }
-        public long FileSize { get; set; }
-        public int UploadedBy { get; set; }
-        public DateTime UploadedDate { get; set; }
+        public string OriginalFileName { get; set; }
+        public string StoredFileName { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public int? ModifiedBy { get; set; }
+        public DateTime? ModifiedDate { get; set; }
         public bool IsActive { get; set; }
     }
 }

@@ -6,10 +6,12 @@ namespace TicketResolver.Models
     {
         public int HistoryId { get; set; }
         public int TicketId { get; set; }
-        public int OldStatusId { get; set; }
+        public int? OldStatusId { get; set; }
         public int NewStatusId { get; set; }
-        public int ChangedBy { get; set; }
-        public DateTime ChangedDate { get; set; }
-        public string Remarks { get; set; }
+        public int? PreviousAssignedTo { get; set; }
+        public int? CurrentAssignedTo { get; set; }
+        public string ChangeReason { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }
