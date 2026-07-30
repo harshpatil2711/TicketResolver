@@ -1,6 +1,10 @@
 $(function () {
+    function isValid(form) {
+        return typeof $.fn.valid !== 'function' || $(form).valid();
+    }
+
     $('.login-form').on('submit', function (e) {
-        if (!$(this).valid()) return;
+        if (!isValid(this)) return;
         e.preventDefault();
         var form = $(this);
         $.post(form.attr('action'), form.serialize(), function (res) {
@@ -15,7 +19,7 @@ $(function () {
     });
 
     $('.register-form').on('submit', function (e) {
-        if (!$(this).valid()) return;
+        if (!isValid(this)) return;
         e.preventDefault();
         var form = $(this);
         $.post(form.attr('action'), form.serialize(), function (res) {
@@ -31,7 +35,7 @@ $(function () {
     });
 
     $('.otp-form').on('submit', function (e) {
-        if (!$(this).valid()) return;
+        if (!isValid(this)) return;
         e.preventDefault();
         var form = $(this);
         $.post(form.attr('action'), form.serialize(), function (res) {

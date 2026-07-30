@@ -1,12 +1,11 @@
 $(function () {
-    var indexActionUrl = $('#ticketTableContainer').data('url');
+    var indexActionUrl = $('#userTableContainer').data('url');
 
     function FetchData(page) {
         var data = {
             searchTerm: $('#searchTerm').val() || '',
-            categoryId: $('#categoryId').val() || '',
-            priorityId: $('#priorityId').val() || '',
-            statusId: $('#statusId').val() || '',
+            roleId: $('#roleId').val() || '',
+            isActive: $('#isActive').val() || '',
             page: page || 1,
             __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
         };
@@ -16,10 +15,10 @@ $(function () {
             type: 'POST',
             data: data,
             success: function (result) {
-                $('#ticketTableContainer').html(result);
+                $('#userTableContainer').html(result);
             },
             error: function () {
-                alert('Error loading tickets.');
+                alert('Error loading users.');
             }
         });
     }
@@ -36,9 +35,8 @@ $(function () {
 
     $('#clearBtn').on('click', function () {
         $('#searchTerm').val('');
-        $('#categoryId').val('');
-        $('#priorityId').val('');
-        $('#statusId').val('');
+        $('#roleId').val('');
+        $('#isActive').val('');
         FetchData(1);
     });
 });

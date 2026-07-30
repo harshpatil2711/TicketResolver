@@ -4,98 +4,49 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h5 class="fw-bold mb-0" style="color:#333;">Tickets</h5>
+<div class="page-header">
+    <h5 class="page-title">Tickets</h5>
     <div>
         <a href="@Url.Action("Create")" class="btn btn-green"><i class="fa-solid fa-plus"></i> Create Ticket</a>
         <a href="@Url.Action("Export", new { searchTerm = Model.SearchTerm, categoryId = Model.CategoryId, priorityId = Model.PriorityId, statusId = Model.StatusId })" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-download"></i></a>
     </div>
 </div>
 
-<div class="card border-0 shadow-sm mb-4">
-    <div class="card-header bg-white fw-bold" style="color:#333;">Search & Filter</div>
-    <div class="card-body">
-        @using (Html.BeginForm("Index", "Ticket", FormMethod.Get))
-        {
-            <div class="row g-2">
-                <div class="col-md-3">
-                    <input type="text" name="searchTerm" class="form-control form-control-sm" placeholder="Search ticket # or subject" value="@Model.SearchTerm" />
-                </div>
-                <div class="col-md-2">
-                    @Html.DropDownList("categoryId", new SelectList(Model.Categories, "CategoryId", "CategoryName", Model.CategoryId), "All Categories", new { @class = "form-select form-select-sm" })
-                </div>
-                <div class="col-md-2">
-                    @Html.DropDownList("priorityId", new SelectList(Model.Priorities, "PriorityId", "PriorityName", Model.PriorityId), "All Priorities", new { @class = "form-select form-select-sm" })
-                </div>
-                <div class="col-md-2">
-                    @Html.DropDownList("statusId", new SelectList(Model.Statuses, "StatusId", "StatusName", Model.StatusId), "All Statuses", new { @class = "form-select form-select-sm" })
-                </div>
-                <div class="col-md-1">
-                    <button type="submit" class="btn btn-sm w-100 text-white" style="background-color:#2b3e50;"><i class="fa-solid fa-search"></i></button>
-                </div>
-                <div class="col-md-2">
-                    <a href="@Url.Action("Index")" class="btn btn-sm btn-outline-secondary w-100">Clear</a>
-                </div>
+<div class="card-custom" style="margin-bottom:15px;">
+    <div class="card-header-custom">Search & Filter</div>
+    <form id="searchForm" style="padding:15px 20px;">
+        @Html.AntiForgeryToken()
+        <div class="row g-2">
+            <div class="col-md-3">
+                <input type="text" id="searchTerm" name="searchTerm" class="form-control form-control-sm" placeholder="Search ticket # or subject" value="@Model.SearchTerm" />
             </div>
-        }
-    </div>
+            <div class="col-md-2">
+                @Html.DropDownList("categoryId", new SelectList(Model.Categories, "CategoryId", "CategoryName", Model.CategoryId), "All Categories", new { @class = "form-select form-select-sm" })
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownList("priorityId", new SelectList(Model.Priorities, "PriorityId", "PriorityName", Model.PriorityId), "All Priorities", new { @class = "form-select form-select-sm" })
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownList("statusId", new SelectList(Model.Statuses, "StatusId", "StatusName", Model.StatusId), "All Statuses", new { @class = "form-select form-select-sm" })
+            </div>
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-sm w-100 text-white" style="background-color:#2b3e50;"><i class="fa-solid fa-search"></i></button>
+            </div>
+            <div class="col-md-2">
+                <a href="#" id="clearBtn" class="btn btn-sm btn-outline-secondary w-100">Clear</a>
+            </div>
+        </div>
+    </form>
 </div>
 
-<div class="card border-0 shadow-sm">
-    <div class="card-header bg-white fw-bold" style="color:#333;">@Model.TotalCount Ticket(s) found</div>
-    <table class="custom-table table table-borderless mb-0">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Ticket #</th>
-                <th>Subject</th>
-                <th>Category</th>
-                <th>Priority</th>
-                <th>Status</th>
-                <th>Created By</th>
-                <th>Assigned To</th>
-                <th>Created</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.Results.Count == 0)
-            {
-                <tr><td colspan="10" class="empty-msg">No tickets found.</td></tr>
-            }
-            @foreach (var ticket in Model.Results)
-            {
-                <tr>
-                    <td>@ticket.TicketId</td>
-                    <td><a href="@Url.Action("Details", new { id = ticket.TicketId })" class="fw-bold text-decoration-none" style="color:#2b3e50;">@ticket.TicketNumber</a></td>
-                    <td>@ticket.Subject</td>
-                    <td>@ticket.CategoryName</td>
-                    <td>@ticket.PriorityName</td>
-                    <td><span class="badge bg-secondary">@ticket.StatusName</span></td>
-                    <td>@ticket.CreatedByName</td>
-                    <td>@ticket.AssignedToName</td>
-                    <td class="small text-muted">@ticket.CreatedDate.ToString("dd-MMM-yyyy")</td>
-                    <td><a href="@Url.Action("Details", new { id = ticket.TicketId })" class="btn btn-sm btn-outline-secondary"><i class="fa-regular fa-eye"></i></a></td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    @if (Model.TotalCount > Model.PageSize)
-    {
-        <div class="card-footer bg-white">
-            <nav>
-                <ul class="pagination pagination-sm mb-0 justify-content-center">
-                    @for (int i = 1; i <= Math.Ceiling((double)Model.TotalCount / Model.PageSize); i++)
-                    {
-                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                            <a class="page-link" href="@Url.Action("Index", new { searchTerm = Model.SearchTerm, categoryId = Model.CategoryId, priorityId = Model.PriorityId, statusId = Model.StatusId, page = i })">@i</a>
-                        </li>
-                    }
-                </ul>
-            </nav>
-        </div>
-    }
+<div id="ticketTableContainer" data-url="@Url.Action("Index", "Ticket")">
+    @Html.Partial("_TicketTable", Model)
 </div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <script>alert('@TempData["SuccessMessage"]');</script>
+}
 
 @section scripts {
     <script src="@Url.Content("~/Scripts/ticket-index.js")"></script>

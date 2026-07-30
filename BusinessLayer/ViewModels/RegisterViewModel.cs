@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TicketResolver.Models;
 
 namespace TicketResolver.ViewModels
 {
@@ -9,10 +11,13 @@ namespace TicketResolver.ViewModels
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, MinimumLength = 6)]
+        [MaxLength(100)]
+        [RegularExpression(@"^[A-Za-z\s]+$", ErrorMessage = "First name can only contain letters and spaces.")]
         public string FirstName { get; set; }
 
         [Required]
+        [MaxLength(100)]
+        [RegularExpression(@"^[A-Za-z\s]+$", ErrorMessage = "Last name can only contain letters and spaces.")]
         public string LastName { get; set; }
 
         [Required]
@@ -27,5 +32,10 @@ namespace TicketResolver.ViewModels
         [DataType(DataType.Password)]
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        public int RoleId { get; set; }
+
+        public List<TicketRole> Roles { get; set; }
     }
 }

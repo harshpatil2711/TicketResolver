@@ -6,50 +6,50 @@
     var isStaff = role == "Administrator" || role == "Support Executive";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h5 class="fw-bold mb-0" style="color:#333;">Dashboard</h5>
-    <span class="alert-banner"><i class="fa-regular fa-bell me-1"></i> Welcome back, @ViewContext.ViewData["fullName"]!</span>
+<div class="page-header">
+    <h5 class="page-title">Dashboard</h5>
+    <span class="alert-banner"><i class="fa-regular fa-bell me-1"></i> Welcome back!</span>
 </div>
 
-<div class="stats-grid mb-4">
-    <div class="stat-card p-3 bg-white rounded shadow-sm" style="border-left-color:#28a745;">
+<div class="stats-grid">
+    <div class="stat-card border-green">
         <div class="stat-title">Total Tickets</div>
         <div class="stat-value">@Model.TotalTickets</div>
     </div>
-    <div class="stat-card p-3 bg-white rounded shadow-sm" style="border-left-color:#dc3545;">
+    <div class="stat-card border-red">
         <div class="stat-title">New Tickets</div>
         <div class="stat-value">@Model.NewTickets</div>
     </div>
-    <div class="stat-card p-3 bg-white rounded shadow-sm" style="border-left-color:#ffc107;">
+    <div class="stat-card border-yellow">
         <div class="stat-title">Open Tickets</div>
         <div class="stat-value">@Model.AssignedTickets</div>
     </div>
-    <div class="stat-card p-3 bg-white rounded shadow-sm" style="border-left-color:#17a2b8;">
+    <div class="stat-card border-blue">
         <div class="stat-title">In Progress</div>
         <div class="stat-value">@Model.InProgressTickets</div>
     </div>
-    <div class="stat-card p-3 bg-white rounded shadow-sm" style="border-left-color:#17a2b8;">
+    <div class="stat-card border-blue">
         <div class="stat-title">Resolved</div>
         <div class="stat-value">@Model.ResolvedTickets</div>
     </div>
-    <div class="stat-card p-3 bg-white rounded shadow-sm" style="border-left-color:#fd7e14;">
+    <div class="stat-card border-orange">
         <div class="stat-title">Closed</div>
         <div class="stat-value">@Model.ClosedTickets</div>
     </div>
-    <div class="stat-card p-3 bg-white rounded shadow-sm" style="border-left-color:#28a745;">
+    <div class="stat-card border-green">
         <div class="stat-title">Solved</div>
         <div class="stat-value">@Model.ResolvedTickets</div>
     </div>
-    <div class="stat-card p-3 bg-white rounded shadow-sm" style="border-left-color:#ffc107;">
+    <div class="stat-card border-yellow">
         <div class="stat-title">Reopened</div>
         <div class="stat-value">@Model.ReopenedTickets</div>
     </div>
 </div>
 
-<div class="dashboard-grid">
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white fw-bold" style="color:#333;">Recent Tickets</div>
-        <table class="custom-table table table-borderless mb-0">
+<div class="dashboard-layout">
+    <div class="card-custom">
+        <div class="card-header-custom">Recent Tickets</div>
+        <table class="custom-table">
             <thead>
                 <tr>
                     <th>#</th>
@@ -65,17 +65,17 @@
             <tbody>
                 @if (Model.RecentTickets.Count == 0)
                 {
-                    <tr><td colspan="8" class="empty-msg">No recent tickets found.</td></tr>
+                    <tr><td colspan="8"><div class="empty-msg">No recent tickets found.</div></td></tr>
                 }
                 @foreach (var ticket in Model.RecentTickets)
                 {
                     <tr>
                         <td>@ticket.TicketId</td>
-                        <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="fw-bold text-decoration-none" style="color:#2b3e50;">@ticket.TicketNumber</a></td>
+                        <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" style="color:#2b3e50;font-weight:600;text-decoration:none;">@ticket.TicketNumber</a></td>
                         <td>@ticket.CreatedByName</td>
                         <td>@ticket.Subject</td>
                         <td>@(ticket.AssignedToName ?? "-")</td>
-                        <td class="small text-muted">@ticket.CreatedDate.ToString("dd-MMM-yyyy")</td>
+                        <td class="small" style="color:#888;">@ticket.CreatedDate.ToString("dd-MMM-yyyy")</td>
                         <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="btn btn-sm btn-outline-secondary"><i class="fa-regular fa-eye"></i></a></td>
                         <td><span class="badge bg-secondary">@ticket.StatusName</span></td>
                     </tr>
@@ -84,18 +84,18 @@
         </table>
     </div>
 
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white fw-bold" style="color:#333;">
-            <select id="chartPriority" class="form-select form-select-sm float-end" style="width:auto;">
+    <div class="card-custom">
+        <div class="card-header-custom d-flex justify-content-between align-items-center">
+            <span>Ticket Status</span>
+            <select id="chartPriority" class="form-select form-select-sm" style="width:auto;">
                 <option value="">All Priorities</option>
                 @foreach (var p in Model.Priorities)
                 {
                     <option value="@p.PriorityId">@p.PriorityName</option>
                 }
             </select>
-            Ticket Status
         </div>
-        <div class="card-body text-center" style="min-height:240px;">
+        <div style="min-height:240px;text-align:center;">
             <canvas id="ticketPieChart" height="180"></canvas>
         </div>
         <div class="chart-legend" id="chartLegend"></div>
@@ -104,12 +104,12 @@
 
 @if (isStaff)
 {
-    <div class="card border-0 shadow-sm mt-4">
-        <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center" style="color:#333;">
+    <div class="card-custom" style="margin-top:25px;">
+        <div class="card-header-custom d-flex justify-content-between align-items-center">
             <span>Unassigned Tickets</span>
             <a href="@Url.Action("Index", "Ticket")" class="btn btn-sm btn-outline-secondary">View All</a>
         </div>
-        <table class="custom-table table table-borderless mb-0">
+        <table class="custom-table">
             <thead>
                 <tr>
                     <th>#</th>
@@ -125,18 +125,18 @@
             <tbody>
                 @if (Model.UnassignedTickets.Count == 0)
                 {
-                    <tr><td colspan="8" class="empty-msg">No unassigned tickets.</td></tr>
+                    <tr><td colspan="8"><div class="empty-msg">No unassigned tickets.</div></td></tr>
                 }
                 @foreach (var ticket in Model.UnassignedTickets)
                 {
                     <tr>
                         <td>@ticket.TicketId</td>
-                        <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="fw-bold text-decoration-none" style="color:#2b3e50;">@ticket.TicketNumber</a></td>
+                        <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" style="color:#2b3e50;font-weight:600;text-decoration:none;">@ticket.TicketNumber</a></td>
                         <td>@ticket.CreatedByName</td>
                         <td>@ticket.Subject</td>
                         <td>@ticket.PriorityName</td>
                         <td><span class="badge bg-secondary">@ticket.StatusName</span></td>
-                        <td class="small text-muted">@ticket.CreatedDate.ToString("dd-MMM-yyyy")</td>
+                        <td class="small" style="color:#888;">@ticket.CreatedDate.ToString("dd-MMM-yyyy")</td>
                         <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="btn btn-sm btn-outline-secondary"><i class="fa-regular fa-eye"></i></a></td>
                     </tr>
                 }

@@ -9,8 +9,8 @@
     var isOwner = Model.CreatedBy == userId;
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h5 class="fw-bold mb-0" style="color:#333;">@Model.TicketNumber - @Model.Subject</h5>
+<div class="page-header">
+    <h5 class="page-title">@Model.TicketNumber - @Model.Subject</h5>
     <div>
         <a href="@Url.Action("Index")" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left"></i> Back</a>
         @if (isOwner || role == "Administrator")
@@ -34,9 +34,9 @@
 
 <div class="row">
     <div class="col-md-8">
-        <div class="card border-0 shadow-sm mb-3">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <span class="fw-semibold">Details</span>
+        <div class="card-custom" style="margin-bottom:15px;">
+            <div class="card-header-custom d-flex justify-content-between align-items-center">
+                <span>Details</span>
                 @if (!Model.IsTerminalState && isStaff)
                 {
                     <div class="dropdown">
@@ -50,7 +50,7 @@
                     </div>
                 }
             </div>
-            <div class="card-body">
+            <div style="padding:20px;">
                 <div class="row mb-2">
                     <div class="col-sm-3 text-muted">Status</div>
                     <div class="col-sm-9"><span class="badge bg-secondary" id="currentStatus">@Model.StatusName</span></div>
@@ -88,11 +88,11 @@
             </div>
         </div>
 
-        <div class="card border-0 shadow-sm mb-3">
-            <div class="card-header bg-white">
-                <span class="fw-semibold">Comments (@Model.Comments.Count)</span>
+        <div class="card-custom" style="margin-bottom:15px;">
+            <div class="card-header-custom">
+                <span>Comments (@Model.Comments.Count)</span>
             </div>
-            <div class="card-body" id="commentsContainer">
+            <div style="padding:20px;" id="commentsContainer">
                 @if (Model.Comments.Count == 0)
                 {
                     <p class="text-muted mb-0" id="noComments">No comments yet.</p>
@@ -112,7 +112,7 @@
                     </div>
                 }
             </div>
-            <div class="card-footer bg-white border-top-0">
+            <div style="padding:15px 20px;border-top:1px solid #f0f0f0;">
                 @Html.AntiForgeryToken()
                 <textarea id="commentText" class="form-control mb-2" rows="3" placeholder="Write a comment..."></textarea>
                 <div class="form-check mb-2">
@@ -125,11 +125,11 @@
     </div>
 
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm mb-3">
-            <div class="card-header bg-white">
-                <span class="fw-semibold">Status History</span>
+        <div class="card-custom" style="margin-bottom:15px;">
+            <div class="card-header-custom">
+                <span>Status History</span>
             </div>
-            <div class="card-body p-0">
+            <div style="padding:0;">
                 @if (Model.History.Count == 0)
                 {
                     <p class="text-muted p-3 mb-0">No history available.</p>
@@ -146,14 +146,14 @@
             </div>
         </div>
 
-        <div class="card border-0 shadow-sm mb-3">
-            <div class="card-header bg-white">
-                <span class="fw-semibold">Attachments (@Model.Attachments.Count)</span>
+        <div class="card-custom" style="margin-bottom:15px;">
+            <div class="card-header-custom">
+                <span>Attachments (@Model.Attachments.Count)</span>
             </div>
-            <div class="card-body">
+            <div style="padding:0;">
                 @if (Model.Attachments.Count == 0)
                 {
-                    <p class="text-muted mb-0" id="noAttachments">No attachments.</p>
+                    <p class="text-muted mb-0 p-3" id="noAttachments">No attachments.</p>
                 }
                 <ul class="list-unstyled mb-3" id="attachmentList">
                     @foreach (var file in Model.Attachments)

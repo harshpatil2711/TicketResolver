@@ -35,10 +35,12 @@ namespace TicketResolver.ViewModels
     {
         [Required]
         [MaxLength(100)]
+        [RegularExpression(@"^[A-Za-z\s]+$", ErrorMessage = "First name can only contain letters and spaces.")]
         public string FirstName { get; set; }
 
         [Required]
         [MaxLength(100)]
+        [RegularExpression(@"^[A-Za-z\s]+$", ErrorMessage = "Last name can only contain letters and spaces.")]
         public string LastName { get; set; }
 
         [Required]
@@ -65,10 +67,12 @@ namespace TicketResolver.ViewModels
 
         [Required]
         [MaxLength(100)]
+        [RegularExpression(@"^[A-Za-z\s]+$", ErrorMessage = "First name can only contain letters and spaces.")]
         public string FirstName { get; set; }
 
         [Required]
         [MaxLength(100)]
+        [RegularExpression(@"^[A-Za-z\s]+$", ErrorMessage = "Last name can only contain letters and spaces.")]
         public string LastName { get; set; }
 
         [Required]

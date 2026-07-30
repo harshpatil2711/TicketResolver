@@ -1,0 +1,66 @@
+@model TicketResolver.ViewModels.UserSearchViewModel
+
+<div class="card-custom">
+    <div class="card-header-custom d-flex justify-content-between align-items-center">
+        <span>@Model.TotalCount User(s) found</span>
+    </div>
+    <div class="table-responsive">
+        <table class="custom-table table table-borderless mb-0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Results.Count == 0)
+                {
+                    <tr><td colspan="7" class="text-center text-muted py-4">No users found.</td></tr>
+                }
+                @foreach (var user in Model.Results)
+                {
+                    <tr>
+                        <td>@user.FullName</td>
+                        <td>@user.Email</td>
+                        <td>@(user.Mobile ?? "-")</td>
+                        <td>@user.RoleName</td>
+                        <td>
+                            @if (user.IsActive)
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Inactive</span>
+                            }
+                        </td>
+                        <td class="text-muted small">@user.CreatedDate.ToString("dd-MMM-yyyy")</td>
+                        <td>
+                            <a href="@Url.Action("Edit", new { id = user.UserId })" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (Model.TotalCount > Model.PageSize)
+    {
+        <div style="padding:12px 20px;background:#fafafa;">
+            <nav>
+                <ul class="pagination pagination-sm mb-0 justify-content-center">
+                    @for (int i = 1; i <= Math.Ceiling((double)Model.TotalCount / Model.PageSize); i++)
+                    {
+                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                            <a class="page-link" href="#" data-page="@i">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    }
+</div>

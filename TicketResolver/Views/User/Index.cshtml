@@ -4,8 +4,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h5 class="fw-bold mb-0" style="color:#333;">Users</h5>
+<div class="page-header">
+    <h5 class="page-title">Users</h5>
     <a href="@Url.Action("Create")" class="btn btn-green btn-sm"><i class="fa-solid fa-plus"></i> Create User</a>
 </div>
 
@@ -17,97 +17,38 @@
     </div>
 }
 
-<div class="card border-0 shadow-sm mb-3">
-    <div class="card-header bg-white">Search</div>
-    <div class="card-body">
-        @using (Html.BeginForm("Index", "User", FormMethod.Get))
-        {
-            <div class="row g-2 align-items-end">
-                <div class="col-md-4">
-                    <input type="text" name="searchTerm" class="form-control" placeholder="Search name or email" value="@Model.SearchTerm" />
-                </div>
-                <div class="col-md-2">
-                    @Html.DropDownList("roleId", new SelectList(Model.Roles, "RoleId", "RoleName", Model.RoleId), "All Roles", new { @class = "form-select" })
-                </div>
-                <div class="col-md-2">
-                    <select name="isActive" class="form-select">
-                        <option value="">All</option>
-                        <option value="true" @(Model.IsActive == true ? "selected" : "")>Active</option>
-                        <option value="false" @(Model.IsActive == false ? "selected" : "")>Inactive</option>
-                    </select>
-                </div>
-                <div class="col-md-1">
-                    <button type="submit" class="btn btn-green w-100"><i class="fa-solid fa-search"></i></button>
-                </div>
-                <div class="col-md-3">
-                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary w-100">Clear</a>
-                </div>
+<div class="card-custom" style="margin-bottom:15px;">
+    <div class="card-header-custom">Search</div>
+    <form id="searchForm" style="padding:20px;">
+        @Html.AntiForgeryToken()
+        <div class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <input type="text" id="searchTerm" name="searchTerm" class="form-control" placeholder="Search name or email" value="@Model.SearchTerm" />
             </div>
-        }
-    </div>
+            <div class="col-md-2">
+                @Html.DropDownList("roleId", new SelectList(Model.Roles, "RoleId", "RoleName", Model.RoleId), "All Roles", new { @class = "form-select" })
+            </div>
+            <div class="col-md-2">
+                <select id="isActive" name="isActive" class="form-select">
+                    <option value="">All</option>
+                    <option value="true" @(Model.IsActive == true ? "selected" : "")>Active</option>
+                    <option value="false" @(Model.IsActive == false ? "selected" : "")>Inactive</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-green w-100"><i class="fa-solid fa-search"></i></button>
+            </div>
+            <div class="col-md-3">
+                <a href="#" id="clearBtn" class="btn btn-outline-secondary w-100">Clear</a>
+            </div>
+        </div>
+    </form>
 </div>
 
-<div class="card border-0 shadow-sm">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-        <span class="fw-semibold">@Model.TotalCount User(s) found</span>
-    </div>
-    <div class="table-responsive">
-        <table class="custom-table table table-borderless mb-0">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Mobile</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Created</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.Results.Count == 0)
-                {
-                    <tr><td colspan="7" class="text-center text-muted py-4">No users found.</td></tr>
-                }
-                @foreach (var user in Model.Results)
-                {
-                    <tr>
-                        <td>@user.FullName</td>
-                        <td>@user.Email</td>
-                        <td>@(user.Mobile ?? "-")</td>
-                        <td>@user.RoleName</td>
-                        <td>
-                            @if (user.IsActive)
-                            {
-                                <span class="badge bg-success">Active</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-danger">Inactive</span>
-                            }
-                        </td>
-                        <td class="text-muted small">@user.CreatedDate.ToString("dd-MMM-yyyy")</td>
-                        <td>
-                            <a href="@Url.Action("Edit", new { id = user.UserId })" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    @if (Model.TotalCount > Model.PageSize)
-    {
-        <div class="card-footer bg-white">
-            <nav>
-                <ul class="pagination pagination-sm mb-0 justify-content-center">
-                    @for (int i = 1; i <= Math.Ceiling((double)Model.TotalCount / Model.PageSize); i++)
-                    {
-                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                            <a class="page-link" href="@Url.Action("Index", new { searchTerm = Model.SearchTerm, roleId = Model.RoleId, isActive = Model.IsActive, page = i })">@i</a>
-                        </li>
-                    }
-                </ul>
-            </nav>
-        </div>
-    }
+<div id="userTableContainer" data-url="@Url.Action("Index", "User")">
+    @Html.Partial("_UserTable", Model)
 </div>
+
+@section scripts {
+    <script src="@Url.Content("~/Scripts/user-index.js")"></script>
+}

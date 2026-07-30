@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Security.Claims;
+using System.Threading;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -16,6 +19,8 @@ namespace TicketResolver
                 .MinimumLevel.Information()
                 .WriteTo.File(Server.MapPath("~/logs/log-.txt"), rollingInterval: RollingInterval.Day)
                 .CreateLogger();
+
+            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
 
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -36,10 +41,12 @@ namespace TicketResolver
                     if (principal != null)
                     {
                         HttpContext.Current.User = principal;
+                        Thread.CurrentPrincipal = principal;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    AppLogger.Warning("Global.PostAuthenticateRequest", "JWT validation failed, attempting refresh token");
                     var refreshCookie = Request.Cookies["refresh_token"];
                     if (refreshCookie != null && !string.IsNullOrEmpty(refreshCookie.Value))
                     {
@@ -75,16 +82,22 @@ namespace TicketResolver
 
                 dal.RotateRefreshToken(storedToken.RefreshTokenId, newRefreshTokenHash, expiryDate);
 
-                var accessCookie = new HttpCookie("jwt_token", newAccessToken) { HttpOnly = true, Secure = false, Expires = DateTime.UtcNow.AddMinutes(15) };
+                var accessCookie = new HttpCookie("jwt_token", newAccessToken) { HttpOnly = true, Secure = false, Expires = expiryDate };
                 var refreshCookie = new HttpCookie("refresh_token", newRefreshToken) { HttpOnly = true, Secure = false, Expires = expiryDate };
                 Response.Cookies.Add(accessCookie);
                 Response.Cookies.Add(refreshCookie);
 
                 var principal = JwtHelper.ValidateToken(newAccessToken);
                 if (principal != null)
+                {
                     HttpContext.Current.User = principal;
+                    Thread.CurrentPrincipal = principal;
+                }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                AppLogger.Error("Global.TryRefreshToken", "Failed to refresh token", ex);
+            }
         }
 
         protected void Application_Error()

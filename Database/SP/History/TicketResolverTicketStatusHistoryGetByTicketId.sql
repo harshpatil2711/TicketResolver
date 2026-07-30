@@ -33,6 +33,7 @@ BEGIN
             ELSE NULL 
         END AS CurrentAssignedToName,
         h.ChangeReason,
+        h.CreatedBy,
         u.FirstName + ' ' + u.LastName AS ChangedByName,
         h.CreatedDate
     FROM TicketResolverTicketStatusHistory h

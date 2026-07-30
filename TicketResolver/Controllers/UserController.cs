@@ -17,14 +17,45 @@ namespace TicketResolver.Controllers
 
         public ActionResult Index(string searchTerm, int? roleId, bool? isActive, int page = 1)
         {
+            try
+            {
+                var model = BuildUserSearchModel(searchTerm, roleId, isActive, page);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("UserController.Index", "Failed to load user list", ex);
+                return View("Error");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(UserSearchViewModel input)
+        {
+            try
+            {
+                var model = BuildUserSearchModel(input.SearchTerm, input.RoleId, input.IsActive, input.PageNumber);
+                return PartialView("_UserTable", model);
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("UserController.Index", "Failed to load user list (AJAX)", ex);
+                return Content("<div class='alert alert-danger m-3'>Error loading users.</div>");
+            }
+        }
+
+        private UserSearchViewModel BuildUserSearchModel(string searchTerm, int? roleId, bool? isActive, int page)
+        {
             var ds = authDAL.SearchUsers(searchTerm, roleId, isActive, page, 10);
 
-            var model = new UserSearchViewModel
+            return new UserSearchViewModel
             {
                 SearchTerm = searchTerm,
                 RoleId = roleId,
                 IsActive = isActive,
                 PageNumber = page,
+                PageSize = 10,
                 TotalCount = ds.Tables[1].Rows.Count > 0 ? Convert.ToInt32(ds.Tables[1].Rows[0]["TotalCount"]) : 0,
                 Results = ds.Tables[0].Rows.Cast<DataRow>().Select(r => new UserListItemViewModel
                 {
@@ -40,17 +71,24 @@ namespace TicketResolver.Controllers
                 }).ToList(),
                 Roles = masterDAL.GetRoles()
             };
-            return View(model);
         }
 
         [RoleAuthorize(1)]
         public ActionResult Create()
         {
-            var model = new UserCreateViewModel
+            try
             {
-                Roles = masterDAL.GetRoles()
-            };
-            return View(model);
+                var model = new UserCreateViewModel
+                {
+                    Roles = masterDAL.GetRoles()
+                };
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("UserController.Create", "Failed to load create user form", ex);
+                return View("Error");
+            }
         }
 
         [HttpPost]
@@ -73,6 +111,7 @@ namespace TicketResolver.Controllers
             }
             catch (Exception ex)
             {
+                AppLogger.Error("UserController.Create", $"Failed to create user {model.Email}", ex);
                 ModelState.AddModelError("", ex.Message);
                 model.Roles = masterDAL.GetRoles();
                 return View(model);
@@ -82,21 +121,29 @@ namespace TicketResolver.Controllers
         [RoleAuthorize(1)]
         public ActionResult Edit(int id)
         {
-            var user = authDAL.GetUserById(id);
-            if (user == null) return HttpNotFound();
-
-            var model = new UserEditViewModel
+            try
             {
-                UserId = user.UserId,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Mobile = user.Mobile,
-                RoleId = user.RoleId,
-                IsActive = user.IsActive,
-                Roles = masterDAL.GetRoles()
-            };
-            return View(model);
+                var user = authDAL.GetUserById(id);
+                if (user == null) return HttpNotFound();
+
+                var model = new UserEditViewModel
+                {
+                    UserId = user.UserId,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    Mobile = user.Mobile,
+                    RoleId = user.RoleId,
+                    IsActive = user.IsActive,
+                    Roles = masterDAL.GetRoles()
+                };
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("UserController.Edit", $"Failed to load edit user form for id={id}", ex);
+                return View("Error");
+            }
         }
 
         [HttpPost]
@@ -117,6 +164,7 @@ namespace TicketResolver.Controllers
             }
             catch (Exception ex)
             {
+                AppLogger.Error("UserController.Edit", $"Failed to update user id={model.UserId}", ex);
                 ModelState.AddModelError("", ex.Message);
                 model.Roles = masterDAL.GetRoles();
                 return View(model);
@@ -132,8 +180,9 @@ namespace TicketResolver.Controllers
                 authDAL.SetActiveStatus(id, isActive);
                 return Json(new { success = true });
             }
-            catch
+            catch (Exception ex)
             {
+                AppLogger.Error("UserController.ToggleActive", $"Failed to toggle active status for id={id}", ex);
                 return Json(new { success = false });
             }
         }

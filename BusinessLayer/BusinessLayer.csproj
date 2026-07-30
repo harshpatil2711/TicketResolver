@@ -118,6 +118,7 @@
     <Compile Include="Helpers\JwtHelper.cs" />
     <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Helpers\EmailTemplates.cs" />
+    <Compile Include="Helpers\AppLogger.cs" />
     <Compile Include="Helpers\OtpHelper.cs" />
     <Compile Include="Helpers\AttachmentHelper.cs" />
     <Compile Include="Models\User.cs" />

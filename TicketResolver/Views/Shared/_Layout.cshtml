@@ -7,97 +7,85 @@
     {
         var identity = (ClaimsPrincipal)User;
         role = identity.FindFirst(ClaimTypes.Role)?.Value ?? "";
-        var email = identity.FindFirst(ClaimTypes.Email)?.Value ?? "";
-        fullName = email.Split('@')[0];
+        fullName = identity.FindFirst(ClaimTypes.Name)?.Value ?? identity.FindFirst(ClaimTypes.Email)?.Value?.Split('@')[0] ?? "User";
     }
     var controller = ViewContext.RouteData.Values["Controller"]?.ToString();
     var action = ViewContext.RouteData.Values["Action"]?.ToString();
-    bool IsActive(string c, string a = null) => controller == c && (a == null || action == a);
+    Func<string, bool> IsActive = c => controller == c;
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewBag.Title - Helpdesk System</title>
+    <title>@ViewBag.Title - Ticket Resolver</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="@Url.Content("~/Content/custom.css")" rel="stylesheet" />
     @RenderSection("styles", required: false)
 </head>
-<body class="d-flex min-vh-100">
+<body>
 
     @if (isAuthenticated)
     {
-        <aside class="sidebar d-flex flex-column">
-            <div class="brand">Helpdesk System</div>
-            <ul class="nav flex-column mt-2">
-                <li class="nav-item">
-                    <a href="@Url.Action("Index", "Home")" class="nav-link @(IsActive("Home") ? "active" : "")">
-                        <i class="fa-solid fa-gauge"></i> Dashboard
-                    </a>
+        <aside class="sidebar">
+            <div class="sidebar-brand">Ticket Resolver</div>
+            <ul class="sidebar-menu">
+                <li class="@(IsActive("Home") ? "active" : "")">
+                    <a href="@Url.Action("Index", "Home")"><i class="fa-solid fa-gauge"></i> Dashboard</a>
                 </li>
                 @if (role == "Administrator" || role == "Support Executive")
                 {
-                    <li class="nav-item">
-                        <a href="@Url.Action("Index", "Ticket")" class="nav-link @(IsActive("Ticket") && action == "Index" ? "active" : "")">
-                            <i class="fa-solid fa-ticket"></i> Tickets
-                        </a>
+                    <li class="@(IsActive("Ticket") && action == "Index" ? "active" : "")">
+                        <a href="@Url.Action("Index", "Ticket")"><i class="fa-solid fa-ticket"></i> Tickets</a>
                     </li>
-                    <li class="nav-item">
-                        <a href="@Url.Action("Index", "User")" class="nav-link @(IsActive("User") ? "active" : "")">
-                            <i class="fa-solid fa-user-group"></i> @(role == "Administrator" ? "Agents" : "Users")
-                        </a>
+                    <li class="@(IsActive("User") ? "active" : "")">
+                        <a href="@Url.Action("Index", "User")"><i class="fa-solid fa-user-group"></i> @(role == "Administrator" ? "Agents" : "Users")</a>
                     </li>
                     if (role == "Administrator")
                     {
-                        <li class="nav-item">
-                            <a href="@Url.Action("Index", "MasterData")" class="nav-link @(IsActive("MasterData") ? "active" : "")">
-                                <i class="fa-solid fa-gear"></i> Settings
-                            </a>
+                        <li class="@(IsActive("MasterData") ? "active" : "")">
+                            <a href="@Url.Action("Index", "MasterData")"><i class="fa-solid fa-gear"></i> Settings</a>
                         </li>
                     }
                 }
                 else
                 {
-                    <li class="nav-item">
-                        <a href="@Url.Action("Create", "Ticket")" class="nav-link @(IsActive("Ticket") && action == "Create" ? "active" : "")">
-                            <i class="fa-solid fa-circle-plus"></i> Create Ticket
-                        </a>
+                    <li class="@(IsActive("Ticket") && action == "Create" ? "active" : "")">
+                        <a href="@Url.Action("Create", "Ticket")"><i class="fa-solid fa-circle-plus"></i> Create Ticket</a>
                     </li>
-                    <li class="nav-item">
-                        <a href="@Url.Action("Index", "Ticket")" class="nav-link @(IsActive("Ticket") && action == "Index" ? "active" : "")">
-                            <i class="fa-solid fa-ticket"></i> My Tickets
-                        </a>
+                    <li class="@(IsActive("Ticket") && action == "Index" ? "active" : "")">
+                        <a href="@Url.Action("Index", "Ticket")"><i class="fa-solid fa-ticket"></i> My Tickets</a>
                     </li>
                 }
-                <li class="nav-item">
-                    <a href="@Url.Action("Index", "Profile")" class="nav-link @(IsActive("Profile") ? "active" : "")">
-                        <i class="fa-solid fa-user"></i> My Profile
-                    </a>
+                <li class="@(IsActive("Profile") ? "active" : "")">
+                    <a href="@Url.Action("Index", "Profile")"><i class="fa-solid fa-user"></i> My Profile</a>
                 </li>
             </ul>
         </aside>
     }
 
-    <div class="flex-grow-1 d-flex flex-column min-w-0">
+    <div class="main-wrapper">
         @if (isAuthenticated)
         {
-            <header class="navbar navbar-expand bg-white shadow-sm px-4" style="height:60px;">
-                <div class="container-fluid justify-content-end">
-                    <div class="d-flex align-items-center gap-3 text-secondary">
-                        <i class="fa-regular fa-bell" role="button"></i>
-                        <i class="fa-solid fa-gear" role="button"></i>
-                        @Html.Partial("_LoginPartial")
-                        <a href="javascript:document.getElementById('logoutForm').submit()" class="text-decoration-none text-secondary">
-                            <i class="fa-solid fa-right-from-bracket"></i> Logout
-                        </a>
-                    </div>
+            <header class="navbar-top">
+                <div></div>
+                <div class="user-menu">
+                    <i class="fa-regular fa-bell"></i>
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Hello, @fullName <i class="fa-solid fa-angle-down"></i></span>
+                    <a href="javascript:document.getElementById('logoutForm').submit()" class="text-decoration-none text-secondary">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </a>
                 </div>
             </header>
+            using (Html.BeginForm("Logout", "Auth", FormMethod.Post, new { id = "logoutForm", style = "display:none;" }))
+            {
+                @Html.AntiForgeryToken()
+            }
         }
 
-        <main class="p-4 flex-grow-1">
+        <main class="content-container">
             @RenderBody()
         </main>
     </div>

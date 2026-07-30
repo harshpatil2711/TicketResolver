@@ -1,4 +1,4 @@
-D:\C#Practice\TicketResolver\TicketResolver\obj\Debug\TicketResolver.dll
+D:\C#Practice\TicketResolver\TicketResolver\obj\Debug\TicketResolver.csprojResolveAssemblyReference.cache
 D:\C#Practice\TicketResolver\TicketResolver\bin\roslyn\csc.exe
 D:\C#Practice\TicketResolver\TicketResolver\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
 D:\C#Practice\TicketResolver\TicketResolver\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
@@ -41,6 +41,12 @@ D:\C#Practice\TicketResolver\TicketResolver\bin\Microsoft.Practices.EnterpriseLi
 D:\C#Practice\TicketResolver\TicketResolver\bin\Microsoft.Practices.ObjectBuilder2.dll
 D:\C#Practice\TicketResolver\TicketResolver\bin\BusinessLayer.pdb
 D:\C#Practice\TicketResolver\TicketResolver\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\C#Practice\TicketResolver\TicketResolver\bin\Newtonsoft.Json.xml
+D:\C#Practice\TicketResolver\TicketResolver\bin\Serilog.xml
+D:\C#Practice\TicketResolver\TicketResolver\bin\Serilog.Sinks.Async.xml
+D:\C#Practice\TicketResolver\TicketResolver\bin\Serilog.Sinks.File.pdb
+D:\C#Practice\TicketResolver\TicketResolver\bin\Serilog.Sinks.File.xml
+D:\C#Practice\TicketResolver\TicketResolver\bin\Serilog.Sinks.MSSqlServer.xml
 D:\C#Practice\TicketResolver\TicketResolver\bin\System.Web.Helpers.xml
 D:\C#Practice\TicketResolver\TicketResolver\bin\System.Web.Mvc.xml
 D:\C#Practice\TicketResolver\TicketResolver\bin\System.Web.Optimization.xml
@@ -49,16 +55,10 @@ D:\C#Practice\TicketResolver\TicketResolver\bin\System.Web.WebPages.xml
 D:\C#Practice\TicketResolver\TicketResolver\bin\System.Web.WebPages.Deployment.xml
 D:\C#Practice\TicketResolver\TicketResolver\bin\System.Web.WebPages.Razor.xml
 D:\C#Practice\TicketResolver\TicketResolver\bin\Antlr3.Runtime.pdb
-D:\C#Practice\TicketResolver\TicketResolver\bin\Serilog.xml
-D:\C#Practice\TicketResolver\TicketResolver\bin\Serilog.Sinks.Async.xml
-D:\C#Practice\TicketResolver\TicketResolver\bin\Serilog.Sinks.File.pdb
-D:\C#Practice\TicketResolver\TicketResolver\bin\Serilog.Sinks.File.xml
-D:\C#Practice\TicketResolver\TicketResolver\bin\Serilog.Sinks.MSSqlServer.xml
-D:\C#Practice\TicketResolver\TicketResolver\bin\Newtonsoft.Json.xml
 D:\C#Practice\TicketResolver\TicketResolver\bin\Microsoft.IdentityModel.Tokens.xml
 D:\C#Practice\TicketResolver\TicketResolver\bin\System.IdentityModel.Tokens.Jwt.xml
 D:\C#Practice\TicketResolver\TicketResolver\bin\BCrypt.Net-Next.xml
 D:\C#Practice\TicketResolver\TicketResolver\bin\Microsoft.IdentityModel.Logging.xml
 D:\C#Practice\TicketResolver\TicketResolver\bin\Microsoft.IdentityModel.JsonWebTokens.xml
-D:\C#Practice\TicketResolver\TicketResolver\obj\Debug\TicketResolver.csprojResolveAssemblyReference.cache
+D:\C#Practice\TicketResolver\TicketResolver\obj\Debug\TicketResolver.dll
 D:\C#Practice\TicketResolver\TicketResolver\obj\Debug\TicketResolver.pdb

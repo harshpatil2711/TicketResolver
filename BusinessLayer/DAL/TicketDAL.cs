@@ -76,6 +76,15 @@ namespace TicketResolver.DAL
             }
         }
 
+        public DataSet GetDetailById(int ticketId)
+        {
+            using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverTicketGetById"))
+            {
+                db.AddInParameter(cmd, "@TicketId", DbType.Int32, ticketId);
+                return db.ExecuteDataSet(cmd);
+            }
+        }
+
         public DataSet Search(string searchTerm, int? categoryId, int? priorityId, int? statusId, int? assignedTo, int? createdBy, int pageNumber, int pageSize)
         {
             using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverTicketSearch"))

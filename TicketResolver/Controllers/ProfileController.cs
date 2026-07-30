@@ -17,40 +17,56 @@ namespace TicketResolver.Controllers
 
         public ActionResult Index()
         {
-            var user = authDAL.GetUserById(CurrentUserId);
-            if (user == null) return HttpNotFound();
-
-            var model = new ProfileIndexViewModel
+            try
             {
-                UserId = user.UserId,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Mobile = user.Mobile,
-                CreatedDate = user.CreatedDate
-            };
+                var user = authDAL.GetUserById(CurrentUserId);
+                if (user == null) return HttpNotFound();
 
-            var roleClaim = ((ClaimsPrincipal)User).FindFirst(ClaimTypes.Role)?.Value;
-            model.RoleName = roleClaim ?? "Employee";
+                var model = new ProfileIndexViewModel
+                {
+                    UserId = user.UserId,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    Mobile = user.Mobile,
+                    CreatedDate = user.CreatedDate
+                };
 
-            return View(model);
+                var roleClaim = ((ClaimsPrincipal)User).FindFirst(ClaimTypes.Role)?.Value;
+                model.RoleName = roleClaim ?? "Employee";
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("ProfileController.Index", "Failed to load profile", ex);
+                return View("Error");
+            }
         }
 
         public ActionResult Edit()
         {
-            var user = authDAL.GetUserById(CurrentUserId);
-            if (user == null) return HttpNotFound();
-
-            var model = new ProfileEditViewModel
+            try
             {
-                UserId = user.UserId,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Mobile = user.Mobile
-            };
+                var user = authDAL.GetUserById(CurrentUserId);
+                if (user == null) return HttpNotFound();
 
-            return View(model);
+                var model = new ProfileEditViewModel
+                {
+                    UserId = user.UserId,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    Mobile = user.Mobile
+                };
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("ProfileController.Edit", "Failed to load profile edit form", ex);
+                return View("Error");
+            }
         }
 
         [HttpPost]
@@ -68,6 +84,7 @@ namespace TicketResolver.Controllers
             }
             catch (Exception ex)
             {
+                AppLogger.Error("ProfileController.Edit", "Failed to update profile", ex);
                 ModelState.AddModelError("", ex.Message);
                 return View(model);
             }
@@ -75,7 +92,15 @@ namespace TicketResolver.Controllers
 
         public ActionResult ChangePassword()
         {
-            return View();
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("ProfileController.ChangePassword", "Failed to load change password page", ex);
+                return View("Error");
+            }
         }
 
         [HttpPost]
@@ -109,6 +134,7 @@ namespace TicketResolver.Controllers
             }
             catch (Exception ex)
             {
+                AppLogger.Error("ProfileController.ChangePassword", "Failed to change password", ex);
                 ModelState.AddModelError("", ex.Message);
                 return View();
             }

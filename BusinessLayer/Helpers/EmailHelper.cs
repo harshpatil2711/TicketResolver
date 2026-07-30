@@ -11,17 +11,24 @@ namespace TicketResolver.Helpers
         {
             var smtpHost = ConfigurationManager.AppSettings["SmtpHost"];
             var smtpPort = int.Parse(ConfigurationManager.AppSettings["SmtpPort"] ?? "587");
-            var smtpUser = ConfigurationManager.AppSettings["SmtpUser"];
-            var smtpPass = ConfigurationManager.AppSettings["SmtpPass"];
-            var smtpFrom = ConfigurationManager.AppSettings["SmtpFrom"];
+            var smtpUsername = ConfigurationManager.AppSettings["SmtpUsername"];
+            var smtpPassword = ConfigurationManager.AppSettings["SmtpPassword"];
+            var smtpSsl = bool.Parse(ConfigurationManager.AppSettings["SmtpSsl"] ?? "true");
+            var senderEmail = ConfigurationManager.AppSettings["SmtpSenderEmail"];
+            var senderName = ConfigurationManager.AppSettings["SmtpSenderName"] ?? "Ticket Resolver";
 
             using (var client = new SmtpClient(smtpHost, smtpPort))
             {
-                client.Credentials = new NetworkCredential(smtpUser, smtpPass);
-                client.EnableSsl = true;
+                client.Credentials = new NetworkCredential(smtpUsername, smtpPassword);
+                client.EnableSsl = smtpSsl;
 
-                var message = new MailMessage(smtpFrom, toEmail, subject, body);
-                message.IsBodyHtml = true;
+                var fromAddress = new MailAddress(senderEmail, senderName);
+                var message = new MailMessage(fromAddress, new MailAddress(toEmail))
+                {
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = true
+                };
                 client.Send(message);
             }
         }

@@ -10,13 +10,22 @@ namespace TicketResolver.Controllers
     public class AuthController : Controller
     {
         private readonly AuthDAL authDAL = new AuthDAL();
+        private readonly MasterDAL masterDAL = new MasterDAL();
 
         [HttpGet]
         public ActionResult Login()
         {
-            if (Request.Cookies["jwt_token"] != null)
-                return RedirectToAction("Index", "Home");
-            return View();
+            try
+            {
+                if (Request.Cookies["jwt_token"] != null)
+                    return RedirectToAction("Index", "Home");
+                return View();
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("AuthController.Login", "Failed to load login page", ex);
+                return View();
+            }
         }
 
         [HttpPost]
@@ -49,7 +58,7 @@ namespace TicketResolver.Controllers
                 }
 
                 var otp = OtpHelper.GenerateOtp();
-                var expiry = DateTime.UtcNow.AddMinutes(5);
+                var expiry = DateTime.Now.AddMinutes(5);
                 authDAL.InvalidatePreviousOtps(user.Email, "Login");
                 authDAL.InsertOtpVerification(user.UserId, user.Email, otp, "Login", expiry);
 
@@ -61,8 +70,9 @@ namespace TicketResolver.Controllers
                 var redirectUrl = Url.Action("VerifyOtp", new { email = user.Email, purpose = "Login" });
                 return Request.IsAjaxRequest() ? Json(new { success = true, redirectUrl }) : (ActionResult)RedirectToAction("VerifyOtp", new { email = user.Email, purpose = "Login" });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                AppLogger.Error("AuthController.Login", $"Failed login attempt for {model.Email}", ex);
                 var err = "An error occurred. Please try again.";
                 return Request.IsAjaxRequest() ? Json(new { success = false, error = err }) : (ActionResult)View(model);
             }
@@ -71,7 +81,19 @@ namespace TicketResolver.Controllers
         [HttpGet]
         public ActionResult Register()
         {
-            return View();
+            try
+            {
+                var model = new RegisterViewModel
+                {
+                    Roles = masterDAL.GetRoles()
+                };
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("AuthController.Register", "Failed to load register page", ex);
+                return View(new RegisterViewModel());
+            }
         }
 
         [HttpPost]
@@ -79,7 +101,10 @@ namespace TicketResolver.Controllers
         public ActionResult Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
+            {
+                model.Roles = masterDAL.GetRoles();
                 return Request.IsAjaxRequest() ? Json(new { success = false, error = "Invalid form data." }) : (ActionResult)View(model);
+            }
 
             try
             {
@@ -87,28 +112,32 @@ namespace TicketResolver.Controllers
                 if (existingUser != null)
                 {
                     var err = "Email already registered.";
+                    model.Roles = masterDAL.GetRoles();
                     return Request.IsAjaxRequest() ? Json(new { success = false, error = err }) : (ActionResult)View(model);
                 }
 
                 var otp = OtpHelper.GenerateOtp();
-                var expiry = DateTime.UtcNow.AddMinutes(5);
-                authDAL.InvalidatePreviousOtps(model.Email, "Registration");
-                authDAL.InsertOtpVerification(null, model.Email, otp, "Registration", expiry);
+                var expiry = DateTime.Now.AddMinutes(5);
+                authDAL.InvalidatePreviousOtps(model.Email, "Signup");
+                authDAL.InsertOtpVerification(null, model.Email, otp, "Signup", expiry);
 
                 var template = System.IO.File.ReadAllText(Server.MapPath("~/EmailTemplates/OtpEmail.html"));
-                EmailHelper.SendEmail(model.Email, "Verify Your Email - OTP Code", EmailTemplates.PopulateOtpTemplate(template, otp, "Registration", model.FirstName));
+                EmailHelper.SendEmail(model.Email, "Verify Your Email - OTP Code", EmailTemplates.PopulateOtpTemplate(template, otp, "Signup", model.FirstName));
 
                 TempData["RegFirstName"] = model.FirstName;
                 TempData["RegLastName"] = model.LastName;
                 TempData["RegEmail"] = model.Email;
                 TempData["RegMobile"] = model.Mobile;
                 TempData["RegPassword"] = model.Password;
+                TempData["RegRoleId"] = model.RoleId;
 
-                var redirectUrl = Url.Action("VerifyOtp", new { email = model.Email, purpose = "Registration" });
-                return Request.IsAjaxRequest() ? Json(new { success = true, redirectUrl }) : (ActionResult)RedirectToAction("VerifyOtp", new { email = model.Email, purpose = "Registration" });
+                var redirectUrl = Url.Action("VerifyOtp", new { email = model.Email, purpose = "Signup" });
+                return Request.IsAjaxRequest() ? Json(new { success = true, redirectUrl }) : (ActionResult)RedirectToAction("VerifyOtp", new { email = model.Email, purpose = "Signup" });
             }
             catch (Exception ex)
             {
+                AppLogger.Error("AuthController.Register", $"Failed registration for {model.Email}", ex);
+                model.Roles = masterDAL.GetRoles();
                 var err = ex.Message.Contains("Email") ? "Email already registered." : "An error occurred. Please try again.";
                 return Request.IsAjaxRequest() ? Json(new { success = false, error = err }) : (ActionResult)View(model);
             }
@@ -117,12 +146,20 @@ namespace TicketResolver.Controllers
         [HttpGet]
         public ActionResult VerifyOtp(string email, string purpose)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(purpose))
-                return RedirectToAction("Login");
+            try
+            {
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(purpose))
+                    return RedirectToAction("Login");
 
-            ViewBag.Email = email;
-            ViewBag.Purpose = purpose;
-            return View(new VerifyOtpViewModel { Email = email, Purpose = purpose });
+                ViewBag.Email = email;
+                ViewBag.Purpose = purpose;
+                return View(new VerifyOtpViewModel { Email = email, Purpose = purpose });
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("AuthController.VerifyOtp", "Failed to load verify OTP page", ex);
+                return RedirectToAction("Login");
+            }
         }
 
         [HttpPost]
@@ -143,7 +180,7 @@ namespace TicketResolver.Controllers
 
                 authDAL.InvalidatePreviousOtps(model.Email, model.Purpose);
 
-                if (model.Purpose == "Registration")
+                if (model.Purpose == "Signup")
                 {
                     var firstName = TempData["RegFirstName"]?.ToString();
                     var lastName = TempData["RegLastName"]?.ToString();
@@ -157,7 +194,8 @@ namespace TicketResolver.Controllers
                         return Request.IsAjaxRequest() ? Json(new { success = false, error = err }) : (ActionResult)RedirectToAction("Register");
                     }
 
-                    int userId = authDAL.InsertUser(3, firstName, lastName, email, mobile);
+                    int roleId = Convert.ToInt32(TempData["RegRoleId"] ?? 3);
+                    int userId = authDAL.InsertUser(roleId, firstName, lastName, email, mobile);
                     var passwordHash = PasswordHelper.HashPassword(password);
                     authDAL.InsertUserCredential(userId, passwordHash);
 
@@ -190,7 +228,7 @@ namespace TicketResolver.Controllers
                     authDAL.DeactivateAllRefreshTokens(loggedInUser.UserId);
                     authDAL.InsertRefreshToken(loggedInUser.UserId, refreshTokenHash, expiryDate);
 
-                    var accessCookie = new HttpCookie("jwt_token", accessToken) { HttpOnly = true, Secure = false, Expires = DateTime.UtcNow.AddMinutes(15) };
+                    var accessCookie = new HttpCookie("jwt_token", accessToken) { HttpOnly = true, Secure = false, Expires = expiryDate };
                     var refreshCookie = new HttpCookie("refresh_token", refreshToken) { HttpOnly = true, Secure = false, Expires = expiryDate };
                     Response.Cookies.Add(accessCookie);
                     Response.Cookies.Add(refreshCookie);
@@ -201,8 +239,9 @@ namespace TicketResolver.Controllers
 
                 return RedirectToAction("Login");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                AppLogger.Error("AuthController.VerifyOtp", $"OTP verification failed for {model.Email}", ex);
                 var err = "An error occurred. Please try again.";
                 return Request.IsAjaxRequest() ? Json(new { success = false, error = err }) : (ActionResult)View(model);
             }
@@ -218,7 +257,7 @@ namespace TicketResolver.Controllers
             try
             {
                 var otp = OtpHelper.GenerateOtp();
-                var expiry = DateTime.UtcNow.AddMinutes(5);
+                var expiry = DateTime.Now.AddMinutes(5);
                 authDAL.InvalidatePreviousOtps(email, purpose);
                 authDAL.InsertOtpVerification(null, email, otp, purpose, expiry);
 
@@ -229,8 +268,9 @@ namespace TicketResolver.Controllers
 
                 return Json(new { success = true });
             }
-            catch
+            catch (Exception ex)
             {
+                AppLogger.Error("AuthController.ResendOtp", $"Failed to resend OTP to {email}", ex);
                 return Json(new { success = false });
             }
         }
@@ -252,7 +292,10 @@ namespace TicketResolver.Controllers
                         authDAL.DeactivateAllRefreshTokens(userId);
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    AppLogger.Error("AuthController.Logout", "Failed to deactivate refresh tokens during logout", ex);
+                }
 
                 Response.Cookies["jwt_token"].Expires = DateTime.UtcNow.AddDays(-1);
                 Response.Cookies["refresh_token"].Expires = DateTime.UtcNow.AddDays(-1);
@@ -264,7 +307,15 @@ namespace TicketResolver.Controllers
         [HttpGet]
         public ActionResult AccessDenied()
         {
-            return View();
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("AuthController.AccessDenied", "Failed to load access denied page", ex);
+                return View();
+            }
         }
     }
 }

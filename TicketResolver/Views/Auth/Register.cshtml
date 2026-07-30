@@ -53,6 +53,12 @@
                 @Html.ValidationMessageFor(m => m.Mobile, "", new { @class = "text-danger" })
             </div>
 
+            <div class="form-group">
+                @Html.LabelFor(m => m.RoleId, "Register As")
+                @Html.DropDownListFor(m => m.RoleId, new SelectList(Model.Roles, "RoleId", "RoleName"), "Select Role", new { @class = "form-select" })
+                @Html.ValidationMessageFor(m => m.RoleId, "", new { @class = "text-danger" })
+            </div>
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -70,7 +76,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 py-2" style="background-color:#2b3e50;border:none;">Register</button>
+            <button type="submit" class="btn btn-primary w-100 py-2 mt-4" style="background-color:#2b3e50;border:none;">Register</button>
         }
 
         <p class="auth-link mt-3">
@@ -80,5 +86,6 @@
 </div>
 
 @section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
     <script src="@Url.Content("~/Scripts/auth.js")"></script>
 }

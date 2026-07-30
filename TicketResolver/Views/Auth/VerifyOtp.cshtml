@@ -2,8 +2,8 @@
 @{
     ViewBag.Title = "Verify OTP";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var email = ViewBag.Email ?? Model.Email;
-    var purpose = ViewBag.Purpose ?? Model.Purpose;
+    var email = (string)ViewBag.Email ?? Model.Email;
+    var purpose = (string)ViewBag.Purpose ?? Model.Purpose;
 }
 
 <div class="auth-wrapper">
@@ -33,7 +33,7 @@
                 @Html.ValidationMessageFor(m => m.OtpCode, "", new { @class = "text-danger" })
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 py-2" style="background-color:#2b3e50;border:none;">Verify & Continue</button>
+            <button type="submit" class="btn btn-primary w-100 py-2 mt-4" style="background-color:#2b3e50;border:none;">Verify & Continue</button>
         }
 
         <p class="auth-link mt-3">
@@ -50,5 +50,6 @@
 </div>
 
 @section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
     <script src="@Url.Content("~/Scripts/auth.js")"></script>
 }
