@@ -1,8 +1,7 @@
-2026-07-31 10:11:58.822 +05:30 [INF] Application started
+﻿2026-07-31 10:11:58.822 +05:30 [INF] Application started
 2026-07-31 10:11:59.264 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
 2026-07-31 10:17:50.277 +05:30 [INF] Application started
 2026-07-31 10:17:50.899 +05:30 [ERR] HomeController.Index: Failed to load dashboard
-System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'TicketResolverTicketSearch1'.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -29,7 +28,6 @@ System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure
 ClientConnectionId:e5be48ee-fc81-40ef-9057-92c97182d233
 Error Number:2812,State:62,Class:16
 2026-07-31 10:17:55.786 +05:30 [ERR] TicketController.Index: Failed to load ticket list
-System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'TicketResolverTicketSearch1'.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -56,7 +54,6 @@ System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure
 ClientConnectionId:e5be48ee-fc81-40ef-9057-92c97182d233
 Error Number:2812,State:62,Class:16
 2026-07-31 10:17:59.952 +05:30 [ERR] HomeController.Index: Failed to load dashboard
-System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'TicketResolverTicketSearch1'.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -83,7 +80,6 @@ System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure
 ClientConnectionId:e5be48ee-fc81-40ef-9057-92c97182d233
 Error Number:2812,State:62,Class:16
 2026-07-31 10:18:00.936 +05:30 [ERR] TicketController.Index: Failed to load ticket list
-System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'TicketResolverTicketSearch1'.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -111,7 +107,6 @@ ClientConnectionId:e5be48ee-fc81-40ef-9057-92c97182d233
 Error Number:2812,State:62,Class:16
 2026-07-31 10:24:22.916 +05:30 [INF] Application started
 2026-07-31 10:24:23.544 +05:30 [ERR] HomeController.Index: Failed to load dashboard
-System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'TicketResolverTicketSearch1'.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -138,7 +133,6 @@ System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure
 ClientConnectionId:282c1120-a1f6-4267-b657-4424c468dcb4
 Error Number:2812,State:62,Class:16
 2026-07-31 10:24:39.401 +05:30 [ERR] HomeController.Index: Failed to load dashboard
-System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'TicketResolverTicketSearch1'.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -165,7 +159,6 @@ System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure
 ClientConnectionId:282c1120-a1f6-4267-b657-4424c468dcb4
 Error Number:2812,State:62,Class:16
 2026-07-31 10:24:40.266 +05:30 [ERR] HomeController.Index: Failed to load dashboard
-System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'TicketResolverTicketSearch1'.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -192,7 +185,6 @@ System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure
 ClientConnectionId:282c1120-a1f6-4267-b657-4424c468dcb4
 Error Number:2812,State:62,Class:16
 2026-07-31 10:24:40.933 +05:30 [ERR] HomeController.Index: Failed to load dashboard
-System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'TicketResolverTicketSearch1'.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -219,7 +211,6 @@ System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure
 ClientConnectionId:282c1120-a1f6-4267-b657-4424c468dcb4
 Error Number:2812,State:62,Class:16
 2026-07-31 10:24:41.905 +05:30 [ERR] HomeController.Index: Failed to load dashboard
-System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'TicketResolverTicketSearch1'.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -246,7 +237,6 @@ System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure
 ClientConnectionId:282c1120-a1f6-4267-b657-4424c468dcb4
 Error Number:2812,State:62,Class:16
 2026-07-31 10:24:42.722 +05:30 [ERR] TicketController.Index: Failed to load ticket list
-System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'TicketResolverTicketSearch1'.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -273,7 +263,6 @@ System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure
 ClientConnectionId:282c1120-a1f6-4267-b657-4424c468dcb4
 Error Number:2812,State:62,Class:16
 2026-07-31 10:24:47.732 +05:30 [ERR] TicketController.Index: Failed to load ticket list
-System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'TicketResolverTicketSearch1'.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -300,7 +289,6 @@ System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure
 ClientConnectionId:282c1120-a1f6-4267-b657-4424c468dcb4
 Error Number:2812,State:62,Class:16
 2026-07-31 10:24:48.968 +05:30 [ERR] HomeController.Index: Failed to load dashboard
-System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'TicketResolverTicketSearch1'.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -327,7 +315,6 @@ System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure
 ClientConnectionId:282c1120-a1f6-4267-b657-4424c468dcb4
 Error Number:2812,State:62,Class:16
 2026-07-31 10:24:50.717 +05:30 [ERR] HomeController.Index: Failed to load dashboard
-System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'TicketResolverTicketSearch1'.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -354,7 +341,6 @@ System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure
 ClientConnectionId:282c1120-a1f6-4267-b657-4424c468dcb4
 Error Number:2812,State:62,Class:16
 2026-07-31 10:24:52.116 +05:30 [ERR] HomeController.Index: Failed to load dashboard
-System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'TicketResolverTicketSearch1'.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -381,7 +367,6 @@ System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure
 ClientConnectionId:282c1120-a1f6-4267-b657-4424c468dcb4
 Error Number:2812,State:62,Class:16
 2026-07-31 10:26:10.632 +05:30 [ERR] HomeController.Index: Failed to load dashboard
-System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'TicketResolverTicketSearch1'.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -408,7 +393,6 @@ System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure
 ClientConnectionId:282c1120-a1f6-4267-b657-4424c468dcb4
 Error Number:2812,State:62,Class:16
 2026-07-31 10:29:30.846 +05:30 [ERR] HomeController.Index: Failed to load dashboard
-System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'TicketResolverTicketSearch1'.
    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)

@@ -17,84 +17,26 @@
     <div class="alert alert-danger alert-dismissible fade show">@TempData["Error"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
 }
 
-<ul class="nav nav-tabs mb-3" id="masterTabs">
-    <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#categories">Categories</a></li>
-    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#priorities">Priorities</a></li>
-    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#statuses">Statuses</a></li>
-</ul>
-
-<div class="tab-content">
-    <div class="tab-pane active" id="categories">
-        <div class="card-custom">
-            <div class="card-header-custom d-flex justify-content-between align-items-center">
-                <span>Categories</span>
-                <button class="btn btn-green btn-sm" data-bs-toggle="modal" data-bs-target="#addCategoryModal"><i class="fa-solid fa-plus"></i> Add</button>
-            </div>
-            <table class="custom-table table table-borderless mb-0">
-                <thead><tr><th>Name</th><th></th></tr></thead>
-                <tbody>
-                    @foreach (var c in Model.Categories)
-                    {
-                        <tr>
-                            <td>@c.CategoryName</td>
-                            <td class="text-end">
-                                <button class="btn btn-sm btn-outline-primary edit-category" data-id="@c.CategoryId" data-name="@c.CategoryName"><i class="fa-solid fa-pen"></i></button>
-                                <button class="btn btn-sm btn-outline-danger delete-category" data-id="@c.CategoryId"><i class="fa-solid fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+<div class="card-custom">
+    <div class="card-header-custom d-flex justify-content-between align-items-center">
+        <span>Categories</span>
+        <button class="btn btn-green btn-sm" data-bs-toggle="modal" data-bs-target="#addCategoryModal"><i class="fa-solid fa-plus"></i> Add</button>
     </div>
-    <div class="tab-pane" id="priorities">
-        <div class="card-custom">
-            <div class="card-header-custom d-flex justify-content-between align-items-center">
-                <span>Priorities</span>
-                <button class="btn btn-green btn-sm" data-bs-toggle="modal" data-bs-target="#addPriorityModal"><i class="fa-solid fa-plus"></i> Add</button>
-            </div>
-            <table class="custom-table table table-borderless mb-0">
-                <thead><tr><th>Name</th><th>Sequence</th><th></th></tr></thead>
-                <tbody>
-                    @foreach (var p in Model.Priorities)
-                    {
-                        <tr>
-                            <td>@p.PriorityName</td>
-                            <td>@p.Sequence</td>
-                            <td class="text-end">
-                                <button class="btn btn-sm btn-outline-primary edit-priority" data-id="@p.PriorityId" data-name="@p.PriorityName" data-sequence="@p.Sequence"><i class="fa-solid fa-pen"></i></button>
-                                <button class="btn btn-sm btn-outline-danger delete-priority" data-id="@p.PriorityId"><i class="fa-solid fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="tab-pane" id="statuses">
-        <div class="card-custom">
-            <div class="card-header-custom d-flex justify-content-between align-items-center">
-                <span>Statuses</span>
-                <button class="btn btn-green btn-sm" data-bs-toggle="modal" data-bs-target="#addStatusModal"><i class="fa-solid fa-plus"></i> Add</button>
-            </div>
-            <table class="custom-table table table-borderless mb-0">
-                <thead><tr><th>Name</th><th>Terminal</th><th></th></tr></thead>
-                <tbody>
-                    @foreach (var s in Model.Statuses)
-                    {
-                        <tr>
-                            <td>@s.StatusName</td>
-                            <td>@(s.IsTerminalState ? "Yes" : "No")</td>
-                            <td class="text-end">
-                                <button class="btn btn-sm btn-outline-primary edit-status" data-id="@s.StatusId" data-name="@s.StatusName" data-terminal="@s.IsTerminalState.ToString().ToLower()"><i class="fa-solid fa-pen"></i></button>
-                                <button class="btn btn-sm btn-outline-danger delete-status" data-id="@s.StatusId"><i class="fa-solid fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <table class="custom-table table table-borderless mb-0">
+        <thead><tr><th>Name</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var c in Model.Categories)
+            {
+                <tr>
+                    <td>@c.CategoryName</td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-primary edit-category" data-id="@c.CategoryId" data-name="@c.CategoryName"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn btn-sm btn-outline-danger delete-category" data-id="@c.CategoryId"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
 @* Add Category Modal *@
@@ -122,78 +64,6 @@
             <div class="modal-header"><h5 class="modal-title">Edit Category</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
             <div class="modal-body">
                 <input name="categoryName" id="editCategoryName" class="form-control" required />
-            </div>
-            <div class="modal-footer"><button type="submit" class="btn btn-green">Save</button></div>
-        }
-    </div></div>
-</div>
-
-@* Add Priority Modal *@
-<div class="modal fade" id="addPriorityModal">
-    <div class="modal-dialog"><div class="modal-content">
-        @using (Html.BeginForm("AddPriority", "MasterData", FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-            <div class="modal-header"><h5 class="modal-title">Add Priority</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-            <div class="modal-body">
-                <div class="mb-2"><input name="priorityName" class="form-control" placeholder="Priority name" required /></div>
-                <div><input name="sequence" type="number" class="form-control" placeholder="Sequence" required /></div>
-            </div>
-            <div class="modal-footer"><button type="submit" class="btn btn-green">Add</button></div>
-        }
-    </div></div>
-</div>
-
-@* Edit Priority Modal *@
-<div class="modal fade" id="editPriorityModal">
-    <div class="modal-dialog"><div class="modal-content">
-        @using (Html.BeginForm("UpdatePriority", "MasterData", FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-            <input type="hidden" name="priorityId" id="editPriorityId" />
-            <div class="modal-header"><h5 class="modal-title">Edit Priority</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-            <div class="modal-body">
-                <div class="mb-2"><input name="priorityName" id="editPriorityName" class="form-control" required /></div>
-                <div><input name="sequence" id="editPrioritySequence" type="number" class="form-control" required /></div>
-            </div>
-            <div class="modal-footer"><button type="submit" class="btn btn-green">Save</button></div>
-        }
-    </div></div>
-</div>
-
-@* Add Status Modal *@
-<div class="modal fade" id="addStatusModal">
-    <div class="modal-dialog"><div class="modal-content">
-        @using (Html.BeginForm("AddStatus", "MasterData", FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-            <div class="modal-header"><h5 class="modal-title">Add Status</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-            <div class="modal-body">
-                <div class="mb-2"><input name="statusName" class="form-control" placeholder="Status name" required /></div>
-                <div class="form-check">
-                    <input type="checkbox" name="isTerminalState" class="form-check-input" value="true" id="addIsTerminal" />
-                    <label class="form-check-label" for="addIsTerminal">Terminal State</label>
-                </div>
-            </div>
-            <div class="modal-footer"><button type="submit" class="btn btn-green">Add</button></div>
-        }
-    </div></div>
-</div>
-
-@* Edit Status Modal *@
-<div class="modal fade" id="editStatusModal">
-    <div class="modal-dialog"><div class="modal-content">
-        @using (Html.BeginForm("UpdateStatus", "MasterData", FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-            <input type="hidden" name="statusId" id="editStatusId" />
-            <div class="modal-header"><h5 class="modal-title">Edit Status</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-            <div class="modal-body">
-                <div class="mb-2"><input name="statusName" id="editStatusName" class="form-control" required /></div>
-                <div class="form-check">
-                    <input type="checkbox" name="isTerminalState" class="form-check-input" value="true" id="editIsTerminal" />
-                    <label class="form-check-label" for="editIsTerminal">Terminal State</label>
-                </div>
             </div>
             <div class="modal-footer"><button type="submit" class="btn btn-green">Save</button></div>
         }

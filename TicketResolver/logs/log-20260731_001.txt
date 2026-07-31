@@ -17,3 +17,5 @@
 2026-07-31 11:48:13.833 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
 2026-07-31 11:59:37.771 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
 2026-07-31 12:38:57.248 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-31 12:48:28.494 +05:30 [INF] Application started
+2026-07-31 14:29:10.255 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
