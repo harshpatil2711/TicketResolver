@@ -103,7 +103,7 @@ namespace TicketResolver.Controllers
 
         private System.Collections.Generic.List<TicketListItemViewModel> GetUnassignedTickets()
         {
-            if (CurrentRoleId == 3) return new System.Collections.Generic.List<TicketListItemViewModel>();
+            if (CurrentRoleId != 1) return new System.Collections.Generic.List<TicketListItemViewModel>();
 
             var ds = ticketDAL.Search(null, null, null, 1, null, null, 1, 5);
             return ds.Tables[0].Rows.Cast<DataRow>().Select(r => new TicketListItemViewModel

@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using TicketResolver.DAL;
 using TicketResolver.Filters;
@@ -429,7 +431,20 @@ namespace TicketResolver.Controllers
             try
             {
                 ticketDAL.UpdateStatus(ticketId, newStatusId, CurrentUserId, changeReason);
+                NotifyStatusChange(ticketId, newStatusId);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("TicketController.ChangeStatus", $"Failed to change status for ticket id={ticketId}", ex);
+                return Json(new { success = false, error = "Could not change status." });
+            }
+        }
 
+        private void NotifyStatusChange(int ticketId, int newStatusId)
+        {
+            try
+            {
                 var ticket = ticketDAL.GetById(ticketId);
                 var creator = authDAL.GetUserById(ticket.CreatedBy);
                 var actor = authDAL.GetUserById(CurrentUserId);
@@ -437,30 +452,42 @@ namespace TicketResolver.Controllers
                 var newStatusName = statuses.FirstOrDefault(s => s.StatusId == newStatusId)?.StatusName ?? "Unknown";
                 var template = EmailTemplates.LoadTemplate(Server.MapPath("~/EmailTemplates/NotificationEmail.html"));
 
+                var recipients = new List<KeyValuePair<string, string>>();
                 if (creator != null)
-                {
-                    var body = EmailTemplates.PopulateNotificationTemplate(template, creator.FirstName, ticket.TicketNumber,
-                        $"Ticket status changed to {newStatusName}.", actor?.FirstName ?? "System");
-                    EmailHelper.SendEmail(creator.Email, $"Ticket {ticket.TicketNumber} - Status: {newStatusName}", body);
-                }
-
+                    recipients.Add(new KeyValuePair<string, string>(creator.Email, creator.FirstName));
                 if (ticket.AssignedTo.HasValue && ticket.AssignedTo != ticket.CreatedBy)
                 {
                     var assignee = authDAL.GetUserById(ticket.AssignedTo.Value);
                     if (assignee != null)
-                    {
-                        var body = EmailTemplates.PopulateNotificationTemplate(template, assignee.FirstName, ticket.TicketNumber,
-                            $"Ticket status changed to {newStatusName}.", actor?.FirstName ?? "System");
-                        EmailHelper.SendEmail(assignee.Email, $"Ticket {ticket.TicketNumber} - Status: {newStatusName}", body);
-                    }
+                        recipients.Add(new KeyValuePair<string, string>(assignee.Email, assignee.FirstName));
                 }
+                if (recipients.Count == 0)
+                    return;
 
-                return Json(new { success = true });
+                var ticketNumber = ticket.TicketNumber;
+                var subject = $"Ticket {ticketNumber} - Status: {newStatusName}";
+                var message = $"Ticket status changed to {newStatusName}.";
+                var actorName = actor?.FirstName ?? "System";
+
+                HostingEnvironment.QueueBackgroundWorkItem(ct =>
+                {
+                    try
+                    {
+                        foreach (var recipient in recipients)
+                        {
+                            var body = EmailTemplates.PopulateNotificationTemplate(template, recipient.Value, ticketNumber, message, actorName);
+                            EmailHelper.SendEmail(recipient.Key, subject, body);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        AppLogger.Error("TicketController.NotifyStatusChange", $"Failed to send status-change email for ticket id={ticketId}", ex);
+                    }
+                });
             }
             catch (Exception ex)
             {
-                AppLogger.Error("TicketController.ChangeStatus", $"Failed to change status for ticket id={ticketId}", ex);
-                return Json(new { success = false, error = "Could not change status." });
+                AppLogger.Error("TicketController.NotifyStatusChange", $"Failed to prepare status-change notification for ticket id={ticketId}", ex);
             }
         }
 
