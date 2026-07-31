@@ -13,7 +13,7 @@
     <h5 class="page-title">@Model.TicketNumber - @Model.Subject</h5>
     <div>
         <a href="@Url.Action("Index")" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left"></i> Back</a>
-        @if (isOwner || role == "Administrator")
+        @if ((isOwner || role == "Administrator") && (role != "Employee" || Model.StatusId != 6))
         {
             <a href="@Url.Action("Edit", new { id = Model.TicketId })" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-pen"></i> Edit</a>
         }
@@ -28,6 +28,13 @@
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 }
@@ -92,13 +99,14 @@
             <div class="card-header-custom">
                 <span>Comments (@Model.Comments.Count)</span>
             </div>
-            <div style="padding:20px;" id="commentsContainer">
+            <div style="padding:20px;max-height:400px;overflow-y:auto;" id="commentsContainer">
                 @if (Model.Comments.Count == 0)
                 {
                     <p class="text-muted mb-0" id="noComments">No comments yet.</p>
                 }
                 @foreach (var comment in Model.Comments)
                 {
+                    var commentFiles = Model.Attachments.Where(a => a.CommentId == comment.CommentId).ToList();
                     <div class="mb-3 p-3 bg-light rounded @(comment.IsInternalNote ? "border-start border-warning border-3" : "")">
                         <div class="d-flex justify-content-between">
                             <strong>@comment.UserName (@comment.RoleName)</strong>
@@ -109,17 +117,33 @@
                             <span class="badge bg-warning text-dark mb-1">Internal Note</span>
                         }
                         <p class="mb-0 mt-1" style="white-space:pre-wrap;">@comment.CommentText</p>
+                        @if (commentFiles.Count > 0)
+                        {
+                            <div class="mt-2">
+                                @foreach (var f in commentFiles)
+                                {
+                                    <span class="me-2"><i class="fa-regular fa-file"></i> <a href="@Url.Action("Download", "Ticket", new { id = f.AttachmentId })">@f.OriginalFileName</a></span>
+                                }
+                            </div>
+                        }
                     </div>
                 }
             </div>
             <div style="padding:15px 20px;border-top:1px solid #f0f0f0;">
                 @Html.AntiForgeryToken()
+                @Html.Hidden("ticketIdVal", Model.TicketId)
                 <textarea id="commentText" class="form-control mb-2" rows="3" placeholder="Write a comment..."></textarea>
                 <div class="form-check mb-2">
                     <input type="checkbox" class="form-check-input" id="isInternalNote" />
                     <label class="form-check-label" for="isInternalNote">Internal Note (visible only to staff)</label>
                 </div>
-                <button type="button" class="btn btn-green btn-sm" id="addCommentBtn">Add Comment</button>
+                <div class="mb-2 d-flex align-items-center gap-2">
+                    <input type="file" id="commentFile" class="form-control form-control-sm" style="width:auto;" />
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="clearCommentFile" title="Clear file" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="mb-2">
+                    <button type="button" class="btn btn-green btn-sm" id="addCommentBtn">Add Comment</button>
+                </div>
             </div>
         </div>
     </div>
@@ -129,7 +153,7 @@
             <div class="card-header-custom">
                 <span>Status History</span>
             </div>
-            <div style="padding:0;">
+            <div style="padding:0;max-height:400px;overflow-y:auto;">
                 @if (Model.History.Count == 0)
                 {
                     <p class="text-muted p-3 mb-0">No history available.</p>
@@ -137,8 +161,14 @@
                 <ul class="list-group list-group-flush" id="historyList">
                     @foreach (var h in Model.History)
                     {
+                        var oldName = h.OldStatusId.HasValue ? Model.Statuses.FirstOrDefault(s => s.StatusId == h.OldStatusId.Value)?.StatusName : null;
+                        var newName = Model.Statuses.FirstOrDefault(s => s.StatusId == h.NewStatusId)?.StatusName ?? "Unknown";
                         <li class="list-group-item small">
-                            <div>@h.ChangeReason</div>
+                            <div><strong>@(oldName ?? "N/A")</strong> &rarr; <strong>@newName</strong></div>
+                            @if (!string.IsNullOrEmpty(h.ChangeReason))
+                            {
+                                <div class="text-muted">@h.ChangeReason</div>
+                            }
                             <div class="text-muted">@h.CreatedDate.ToString("dd-MMM-yyyy hh:mm tt")</div>
                         </li>
                     }
@@ -148,25 +178,23 @@
 
         <div class="card-custom" style="margin-bottom:15px;">
             <div class="card-header-custom">
-                <span>Attachments (@Model.Attachments.Count)</span>
+                <span>Attachments (@Model.Attachments.Count(a => a.CommentId == null))</span>
             </div>
             <div style="padding:0;">
-                @if (Model.Attachments.Count == 0)
+                @{
+                    var ticketAttachments = Model.Attachments.Where(a => a.CommentId == null).ToList();
+                }
+                @if (ticketAttachments.Count == 0)
                 {
                     <p class="text-muted mb-0 p-3" id="noAttachments">No attachments.</p>
                 }
                 <ul class="list-unstyled mb-3" id="attachmentList">
-                    @foreach (var file in Model.Attachments)
+                    @foreach (var file in ticketAttachments)
                     {
                         <li><i class="fa-regular fa-file"></i> <a href="@Url.Action("Download", "Ticket", new { id = file.AttachmentId })">@file.OriginalFileName</a></li>
                     }
                 </ul>
-                <hr />
-                <form id="uploadForm" enctype="multipart/form-data">
-                    @Html.AntiForgeryToken()
-                    <input type="file" name="file" class="form-control form-control-sm mb-2" />
-                    <button type="button" class="btn btn-sm btn-outline-secondary" id="uploadBtn"><i class="fa-solid fa-upload"></i> Upload</button>
-                </form>
+
             </div>
         </div>
     </div>
@@ -180,5 +208,5 @@
 </form>
 
 @section scripts {
-    <script src="@Url.Content("~/Scripts/ticket-details.js")"></script>
+    <script src="@Url.Content("~/Scripts/ticket-details.js")?v=4"></script>
 }

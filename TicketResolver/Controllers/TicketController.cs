@@ -148,8 +148,9 @@ namespace TicketResolver.Controllers
                 TempData["SuccessMessage"] = $"Ticket {ticketNumber} created successfully.";
                 return RedirectToAction("Index");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                AppLogger.Error("TicketController.Create", "Failed to create ticket", ex);
                 ModelState.AddModelError("", "An error occurred while creating the ticket.");
                 model.Categories = masterDAL.GetCategories();
                 model.Priorities = masterDAL.GetPriorities();
@@ -162,44 +163,38 @@ namespace TicketResolver.Controllers
         {
             try
             {
-                var ticket = ticketDAL.GetById(id);
-                if (ticket == null)
+                var ds = ticketDAL.GetDetailById(id);
+                if (ds.Tables[0].Rows.Count == 0)
                     return HttpNotFound();
 
-                var ds = ticketDAL.GetDetailById(id);
-
+                var row = ds.Tables[0].Rows[0];
                 var model = new TicketDetailViewModel
                 {
-                    TicketId = ticket.TicketId,
-                    TicketNumber = ticket.TicketNumber,
-                    Subject = ticket.Subject,
-                    Description = ticket.Description,
-                    CategoryId = ticket.CategoryId,
-                    PriorityId = ticket.PriorityId,
-                    StatusId = ticket.StatusId,
-                    CreatedBy = ticket.CreatedBy,
-                    CreatedDate = ticket.CreatedDate,
-                    ResolvedDate = ticket.ResolvedDate,
-                    ClosedDate = ticket.ClosedDate,
-                    IsActive = ticket.IsActive,
-                    Comments = commentDAL.GetByTicketId(ticket.TicketId, CurrentUserId, GetRoleId()),
-                    Attachments = attachmentDAL.GetByTicketId(ticket.TicketId),
-                    History = historyDAL.GetByTicketId(ticket.TicketId),
+                    TicketId = Convert.ToInt32(row["TicketId"]),
+                    TicketNumber = row["TicketNumber"].ToString(),
+                    Subject = row["Subject"].ToString(),
+                    Description = row["Description"].ToString(),
+                    CategoryId = Convert.ToInt32(row["CategoryId"]),
+                    PriorityId = Convert.ToInt32(row["PriorityId"]),
+                    StatusId = Convert.ToInt32(row["StatusId"]),
+                    CreatedBy = Convert.ToInt32(row["CreatedBy"]),
+                    CreatedDate = Convert.ToDateTime(row["CreatedDate"]),
+                    ResolvedDate = row["ResolvedDate"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(row["ResolvedDate"]),
+                    ClosedDate = row["ClosedDate"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(row["ClosedDate"]),
+                    IsActive = Convert.ToBoolean(row["IsActive"]),
+                    CategoryName = row["CategoryName"].ToString(),
+                    PriorityName = row["PriorityName"].ToString(),
+                    StatusName = row["StatusName"].ToString(),
+                    IsTerminalState = Convert.ToBoolean(row["IsTerminalState"]),
+                    CreatedByName = row["CreatedByName"].ToString(),
+                    AssignedToName = row["AssignedToName"]?.ToString(),
+                    AssignedTo = row["AssignedTo"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["AssignedTo"]),
+                    Comments = commentDAL.GetByTicketId(Convert.ToInt32(row["TicketId"]), CurrentUserId, GetRoleId()),
+                    Attachments = attachmentDAL.GetByTicketId(Convert.ToInt32(row["TicketId"])),
+                    History = historyDAL.GetByTicketId(Convert.ToInt32(row["TicketId"])),
                     Statuses = masterDAL.GetStatuses(),
                     SupportExecutives = GetSupportExecutives()
                 };
-
-                if (ds.Tables[0].Rows.Count > 0)
-                {
-                    var row = ds.Tables[0].Rows[0];
-                    model.CategoryName = row["CategoryName"].ToString();
-                    model.PriorityName = row["PriorityName"].ToString();
-                    model.StatusName = row["StatusName"].ToString();
-                    model.IsTerminalState = Convert.ToBoolean(row["IsTerminalState"]);
-                    model.CreatedByName = row["CreatedByName"].ToString();
-                    model.AssignedToName = row["AssignedToName"]?.ToString();
-                    model.AssignedTo = row["AssignedTo"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["AssignedTo"]);
-                }
 
                 return View(model);
             }
@@ -221,6 +216,12 @@ namespace TicketResolver.Controllers
 
                 if (ticket.CreatedBy != CurrentUserId && CurrentRole != "Administrator")
                     return RedirectToAction("AccessDenied", "Auth");
+
+                if (ticket.StatusId == 6 && CurrentRole == "Employee")
+                {
+                    TempData["ErrorMessage"] = "Cannot edit a closed ticket.";
+                    return RedirectToAction("Details", new { id });
+                }
 
                 var model = new TicketEditViewModel
                 {
@@ -254,6 +255,15 @@ namespace TicketResolver.Controllers
 
             try
             {
+                var ticket = ticketDAL.GetById(model.TicketId);
+                if (ticket != null && ticket.StatusId == 6 && CurrentRole == "Employee")
+                {
+                    ModelState.AddModelError("", "Cannot edit a closed ticket.");
+                    model.Categories = masterDAL.GetCategories();
+                    model.Priorities = masterDAL.GetPriorities();
+                    return View(model);
+                }
+
                 ticketDAL.Update(model.TicketId, model.Subject, model.Description, model.CategoryId, model.PriorityId, CurrentUserId);
                 TempData["SuccessMessage"] = "Ticket updated successfully.";
                 return RedirectToAction("Details", new { id = model.TicketId });
@@ -285,11 +295,19 @@ namespace TicketResolver.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddComment(int ticketId, string commentText, bool isInternalNote)
+        public ActionResult AddComment(int ticketId, string commentText, bool isInternalNote, HttpPostedFileBase file)
         {
             try
             {
-                commentDAL.Insert(ticketId, CurrentUserId, commentText, isInternalNote);
+                var commentId = commentDAL.Insert(ticketId, CurrentUserId, commentText, isInternalNote);
+
+                if (file != null && file.ContentLength > 0)
+                {
+                    var uploadDir = Server.MapPath("~/Uploads");
+                    var storedName = AttachmentHelper.SaveFile(file, uploadDir);
+                    attachmentDAL.Insert(ticketId, commentId, Path.GetFileName(file.FileName), storedName, CurrentUserId);
+                }
+
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -499,7 +517,7 @@ namespace TicketResolver.Controllers
             return ds.Tables[0].Rows.Cast<DataRow>().Select(r => new UserListItem
             {
                 UserId = Convert.ToInt32(r["UserId"]),
-                FullName = r["FullName"].ToString(),
+                FullName = r["FirstName"].ToString() + " " + r["LastName"].ToString(),
                 Email = r["Email"].ToString()
             }).ToList();
         }

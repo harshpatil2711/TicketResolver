@@ -1,3 +1,8 @@
+
+-- ============================================================
+-- SECTION: Dashboard
+-- ============================================================
+
 /*
 ***********************************************************************************************
     Date            Modified By         Purpose of Modification
@@ -62,4 +67,3 @@ BEGIN
         @ClosedTickets AS ClosedTickets,
         @ReopenedTickets AS ReopenedTickets;
 END
-GO

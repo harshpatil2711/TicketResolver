@@ -1,3 +1,4 @@
+
 /*
 ***********************************************************************************************
     Date            Modified By         Purpose of Modification
@@ -20,4 +21,3 @@ BEGIN
     FROM TicketResolverUserCredential
     WHERE UserId = @UserId AND IsActive = 1;
 END
-GO

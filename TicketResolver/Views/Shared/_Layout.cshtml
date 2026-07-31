@@ -39,11 +39,11 @@
                     <li class="@(IsActive("Ticket") && action == "Index" ? "active" : "")">
                         <a href="@Url.Action("Index", "Ticket")"><i class="fa-solid fa-ticket"></i> Tickets</a>
                     </li>
-                    <li class="@(IsActive("User") ? "active" : "")">
-                        <a href="@Url.Action("Index", "User")"><i class="fa-solid fa-user-group"></i> @(role == "Administrator" ? "Agents" : "Users")</a>
-                    </li>
                     if (role == "Administrator")
                     {
+                        <li class="@(IsActive("User") ? "active" : "")">
+                            <a href="@Url.Action("Index", "User")"><i class="fa-solid fa-user-group"></i> Agents</a>
+                        </li>
                         <li class="@(IsActive("MasterData") ? "active" : "")">
                             <a href="@Url.Action("Index", "MasterData")"><i class="fa-solid fa-gear"></i> Settings</a>
                         </li>

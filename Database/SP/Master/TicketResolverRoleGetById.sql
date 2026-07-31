@@ -1,3 +1,4 @@
+
 /*
 ***********************************************************************************************
     Date            Modified By         Purpose of Modification
@@ -19,4 +20,3 @@ BEGIN
     FROM TicketResolverRole
     WHERE RoleId = @RoleId AND IsActive = 1;
 END
-GO

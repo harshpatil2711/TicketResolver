@@ -239,19 +239,7 @@ namespace TicketResolver.DAL
         }
         public DataSet GetSupportExecutives()
         {
-            using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverUserGetSupportExecutives"))
-            {
-                return db.ExecuteDataSet(cmd);
-            }
-        }
-
-        public DataSet GetUsersByRoleId(int roleId)
-        {
-            using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverUserGetByRoleId"))
-            {
-                db.AddInParameter(cmd, "@RoleId", DbType.Int32, roleId);
-                return db.ExecuteDataSet(cmd);
-            }
+            return SearchUsers(null, 2, true, 1, 9999);
         }
 
         public DataSet SearchUsers(string searchTerm, int? roleId, bool? isActive, int pageNumber, int pageSize)

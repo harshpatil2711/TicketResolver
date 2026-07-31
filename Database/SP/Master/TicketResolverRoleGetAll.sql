@@ -19,4 +19,3 @@ BEGIN
     WHERE IsActive = 1
     ORDER BY RoleName;
 END
-GO

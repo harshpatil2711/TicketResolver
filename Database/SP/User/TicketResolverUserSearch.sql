@@ -1,3 +1,4 @@
+
 /*
 ***********************************************************************************************
     Date            Modified By         Purpose of Modification
@@ -52,4 +53,3 @@ BEGIN
         AND (@RoleId IS NULL OR u.RoleId = @RoleId)
         AND (@IsActive IS NULL OR u.IsActive = @IsActive);
 END
-GO

@@ -1,3 +1,4 @@
+
 /*
 ***********************************************************************************************
     Date            Modified By         Purpose of Modification
@@ -24,4 +25,3 @@ BEGIN
     FROM TicketResolverTicketAttachment a
     WHERE a.AttachmentId = @AttachmentId AND a.IsActive = 1;
 END
-GO

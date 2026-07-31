@@ -2,7 +2,8 @@ var pieChart;
 
 function loadChart() {
     var priorityId = $('#chartPriority').val();
-    $.getJSON('/Home/GetChartData', { priorityId: priorityId }, function (data) {
+    var statusId = $('#chartStatus').val();
+    $.getJSON('/Home/GetChartData', { priorityId: priorityId, statusId: statusId }, function (data) {
         if (pieChart) pieChart.destroy();
         var container = $('#ticketPieChart').parent();
         $('#chartLegend').empty();
@@ -36,4 +37,5 @@ function loadChart() {
 $(document).ready(function () {
     loadChart();
     $('#chartPriority').change(loadChart);
+    $('#chartStatus').change(loadChart);
 });

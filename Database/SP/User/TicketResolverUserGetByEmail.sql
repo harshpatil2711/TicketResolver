@@ -1,3 +1,8 @@
+
+-- ============================================================
+-- SECTION: User
+-- ============================================================
+
 /*
 ***********************************************************************************************
     Date            Modified By         Purpose of Modification
@@ -27,4 +32,3 @@ BEGIN
     INNER JOIN TicketResolverRole r ON u.RoleId = r.RoleId
     WHERE u.Email = @Email;
 END
-GO

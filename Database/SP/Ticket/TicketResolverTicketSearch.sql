@@ -1,3 +1,4 @@
+
 /*
 ***********************************************************************************************
     Date            Modified By         Purpose of Modification
@@ -73,4 +74,3 @@ BEGIN
         AND (@AssignedTo IS NULL OR t.AssignedTo = @AssignedTo)
         AND (@CreatedBy IS NULL OR t.CreatedBy = @CreatedBy);
 END
-GO

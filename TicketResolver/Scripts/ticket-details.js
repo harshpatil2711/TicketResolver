@@ -1,21 +1,40 @@
 (function () {
-    var ticketId = $('#commentsContainer').length ? $('input[name="__RequestVerificationToken"]').first().closest('.card-footer').length : 0;
+    var ticketId = $('#ticketIdVal').val();
+
+    $('#commentFile').on('change', function () {
+        $('#clearCommentFile').toggle(!!this.files.length);
+    });
+
+    $('#clearCommentFile').click(function () {
+        $('#commentFile').val('');
+        $(this).hide();
+    });
 
     $('#addCommentBtn').click(function () {
         var text = $('#commentText').val().trim();
         if (!text) { Swal.fire('Validation', 'Please enter a comment.', 'warning'); return; }
+        var isInternal = $('#isInternalNote').is(':checked');
+        var fileInput = $('#commentFile')[0];
+        var file = fileInput && fileInput.files[0];
+
+        var fd = new FormData();
+        fd.append('ticketId', ticketId);
+        fd.append('commentText', text);
+        fd.append('isInternalNote', isInternal);
+        fd.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
+        if (file) fd.append('file', file);
+
         $.ajax({
             url: '/Ticket/AddComment',
             type: 'POST',
-            data: {
-                ticketId: ticketId,
-                commentText: text,
-                isInternalNote: $('#isInternalNote').is(':checked'),
-                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-            },
+            data: fd,
+            processData: false,
+            contentType: false,
             success: function () {
                 $('#commentText').val('');
                 $('#isInternalNote').prop('checked', false);
+                $('#commentFile').val('');
+                $('#clearCommentFile').hide();
                 Swal.fire({ icon: 'success', title: 'Comment added!', showConfirmButton: false, timer: 1500 });
                 location.reload();
             },
@@ -58,22 +77,4 @@
         });
     });
 
-    $('#uploadBtn').click(function () {
-        var formData = new FormData();
-        formData.append('ticketId', ticketId);
-        formData.append('file', $('#uploadForm input[type="file"]')[0].files[0]);
-        formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
-        $.ajax({
-            url: '/Ticket/UploadAttachment',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function () {
-                Swal.fire({ icon: 'success', title: 'File uploaded!', showConfirmButton: false, timer: 1500 });
-                location.reload();
-            },
-            error: function () { Swal.fire('Error', 'Could not upload file.', 'error'); }
-        });
-    });
 })();

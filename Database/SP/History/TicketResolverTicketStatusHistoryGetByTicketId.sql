@@ -1,12 +1,3 @@
-/*
-***********************************************************************************************
-    Date            Modified By         Purpose of Modification
-
-1   28 Jul 2026    Initial Creation    Get status history for a ticket
-
-***********************************************************************************************
-*/
-
 CREATE PROCEDURE TicketResolverTicketStatusHistoryGetByTicketId
     @TicketId INT
 AS
@@ -45,4 +36,3 @@ BEGIN
     WHERE h.TicketId = @TicketId
     ORDER BY h.CreatedDate DESC;
 END
-GO

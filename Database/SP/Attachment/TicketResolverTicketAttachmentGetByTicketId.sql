@@ -1,3 +1,4 @@
+
 /*
 ***********************************************************************************************
     Date            Modified By         Purpose of Modification
@@ -26,4 +27,3 @@ BEGIN
     WHERE a.TicketId = @TicketId AND a.IsActive = 1
     ORDER BY a.CreatedDate DESC;
 END
-GO

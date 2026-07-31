@@ -1,3 +1,4 @@
+
 /*
 ***********************************************************************************************
     Date            Modified By         Purpose of Modification
@@ -19,4 +20,3 @@ BEGIN
     WHERE IsActive = 1
     ORDER BY CategoryName;
 END
-GO

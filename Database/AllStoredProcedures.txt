@@ -1,0 +1,2155 @@
+======================================================================================
+PROCEDURE: TicketResolverLogInsert
+======================================================================================
+
+-- ============================================================
+-- SECTION: Log
+-- ============================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Insert log entry
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverLogInsert
+    @LogLevel   VARCHAR(20),
+    @Source     VARCHAR(200) = NULL,
+    @Message    NVARCHAR(MAX),
+    @Exception  NVARCHAR(MAX) = NULL,
+    @StackTrace NVARCHAR(MAX) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        INSERT INTO TicketResolverLog 
+            (LogLevel, Source, Message, Exception, StackTrace)
+        VALUES 
+            (@LogLevel, @Source, @Message, @Exception, @StackTrace);
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverOtpGetLatest
+======================================================================================
+
+-- ============================================================
+-- SECTION: Auth
+-- ============================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Get latest unverified OTP by email and purpose
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverOtpGetLatest
+    @Email   VARCHAR(200),
+    @Purpose VARCHAR(20)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT TOP 1 
+        OtpId,
+        UserId,
+        Email,
+        OtpCode,
+        Purpose,
+        ExpiryDate,
+        IsVerified,
+        CreatedDate
+    FROM TicketResolverOtpVerification
+    WHERE Email = @Email
+        AND Purpose = @Purpose
+        AND IsVerified = 0
+    ORDER BY CreatedDate DESC;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverOtpInsert
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Insert OTP for verification
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverOtpInsert
+    @UserId    INT = NULL,
+    @Email     VARCHAR(200),
+    @OtpCode   VARCHAR(10),
+    @Purpose   VARCHAR(20),
+    @ExpiryDate DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        INSERT INTO TicketResolverOtpVerification 
+            (UserId, Email, OtpCode, Purpose, ExpiryDate, IsVerified)
+        VALUES 
+            (@UserId, @Email, @OtpCode, @Purpose, @ExpiryDate, 0);
+
+        SELECT SCOPE_IDENTITY() AS OtpId;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverOtpInvalidatePrevious
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Invalidate previous OTPs for same email and purpose
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverOtpInvalidatePrevious
+    @Email   VARCHAR(200),
+    @Purpose VARCHAR(20)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE TicketResolverOtpVerification
+        SET IsVerified = 1
+        WHERE Email = @Email
+            AND Purpose = @Purpose
+            AND IsVerified = 0;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverOtpVerify
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Verify OTP by code and email
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverOtpVerify
+    @Email   VARCHAR(200),
+    @OtpCode VARCHAR(10),
+    @Purpose VARCHAR(20)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @OtpId INT = NULL;
+    DECLARE @UserId INT = NULL;
+
+    SELECT TOP 1 
+        @OtpId = OtpId,
+        @UserId = UserId
+    FROM TicketResolverOtpVerification
+    WHERE Email = @Email
+        AND OtpCode = @OtpCode
+        AND Purpose = @Purpose
+        AND IsVerified = 0
+        AND ExpiryDate > GETDATE()
+    ORDER BY CreatedDate DESC;
+
+    IF @OtpId IS NOT NULL
+    BEGIN
+        UPDATE TicketResolverOtpVerification
+        SET IsVerified = 1
+        WHERE OtpId = @OtpId;
+
+        SELECT 
+            @OtpId AS OtpId,
+            @UserId AS UserId,
+            1 AS IsValid;
+    END
+    ELSE
+    BEGIN
+        SELECT 
+            NULL AS OtpId,
+            NULL AS UserId,
+            0 AS IsValid;
+    END
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverRefreshTokenDeactivateAll
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Deactivate all refresh tokens for a user
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverRefreshTokenDeactivateAll
+    @UserId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE TicketResolverRefreshToken
+        SET IsActive = 0,
+            ModifiedDate = GETDATE()
+        WHERE UserId = @UserId AND IsActive = 1;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverRefreshTokenGetByTokenHash
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Get refresh token by token hash
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverRefreshTokenGetByTokenHash
+    @TokenHash VARCHAR(500)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        rt.RefreshTokenId,
+        rt.UserId,
+        rt.TokenHash,
+        rt.ExpiryDate,
+        rt.LastUsedDate,
+        rt.RevokedDate,
+        rt.IsActive,
+        u.Email,
+        u.FirstName,
+        u.LastName,
+        r.RoleName
+    FROM TicketResolverRefreshToken rt
+    INNER JOIN TicketResolverUser u ON rt.UserId = u.UserId
+    INNER JOIN TicketResolverRole r ON u.RoleId = r.RoleId
+    WHERE rt.TokenHash = @TokenHash;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverRefreshTokenInsert
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Insert refresh token
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverRefreshTokenInsert
+    @UserId     INT,
+    @TokenHash  VARCHAR(500),
+    @ExpiryDate DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        INSERT INTO TicketResolverRefreshToken 
+            (UserId, TokenHash, ExpiryDate)
+        VALUES 
+            (@UserId, @TokenHash, @ExpiryDate);
+
+        SELECT SCOPE_IDENTITY() AS RefreshTokenId;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverRefreshTokenRevoke
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Revoke a specific refresh token
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverRefreshTokenRevoke
+    @RefreshTokenId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE TicketResolverRefreshToken
+        SET RevokedDate = GETDATE(),
+            IsActive = 0,
+            ModifiedDate = GETDATE()
+        WHERE RefreshTokenId = @RefreshTokenId;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverRefreshTokenRotate
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Update last used date and deactivate old token
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverRefreshTokenRotate
+    @OldRefreshTokenId INT,
+    @NewTokenHash      VARCHAR(500),
+    @NewExpiryDate     DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        DECLARE @UserId INT;
+
+        SELECT @UserId = UserId
+        FROM TicketResolverRefreshToken
+        WHERE RefreshTokenId = @OldRefreshTokenId;
+
+        UPDATE TicketResolverRefreshToken
+        SET IsActive = 0,
+            ModifiedDate = GETDATE()
+        WHERE RefreshTokenId = @OldRefreshTokenId;
+
+        INSERT INTO TicketResolverRefreshToken 
+            (UserId, TokenHash, ExpiryDate)
+        VALUES 
+            (@UserId, @NewTokenHash, @NewExpiryDate);
+
+        SELECT SCOPE_IDENTITY() AS RefreshTokenId;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverRefreshTokenUpdateLastUsed
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Update last used date for refresh token
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverRefreshTokenUpdateLastUsed
+    @RefreshTokenId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE TicketResolverRefreshToken
+        SET LastUsedDate = GETDATE(),
+            ModifiedDate = GETDATE()
+        WHERE RefreshTokenId = @RefreshTokenId AND IsActive = 1;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverRoleGetAll
+======================================================================================
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Get all active roles
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverRoleGetAll
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        RoleId,
+        RoleName
+    FROM TicketResolverRole
+    WHERE IsActive = 1
+    ORDER BY RoleName;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverRoleGetById
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Get role by ID
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverRoleGetById
+    @RoleId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        RoleId,
+        RoleName
+    FROM TicketResolverRole
+    WHERE RoleId = @RoleId AND IsActive = 1;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketAssign
+======================================================================================
+
+-- ============================================================
+-- SECTION: Ticket
+-- ============================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Assign ticket to support executive
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketAssign
+    @TicketId    INT,
+    @AssignedTo  INT,
+    @AssignedBy  INT,
+    @ChangeReason NVARCHAR(500) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        DECLARE @OldStatusId INT;
+        DECLARE @OldAssignedTo INT;
+
+        SELECT @OldStatusId = StatusId,
+               @OldAssignedTo = AssignedTo
+        FROM TicketResolverTicket
+        WHERE TicketId = @TicketId AND IsActive = 1;
+
+        UPDATE TicketResolverTicket
+        SET AssignedTo = @AssignedTo,
+            StatusId = 2,
+            ModifiedBy = @AssignedBy,
+            ModifiedDate = GETDATE()
+        WHERE TicketId = @TicketId AND IsActive = 1;
+
+        INSERT INTO TicketResolverTicketStatusHistory 
+            (TicketId, OldStatusId, NewStatusId, PreviousAssignedTo, CurrentAssignedTo, ChangeReason, CreatedBy)
+        VALUES 
+            (@TicketId, @OldStatusId, 2, @OldAssignedTo, @AssignedTo, @ChangeReason, @AssignedBy);
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketAttachmentDelete
+======================================================================================
+
+-- ============================================================
+-- SECTION: Attachment
+-- ============================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Soft delete attachment
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketAttachmentDelete
+    @AttachmentId INT,
+    @ModifiedBy   INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE TicketResolverTicketAttachment
+        SET IsActive = 0,
+            ModifiedBy = @ModifiedBy,
+            ModifiedDate = GETDATE()
+        WHERE AttachmentId = @AttachmentId AND IsActive = 1;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketAttachmentGetById
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Get attachment by ID
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketAttachmentGetById
+    @AttachmentId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        a.AttachmentId,
+        a.TicketId,
+        a.CommentId,
+        a.OriginalFileName,
+        a.StoredFileName,
+        a.CreatedBy,
+        a.CreatedDate
+    FROM TicketResolverTicketAttachment a
+    WHERE a.AttachmentId = @AttachmentId AND a.IsActive = 1;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketAttachmentGetByTicketId
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Get attachments for a ticket
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketAttachmentGetByTicketId
+    @TicketId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        a.AttachmentId,
+        a.TicketId,
+        a.CommentId,
+        a.OriginalFileName,
+        a.StoredFileName,
+        u.FirstName + ' ' + u.LastName AS UploadedByName,
+        a.CreatedDate
+    FROM TicketResolverTicketAttachment a
+    INNER JOIN TicketResolverUser u ON a.CreatedBy = u.UserId
+    WHERE a.TicketId = @TicketId AND a.IsActive = 1
+    ORDER BY a.CreatedDate DESC;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketAttachmentInsert
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Insert attachment record
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketAttachmentInsert
+    @TicketId         INT,
+    @CommentId        INT = NULL,
+    @OriginalFileName VARCHAR(255),
+    @StoredFileName   VARCHAR(255),
+    @CreatedBy        INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        INSERT INTO TicketResolverTicketAttachment 
+            (TicketId, CommentId, OriginalFileName, StoredFileName, CreatedBy)
+        VALUES 
+            (@TicketId, @CommentId, @OriginalFileName, @StoredFileName, @CreatedBy);
+
+        SELECT SCOPE_IDENTITY() AS AttachmentId;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketCategoryDelete
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Soft delete category
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketCategoryDelete
+    @CategoryId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE TicketResolverTicketCategory
+        SET IsActive = 0,
+            ModifiedDate = GETDATE()
+        WHERE CategoryId = @CategoryId AND IsActive = 1;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketCategoryGetAll
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Get all active categories
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketCategoryGetAll
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        CategoryId,
+        CategoryName
+    FROM TicketResolverTicketCategory
+    WHERE IsActive = 1
+    ORDER BY CategoryName;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketCategoryInsert
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Insert new category
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketCategoryInsert
+    @CategoryName NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF EXISTS (SELECT 1 FROM TicketResolverTicketCategory WHERE CategoryName = @CategoryName AND IsActive = 1)
+        BEGIN
+            RAISERROR('Category already exists.', 16, 1);
+            RETURN;
+        END
+
+        INSERT INTO TicketResolverTicketCategory (CategoryName)
+        VALUES (@CategoryName);
+
+        SELECT SCOPE_IDENTITY() AS CategoryId;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketCategoryUpdate
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Update category
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketCategoryUpdate
+    @CategoryId   INT,
+    @CategoryName NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF EXISTS (SELECT 1 FROM TicketResolverTicketCategory WHERE CategoryName = @CategoryName AND CategoryId != @CategoryId AND IsActive = 1)
+        BEGIN
+            RAISERROR('Category name already exists.', 16, 1);
+            RETURN;
+        END
+
+        UPDATE TicketResolverTicketCategory
+        SET CategoryName = @CategoryName,
+            ModifiedDate = GETDATE()
+        WHERE CategoryId = @CategoryId AND IsActive = 1;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketCommentGetByTicketId
+======================================================================================
+
+-- ============================================================
+-- SECTION: Comment
+-- ============================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Get all comments for a ticket
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketCommentGetByTicketId
+    @TicketId INT,
+    @UserId   INT,
+    @RoleId   INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        tc.CommentId,
+        tc.TicketId,
+        tc.UserId,
+        u.FirstName + ' ' + u.LastName AS UserName,
+        r.RoleName,
+        tc.CommentText,
+        tc.IsInternalNote,
+        tc.CreatedDate
+    FROM TicketResolverTicketComment tc
+    INNER JOIN TicketResolverUser u ON tc.UserId = u.UserId
+    INNER JOIN TicketResolverRole r ON u.RoleId = r.RoleId
+    WHERE tc.TicketId = @TicketId 
+        AND tc.IsActive = 1
+        AND (
+            tc.IsInternalNote = 0
+            OR @RoleId IN (1, 2)
+            OR tc.UserId = @UserId
+        )
+    ORDER BY tc.CreatedDate ASC;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketCommentInsert
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Insert new comment
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketCommentInsert
+    @TicketId       INT,
+    @UserId         INT,
+    @CommentText    NVARCHAR(MAX),
+    @IsInternalNote BIT = 0
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        INSERT INTO TicketResolverTicketComment 
+            (TicketId, UserId, CommentText, IsInternalNote)
+        VALUES 
+            (@TicketId, @UserId, @CommentText, @IsInternalNote);
+
+        SELECT SCOPE_IDENTITY() AS CommentId;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketDashboardStats
+======================================================================================
+
+-- ============================================================
+-- SECTION: Dashboard
+-- ============================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Get dashboard statistics
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketDashboardStats
+    @UserId INT = NULL,
+    @RoleId INT = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @TotalTickets INT = 0;
+    DECLARE @NewTickets INT = 0;
+    DECLARE @AssignedTickets INT = 0;
+    DECLARE @InProgressTickets INT = 0;
+    DECLARE @ResolvedTickets INT = 0;
+    DECLARE @ClosedTickets INT = 0;
+    DECLARE @ReopenedTickets INT = 0;
+
+    IF @RoleId = 3
+    BEGIN
+        SELECT @TotalTickets = COUNT(*) FROM TicketResolverTicket WHERE CreatedBy = @UserId AND IsActive = 1;
+        SELECT @NewTickets = COUNT(*) FROM TicketResolverTicket WHERE CreatedBy = @UserId AND IsActive = 1 AND StatusId = 1;
+        SELECT @AssignedTickets = COUNT(*) FROM TicketResolverTicket WHERE CreatedBy = @UserId AND IsActive = 1 AND StatusId = 2;
+        SELECT @InProgressTickets = COUNT(*) FROM TicketResolverTicket WHERE CreatedBy = @UserId AND IsActive = 1 AND StatusId = 3;
+        SELECT @ResolvedTickets = COUNT(*) FROM TicketResolverTicket WHERE CreatedBy = @UserId AND IsActive = 1 AND StatusId = 5;
+        SELECT @ClosedTickets = COUNT(*) FROM TicketResolverTicket WHERE CreatedBy = @UserId AND IsActive = 1 AND StatusId = 6;
+        SELECT @ReopenedTickets = COUNT(*) FROM TicketResolverTicket WHERE CreatedBy = @UserId AND IsActive = 1 AND StatusId = 7;
+    END
+    ELSE IF @RoleId = 2
+    BEGIN
+        SELECT @TotalTickets = COUNT(*) FROM TicketResolverTicket WHERE AssignedTo = @UserId AND IsActive = 1;
+        SELECT @NewTickets = COUNT(*) FROM TicketResolverTicket WHERE AssignedTo = @UserId AND IsActive = 1 AND StatusId = 1;
+        SELECT @AssignedTickets = COUNT(*) FROM TicketResolverTicket WHERE AssignedTo = @UserId AND IsActive = 1 AND StatusId = 2;
+        SELECT @InProgressTickets = COUNT(*) FROM TicketResolverTicket WHERE AssignedTo = @UserId AND IsActive = 1 AND StatusId = 3;
+        SELECT @ResolvedTickets = COUNT(*) FROM TicketResolverTicket WHERE AssignedTo = @UserId AND IsActive = 1 AND StatusId = 5;
+        SELECT @ClosedTickets = COUNT(*) FROM TicketResolverTicket WHERE AssignedTo = @UserId AND IsActive = 1 AND StatusId = 6;
+        SELECT @ReopenedTickets = COUNT(*) FROM TicketResolverTicket WHERE AssignedTo = @UserId AND IsActive = 1 AND StatusId = 7;
+    END
+    ELSE
+    BEGIN
+        SELECT @TotalTickets = COUNT(*) FROM TicketResolverTicket WHERE IsActive = 1;
+        SELECT @NewTickets = COUNT(*) FROM TicketResolverTicket WHERE IsActive = 1 AND StatusId = 1;
+        SELECT @AssignedTickets = COUNT(*) FROM TicketResolverTicket WHERE IsActive = 1 AND StatusId = 2;
+        SELECT @InProgressTickets = COUNT(*) FROM TicketResolverTicket WHERE IsActive = 1 AND StatusId = 3;
+        SELECT @ResolvedTickets = COUNT(*) FROM TicketResolverTicket WHERE IsActive = 1 AND StatusId = 5;
+        SELECT @ClosedTickets = COUNT(*) FROM TicketResolverTicket WHERE IsActive = 1 AND StatusId = 6;
+        SELECT @ReopenedTickets = COUNT(*) FROM TicketResolverTicket WHERE IsActive = 1 AND StatusId = 7;
+    END
+
+    SELECT 
+        @TotalTickets AS TotalTickets,
+        @NewTickets AS NewTickets,
+        @AssignedTickets AS AssignedTickets,
+        @InProgressTickets AS InProgressTickets,
+        @ResolvedTickets AS ResolvedTickets,
+        @ClosedTickets AS ClosedTickets,
+        @ReopenedTickets AS ReopenedTickets;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketDelete
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Soft delete ticket
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketDelete
+    @TicketId   INT,
+    @ModifiedBy INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE TicketResolverTicket
+        SET IsActive = 0,
+            ModifiedBy = @ModifiedBy,
+            ModifiedDate = GETDATE()
+        WHERE TicketId = @TicketId AND IsActive = 1;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketGenerateNumber
+======================================================================================
+CREATE PROCEDURE TicketResolverTicketGenerateNumber
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @LastNumber VARCHAR(9);
+    DECLARE @NextNumber VARCHAR(9);
+    DECLARE @NextSeq INT;
+
+    SELECT TOP 1 @LastNumber = TicketNumber
+    FROM TicketResolverTicket
+    ORDER BY TicketId DESC;
+
+    IF @LastNumber IS NULL
+    BEGIN
+        SET @NextNumber = 'TKT000001';
+    END
+    ELSE
+    BEGIN
+        SET @NextSeq = CAST(SUBSTRING(@LastNumber, 4, 6) AS INT) + 1;
+        SET @NextNumber = 'TKT' + RIGHT('000000' + CAST(@NextSeq AS VARCHAR(6)), 6);
+    END
+
+    SELECT @NextNumber AS TicketNumber;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketGetById
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Get ticket details by ID with joins
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketGetById
+    @TicketId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        t.TicketId,
+        t.TicketNumber,
+        t.Subject,
+        t.Description,
+        t.CategoryId,
+        c.CategoryName,
+        t.PriorityId,
+        p.PriorityName,
+        p.Sequence AS PrioritySequence,
+        t.StatusId,
+        s.StatusName,
+        s.IsTerminalState,
+        t.CreatedBy,
+        uc.FirstName + ' ' + uc.LastName AS CreatedByName,
+        t.AssignedTo,
+        CASE 
+            WHEN t.AssignedTo IS NOT NULL 
+            THEN ua.FirstName + ' ' + ua.LastName 
+            ELSE NULL 
+        END AS AssignedToName,
+        t.CreatedDate,
+        t.ResolvedDate,
+        t.ClosedDate,
+        t.ModifiedBy,
+        t.ModifiedDate,
+        t.IsActive
+    FROM TicketResolverTicket t
+    INNER JOIN TicketResolverTicketCategory c ON t.CategoryId = c.CategoryId
+    INNER JOIN TicketResolverTicketPriority p ON t.PriorityId = p.PriorityId
+    INNER JOIN TicketResolverTicketStatus s ON t.StatusId = s.StatusId
+    INNER JOIN TicketResolverUser uc ON t.CreatedBy = uc.UserId
+    LEFT JOIN TicketResolverUser ua ON t.AssignedTo = ua.UserId
+    WHERE t.TicketId = @TicketId AND t.IsActive = 1;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketInsert
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Insert new ticket
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketInsert
+    @TicketNumber VARCHAR(9),
+    @Subject      NVARCHAR(200),
+    @Description  NVARCHAR(MAX),
+    @CategoryId   INT,
+    @PriorityId   INT,
+    @CreatedBy    INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        INSERT INTO TicketResolverTicket 
+            (TicketNumber, Subject, Description, CategoryId, PriorityId, StatusId, CreatedBy)
+        VALUES 
+            (@TicketNumber, @Subject, @Description, @CategoryId, @PriorityId, 1, @CreatedBy);
+
+        DECLARE @TicketId INT = SCOPE_IDENTITY();
+
+        INSERT INTO TicketResolverTicketStatusHistory 
+            (TicketId, OldStatusId, NewStatusId, PreviousAssignedTo, CurrentAssignedTo, ChangeReason, CreatedBy)
+        VALUES 
+            (@TicketId, NULL, 1, NULL, NULL, 'Ticket created', @CreatedBy);
+
+        SELECT @TicketId AS TicketId;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketPriorityDelete
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Soft delete priority
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketPriorityDelete
+    @PriorityId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE TicketResolverTicketPriority
+        SET IsActive = 0,
+            ModifiedDate = GETDATE()
+        WHERE PriorityId = @PriorityId AND IsActive = 1;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketPriorityGetAll
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Get all active priorities
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketPriorityGetAll
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        PriorityId,
+        PriorityName,
+        Sequence
+    FROM TicketResolverTicketPriority
+    WHERE IsActive = 1
+    ORDER BY Sequence;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketPriorityInsert
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Insert new priority
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketPriorityInsert
+    @PriorityName NVARCHAR(50),
+    @Sequence     INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF EXISTS (SELECT 1 FROM TicketResolverTicketPriority WHERE PriorityName = @PriorityName AND IsActive = 1)
+        BEGIN
+            RAISERROR('Priority already exists.', 16, 1);
+            RETURN;
+        END
+
+        IF EXISTS (SELECT 1 FROM TicketResolverTicketPriority WHERE Sequence = @Sequence AND IsActive = 1)
+        BEGIN
+            RAISERROR('Priority sequence already exists.', 16, 1);
+            RETURN;
+        END
+
+        INSERT INTO TicketResolverTicketPriority (PriorityName, Sequence)
+        VALUES (@PriorityName, @Sequence);
+
+        SELECT SCOPE_IDENTITY() AS PriorityId;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketPriorityUpdate
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Update priority
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketPriorityUpdate
+    @PriorityId   INT,
+    @PriorityName NVARCHAR(50),
+    @Sequence     INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF EXISTS (SELECT 1 FROM TicketResolverTicketPriority WHERE PriorityName = @PriorityName AND PriorityId != @PriorityId AND IsActive = 1)
+        BEGIN
+            RAISERROR('Priority name already exists.', 16, 1);
+            RETURN;
+        END
+
+        IF EXISTS (SELECT 1 FROM TicketResolverTicketPriority WHERE Sequence = @Sequence AND PriorityId != @PriorityId AND IsActive = 1)
+        BEGIN
+            RAISERROR('Priority sequence already exists.', 16, 1);
+            RETURN;
+        END
+
+        UPDATE TicketResolverTicketPriority
+        SET PriorityName = @PriorityName,
+            Sequence = @Sequence,
+            ModifiedDate = GETDATE()
+        WHERE PriorityId = @PriorityId AND IsActive = 1;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketSearch
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Search tickets with filters (Admin)
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketSearch
+    @SearchTerm  NVARCHAR(200) = NULL,
+    @CategoryId  INT = NULL,
+    @PriorityId  INT = NULL,
+    @StatusId    INT = NULL,
+    @AssignedTo  INT = NULL,
+    @CreatedBy   INT = NULL,
+    @PageNumber  INT = 1,
+    @PageSize    INT = 10
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Skip INT = (@PageNumber - 1) * @PageSize;
+
+    SELECT 
+        t.TicketId,
+        t.TicketNumber,
+        t.Subject,
+        c.CategoryName,
+        p.PriorityName,
+        p.Sequence AS PrioritySequence,
+        s.StatusName,
+        s.StatusId AS StatusIdVal,
+        uc.FirstName + ' ' + uc.LastName AS CreatedByName,
+        CASE 
+            WHEN t.AssignedTo IS NOT NULL 
+            THEN ua.FirstName + ' ' + ua.LastName 
+            ELSE 'Unassigned' 
+        END AS AssignedToName,
+        t.CreatedDate,
+        t.ResolvedDate,
+        t.ClosedDate
+    FROM TicketResolverTicket t
+    INNER JOIN TicketResolverTicketCategory c ON t.CategoryId = c.CategoryId
+    INNER JOIN TicketResolverTicketPriority p ON t.PriorityId = p.PriorityId
+    INNER JOIN TicketResolverTicketStatus s ON t.StatusId = s.StatusId
+    INNER JOIN TicketResolverUser uc ON t.CreatedBy = uc.UserId
+    LEFT JOIN TicketResolverUser ua ON t.AssignedTo = ua.UserId
+    WHERE 
+        t.IsActive = 1
+        AND (@SearchTerm IS NULL OR 
+             t.TicketNumber LIKE '%' + @SearchTerm + '%' OR 
+             t.Subject LIKE '%' + @SearchTerm + '%')
+        AND (@CategoryId IS NULL OR t.CategoryId = @CategoryId)
+        AND (@PriorityId IS NULL OR t.PriorityId = @PriorityId)
+        AND (@StatusId IS NULL OR t.StatusId = @StatusId)
+        AND (@AssignedTo IS NULL OR t.AssignedTo = @AssignedTo)
+        AND (@CreatedBy IS NULL OR t.CreatedBy = @CreatedBy)
+    ORDER BY t.CreatedDate DESC
+    OFFSET @Skip ROWS
+    FETCH NEXT @PageSize ROWS ONLY;
+
+    SELECT COUNT(*) AS TotalCount
+    FROM TicketResolverTicket t
+    WHERE 
+        t.IsActive = 1
+        AND (@SearchTerm IS NULL OR 
+             t.TicketNumber LIKE '%' + @SearchTerm + '%' OR 
+             t.Subject LIKE '%' + @SearchTerm + '%')
+        AND (@CategoryId IS NULL OR t.CategoryId = @CategoryId)
+        AND (@PriorityId IS NULL OR t.PriorityId = @PriorityId)
+        AND (@StatusId IS NULL OR t.StatusId = @StatusId)
+        AND (@AssignedTo IS NULL OR t.AssignedTo = @AssignedTo)
+        AND (@CreatedBy IS NULL OR t.CreatedBy = @CreatedBy);
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketStatusDelete
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Soft delete status
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketStatusDelete
+    @StatusId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE TicketResolverTicketStatus
+        SET IsActive = 0,
+            ModifiedDate = GETDATE()
+        WHERE StatusId = @StatusId AND IsActive = 1;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketStatusGetAll
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Get all active statuses
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketStatusGetAll
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        StatusId,
+        StatusName,
+        IsTerminalState
+    FROM TicketResolverTicketStatus
+    WHERE IsActive = 1
+    ORDER BY StatusId;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketStatusGetById
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Get status by ID
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketStatusGetById
+    @StatusId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        StatusId,
+        StatusName,
+        IsTerminalState
+    FROM TicketResolverTicketStatus
+    WHERE StatusId = @StatusId AND IsActive = 1;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketStatusHistoryGetByTicketId
+======================================================================================
+CREATE PROCEDURE TicketResolverTicketStatusHistoryGetByTicketId
+    @TicketId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        h.HistoryId,
+        h.TicketId,
+        h.OldStatusId,
+        os.StatusName AS OldStatusName,
+        h.NewStatusId,
+        ns.StatusName AS NewStatusName,
+        h.PreviousAssignedTo,
+        CASE 
+            WHEN h.PreviousAssignedTo IS NOT NULL 
+            THEN upa.FirstName + ' ' + upa.LastName 
+            ELSE NULL 
+        END AS PreviousAssignedToName,
+        h.CurrentAssignedTo,
+        CASE 
+            WHEN h.CurrentAssignedTo IS NOT NULL 
+            THEN uca.FirstName + ' ' + uca.LastName 
+            ELSE NULL 
+        END AS CurrentAssignedToName,
+        h.ChangeReason,
+        h.CreatedBy,
+        u.FirstName + ' ' + u.LastName AS ChangedByName,
+        h.CreatedDate
+    FROM TicketResolverTicketStatusHistory h
+    INNER JOIN TicketResolverTicketStatus os ON h.OldStatusId = os.StatusId
+    INNER JOIN TicketResolverTicketStatus ns ON h.NewStatusId = ns.StatusId
+    INNER JOIN TicketResolverUser u ON h.CreatedBy = u.UserId
+    LEFT JOIN TicketResolverUser upa ON h.PreviousAssignedTo = upa.UserId
+    LEFT JOIN TicketResolverUser uca ON h.CurrentAssignedTo = uca.UserId
+    WHERE h.TicketId = @TicketId
+    ORDER BY h.CreatedDate DESC;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketStatusInsert
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Insert new status
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketStatusInsert
+    @StatusName     NVARCHAR(50),
+    @IsTerminalState BIT = 0
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF EXISTS (SELECT 1 FROM TicketResolverTicketStatus WHERE StatusName = @StatusName AND IsActive = 1)
+        BEGIN
+            RAISERROR('Status already exists.', 16, 1);
+            RETURN;
+        END
+
+        INSERT INTO TicketResolverTicketStatus (StatusName, IsTerminalState)
+        VALUES (@StatusName, @IsTerminalState);
+
+        SELECT SCOPE_IDENTITY() AS StatusId;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketStatusUpdate
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Update status
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketStatusUpdate
+    @StatusId       INT,
+    @StatusName     NVARCHAR(50),
+    @IsTerminalState BIT = 0
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF EXISTS (SELECT 1 FROM TicketResolverTicketStatus WHERE StatusName = @StatusName AND StatusId != @StatusId AND IsActive = 1)
+        BEGIN
+            RAISERROR('Status name already exists.', 16, 1);
+            RETURN;
+        END
+
+        UPDATE TicketResolverTicketStatus
+        SET StatusName = @StatusName,
+            IsTerminalState = @IsTerminalState,
+            ModifiedDate = GETDATE()
+        WHERE StatusId = @StatusId AND IsActive = 1;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketUpdate
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Update ticket details (only when status is New)
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketUpdate
+    @TicketId   INT,
+    @Subject    NVARCHAR(200),
+    @Description NVARCHAR(MAX),
+    @CategoryId INT,
+    @PriorityId INT,
+    @ModifiedBy INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE TicketResolverTicket
+        SET Subject = @Subject,
+            Description = @Description,
+            CategoryId = @CategoryId,
+            PriorityId = @PriorityId,
+            ModifiedBy = @ModifiedBy,
+            ModifiedDate = GETDATE()
+        WHERE TicketId = @TicketId 
+            AND IsActive = 1 
+            AND StatusId = 1
+            AND CreatedBy = @ModifiedBy;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverTicketUpdateStatus
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Update ticket status with history
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverTicketUpdateStatus
+    @TicketId    INT,
+    @NewStatusId INT,
+    @ModifiedBy  INT,
+    @ChangeReason NVARCHAR(500) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        DECLARE @OldStatusId INT;
+
+        SELECT @OldStatusId = StatusId
+        FROM TicketResolverTicket
+        WHERE TicketId = @TicketId AND IsActive = 1;
+
+        UPDATE TicketResolverTicket
+        SET StatusId = @NewStatusId,
+            ModifiedBy = @ModifiedBy,
+            ModifiedDate = GETDATE(),
+            ResolvedDate = CASE WHEN @NewStatusId = 5 THEN GETDATE() ELSE ResolvedDate END,
+            ClosedDate = CASE WHEN @NewStatusId = 6 THEN GETDATE() ELSE ClosedDate END
+        WHERE TicketId = @TicketId AND IsActive = 1;
+
+        INSERT INTO TicketResolverTicketStatusHistory 
+            (TicketId, OldStatusId, NewStatusId, PreviousAssignedTo, CurrentAssignedTo, ChangeReason, CreatedBy)
+        VALUES 
+            (@TicketId, @OldStatusId, @NewStatusId, @ModifiedBy, @ModifiedBy, @ChangeReason, @ModifiedBy);
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverUserCredentialGetByUserId
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Get credential by user ID
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverUserCredentialGetByUserId
+    @UserId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        CredentialId,
+        UserId,
+        PasswordHash
+    FROM TicketResolverUserCredential
+    WHERE UserId = @UserId AND IsActive = 1;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverUserCredentialInsert
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Insert user credential (password hash)
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverUserCredentialInsert
+    @UserId       INT,
+    @PasswordHash VARCHAR(500)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        INSERT INTO TicketResolverUserCredential (UserId, PasswordHash)
+        VALUES (@UserId, @PasswordHash);
+
+        SELECT SCOPE_IDENTITY() AS CredentialId;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverUserCredentialUpdatePassword
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Update user credential password hash
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverUserCredentialUpdatePassword
+    @UserId       INT,
+    @PasswordHash VARCHAR(500)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE TicketResolverUserCredential
+        SET PasswordHash = @PasswordHash,
+            ModifiedDate = GETDATE()
+        WHERE UserId = @UserId AND IsActive = 1;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverUserGetByEmail
+======================================================================================
+
+-- ============================================================
+-- SECTION: User
+-- ============================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Get user by email with role name
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverUserGetByEmail
+    @Email VARCHAR(200)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        u.UserId,
+        u.RoleId,
+        r.RoleName,
+        u.FirstName,
+        u.LastName,
+        u.Email,
+        u.Mobile,
+        u.CreatedDate,
+        u.IsActive
+    FROM TicketResolverUser u
+    INNER JOIN TicketResolverRole r ON u.RoleId = r.RoleId
+    WHERE u.Email = @Email;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverUserGetById
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Get user by ID with role name
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverUserGetById
+    @UserId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        u.UserId,
+        u.RoleId,
+        r.RoleName,
+        u.FirstName,
+        u.LastName,
+        u.Email,
+        u.Mobile,
+        u.CreatedDate,
+        u.IsActive
+    FROM TicketResolverUser u
+    INNER JOIN TicketResolverRole r ON u.RoleId = r.RoleId
+    WHERE u.UserId = @UserId;
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverUserInsert
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Insert new user
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverUserInsert
+    @RoleId    INT,
+    @FirstName NVARCHAR(100),
+    @LastName  NVARCHAR(100),
+    @Email     VARCHAR(200),
+    @Mobile    VARCHAR(20)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF EXISTS (SELECT 1 FROM TicketResolverUser WHERE Email = @Email)
+        BEGIN
+            RAISERROR('Email already registered.', 16, 1);
+            RETURN;
+        END
+
+        IF EXISTS (SELECT 1 FROM TicketResolverUser WHERE Mobile = @Mobile)
+        BEGIN
+            RAISERROR('Mobile number already registered.', 16, 1);
+            RETURN;
+        END
+
+        INSERT INTO TicketResolverUser (RoleId, FirstName, LastName, Email, Mobile)
+        VALUES (@RoleId, @FirstName, @LastName, @Email, @Mobile);
+
+        SELECT SCOPE_IDENTITY() AS UserId;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverUserSearch
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Search and paginate users
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverUserSearch
+    @SearchTerm NVARCHAR(200) = NULL,
+    @RoleId     INT = NULL,
+    @IsActive   BIT = NULL,
+    @PageNumber INT = 1,
+    @PageSize   INT = 10
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Skip INT = (@PageNumber - 1) * @PageSize;
+
+    SELECT 
+        u.UserId,
+        u.RoleId,
+        r.RoleName,
+        u.FirstName,
+        u.LastName,
+        u.Email,
+        u.Mobile,
+        u.CreatedDate,
+        u.IsActive
+    FROM TicketResolverUser u
+    INNER JOIN TicketResolverRole r ON u.RoleId = r.RoleId
+    WHERE 
+        (@SearchTerm IS NULL OR 
+         u.FirstName LIKE '%' + @SearchTerm + '%' OR 
+         u.LastName LIKE '%' + @SearchTerm + '%' OR 
+         u.Email LIKE '%' + @SearchTerm + '%')
+        AND (@RoleId IS NULL OR u.RoleId = @RoleId)
+        AND (@IsActive IS NULL OR u.IsActive = @IsActive)
+    ORDER BY u.CreatedDate DESC
+    OFFSET @Skip ROWS
+    FETCH NEXT @PageSize ROWS ONLY;
+
+    SELECT COUNT(*) AS TotalCount
+    FROM TicketResolverUser u
+    WHERE 
+        (@SearchTerm IS NULL OR 
+         u.FirstName LIKE '%' + @SearchTerm + '%' OR 
+         u.LastName LIKE '%' + @SearchTerm + '%' OR 
+         u.Email LIKE '%' + @SearchTerm + '%')
+        AND (@RoleId IS NULL OR u.RoleId = @RoleId)
+        AND (@IsActive IS NULL OR u.IsActive = @IsActive);
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverUserSetActiveStatus
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Soft delete / activate / deactivate user
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverUserSetActiveStatus
+    @UserId   INT,
+    @IsActive BIT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE TicketResolverUser
+        SET IsActive = @IsActive,
+            ModifiedDate = GETDATE()
+        WHERE UserId = @UserId;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+======================================================================================
+PROCEDURE: TicketResolverUserUpdate
+======================================================================================
+
+/*
+***********************************************************************************************
+    Date            Modified By         Purpose of Modification
+
+1   28 Jul 2026    Initial Creation    Update user details
+
+***********************************************************************************************
+*/
+
+CREATE PROCEDURE TicketResolverUserUpdate
+    @UserId    INT,
+    @RoleId    INT,
+    @FirstName NVARCHAR(100),
+    @LastName  NVARCHAR(100),
+    @Email     VARCHAR(200),
+    @Mobile    VARCHAR(20)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF EXISTS (SELECT 1 FROM TicketResolverUser WHERE Email = @Email AND UserId != @UserId)
+        BEGIN
+            RAISERROR('Email already registered.', 16, 1);
+            RETURN;
+        END
+
+        IF EXISTS (SELECT 1 FROM TicketResolverUser WHERE Mobile = @Mobile AND UserId != @UserId)
+        BEGIN
+            RAISERROR('Mobile number already registered.', 16, 1);
+            RETURN;
+        END
+
+        UPDATE TicketResolverUser
+        SET RoleId = @RoleId,
+            FirstName = @FirstName,
+            LastName = @LastName,
+            Email = @Email,
+            Mobile = @Mobile,
+            ModifiedDate = GETDATE()
+        WHERE UserId = @UserId AND IsActive = 1;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+

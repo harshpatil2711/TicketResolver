@@ -1,0 +1,19 @@
+2026-07-31 10:53:47.144 +05:30 [INF] Application started
+2026-07-31 10:53:47.879 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-31 10:53:49.189 +05:30 [INF] Application started
+2026-07-31 10:53:49.910 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-31 11:03:18.914 +05:30 [INF] Application started
+2026-07-31 11:05:28.123 +05:30 [INF] Application started
+2026-07-31 11:05:54.150 +05:30 [INF] Application started
+2026-07-31 11:08:26.939 +05:30 [INF] Application started
+2026-07-31 11:12:20.487 +05:30 [INF] Application started
+2026-07-31 11:12:53.095 +05:30 [INF] Application started
+2026-07-31 11:12:53.401 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-31 11:16:42.161 +05:30 [INF] Application started
+2026-07-31 11:22:17.491 +05:30 [INF] Application started
+2026-07-31 11:27:59.435 +05:30 [INF] Application started
+2026-07-31 11:42:32.361 +05:30 [INF] Application started
+2026-07-31 11:42:32.684 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-31 11:48:13.833 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-31 11:59:37.771 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-31 12:38:57.248 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token

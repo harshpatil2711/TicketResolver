@@ -1,12 +1,3 @@
-/*
-***********************************************************************************************
-    Date            Modified By         Purpose of Modification
-
-1   28 Jul 2026    Initial Creation    Generate next ticket number
-
-***********************************************************************************************
-*/
-
 CREATE PROCEDURE TicketResolverTicketGenerateNumber
 AS
 BEGIN
@@ -16,7 +7,7 @@ BEGIN
     DECLARE @NextNumber VARCHAR(9);
     DECLARE @NextSeq INT;
 
-    SELECT @LastNumber = TicketNumber
+    SELECT TOP 1 @LastNumber = TicketNumber
     FROM TicketResolverTicket
     ORDER BY TicketId DESC;
 
@@ -32,4 +23,3 @@ BEGIN
 
     SELECT @NextNumber AS TicketNumber;
 END
-GO

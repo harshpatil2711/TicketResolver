@@ -72,7 +72,7 @@ namespace TicketResolver.Controllers
             }
         }
 
-        public JsonResult GetChartData(int? priorityId)
+        public JsonResult GetChartData(int? priorityId, int? statusId)
         {
             try
             {
@@ -83,20 +83,14 @@ namespace TicketResolver.Controllers
                 else if (CurrentRoleId == 2)
                     assignedTo = CurrentUserId;
 
-                var ds = ticketDAL.Search(null, null, priorityId, null, assignedTo, createdBy, 1, 500);
-                var statusGroups = ds.Tables[0].Rows.Cast<DataRow>()
-                    .GroupBy(r => new { Id = Convert.ToInt32(r["StatusIdVal"]), Name = r["StatusName"].ToString() })
-                    .Select(g => new { label = g.Key.Name, value = g.Count() })
-                    .ToList();
+                var ds = ticketDAL.Search(null, null, priorityId, statusId, assignedTo, createdBy, 1, 500);
+                var groups = statusId.HasValue
+                    ? ds.Tables[0].Rows.Cast<DataRow>().GroupBy(r => r["PriorityName"].ToString())
+                    : ds.Tables[0].Rows.Cast<DataRow>().GroupBy(r => r["StatusName"].ToString());
 
-                var colors = new[] { "#0d6efd","#ffc107","#0dcaf0","#6f42c1","#198754","#dc3545","#2b3e50" };
-                var result = new System.Collections.Generic.List<object>();
-                int ci = 0;
-                foreach (var g in statusGroups)
-                {
-                    result.Add(new { g.label, g.value, color = colors[ci % colors.Length] });
-                    ci++;
-                }
+                var result = groups
+                    .Select(g => new { label = g.Key, value = g.Count() })
+                    .ToList();
 
                 return Json(result, JsonRequestBehavior.AllowGet);
             }

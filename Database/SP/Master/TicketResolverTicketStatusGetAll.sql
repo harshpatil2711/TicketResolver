@@ -1,3 +1,4 @@
+
 /*
 ***********************************************************************************************
     Date            Modified By         Purpose of Modification
@@ -20,4 +21,3 @@ BEGIN
     WHERE IsActive = 1
     ORDER BY StatusId;
 END
-GO

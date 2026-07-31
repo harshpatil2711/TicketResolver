@@ -101,28 +101,6 @@ namespace TicketResolver.DAL
             }
         }
 
-        public DataSet GetByCreatedBy(int userId, int pageNumber, int pageSize)
-        {
-            using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverTicketGetByCreatedBy"))
-            {
-                db.AddInParameter(cmd, "@UserId", DbType.Int32, userId);
-                db.AddInParameter(cmd, "@PageNumber", DbType.Int32, pageNumber);
-                db.AddInParameter(cmd, "@PageSize", DbType.Int32, pageSize);
-                return db.ExecuteDataSet(cmd);
-            }
-        }
-
-        public DataSet GetByAssignedTo(int userId, int pageNumber, int pageSize)
-        {
-            using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverTicketGetByAssignedTo"))
-            {
-                db.AddInParameter(cmd, "@UserId", DbType.Int32, userId);
-                db.AddInParameter(cmd, "@PageNumber", DbType.Int32, pageNumber);
-                db.AddInParameter(cmd, "@PageSize", DbType.Int32, pageSize);
-                return db.ExecuteDataSet(cmd);
-            }
-        }
-
         public void UpdateStatus(int ticketId, int newStatusId, int modifiedBy, string changeReason)
         {
             using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverTicketUpdateStatus"))
@@ -154,22 +132,6 @@ namespace TicketResolver.DAL
                 db.AddInParameter(cmd, "@TicketId", DbType.Int32, ticketId);
                 db.AddInParameter(cmd, "@ModifiedBy", DbType.Int32, modifiedBy);
                 db.ExecuteNonQuery(cmd);
-            }
-        }
-
-        public DataSet GetUnassigned(int pageNumber, int pageSize)
-        {
-            using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverTicketSearch"))
-            {
-                db.AddInParameter(cmd, "@SearchTerm", DbType.String, DBNull.Value);
-                db.AddInParameter(cmd, "@CategoryId", DbType.Int32, DBNull.Value);
-                db.AddInParameter(cmd, "@PriorityId", DbType.Int32, DBNull.Value);
-                db.AddInParameter(cmd, "@StatusId", DbType.Int32, 1);
-                db.AddInParameter(cmd, "@AssignedTo", DbType.Int32, DBNull.Value);
-                db.AddInParameter(cmd, "@CreatedBy", DbType.Int32, DBNull.Value);
-                db.AddInParameter(cmd, "@PageNumber", DbType.Int32, pageNumber);
-                db.AddInParameter(cmd, "@PageSize", DbType.Int32, pageSize);
-                return db.ExecuteDataSet(cmd);
             }
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TicketResolver.DAL;
@@ -85,7 +86,7 @@ namespace TicketResolver.Controllers
             {
                 var model = new RegisterViewModel
                 {
-                    Roles = masterDAL.GetRoles()
+                    Roles = GetSignupRoles()
                 };
                 return View(model);
             }
@@ -102,7 +103,7 @@ namespace TicketResolver.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Roles = masterDAL.GetRoles();
+                model.Roles = GetSignupRoles();
                 return Request.IsAjaxRequest() ? Json(new { success = false, error = "Invalid form data." }) : (ActionResult)View(model);
             }
 
@@ -112,7 +113,7 @@ namespace TicketResolver.Controllers
                 if (existingUser != null)
                 {
                     var err = "Email already registered.";
-                    model.Roles = masterDAL.GetRoles();
+                    model.Roles = GetSignupRoles();
                     return Request.IsAjaxRequest() ? Json(new { success = false, error = err }) : (ActionResult)View(model);
                 }
 
@@ -137,10 +138,15 @@ namespace TicketResolver.Controllers
             catch (Exception ex)
             {
                 AppLogger.Error("AuthController.Register", $"Failed registration for {model.Email}", ex);
-                model.Roles = masterDAL.GetRoles();
+                model.Roles = GetSignupRoles();
                 var err = ex.Message.Contains("Email") ? "Email already registered." : "An error occurred. Please try again.";
                 return Request.IsAjaxRequest() ? Json(new { success = false, error = err }) : (ActionResult)View(model);
             }
+        }
+
+        private System.Collections.Generic.List<TicketResolver.Models.TicketRole> GetSignupRoles()
+        {
+            return masterDAL.GetRoles().Where(r => r.RoleId != 1).ToList();
         }
 
         [HttpGet]

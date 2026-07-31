@@ -64,49 +64,6 @@ namespace TicketResolver.DAL
             return list;
         }
 
-        public List<TicketCategory> GetCategoryById(int categoryId)
-        {
-            var list = new List<TicketCategory>();
-            using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverTicketCategoryGetById"))
-            {
-                db.AddInParameter(cmd, "@CategoryId", DbType.Int32, categoryId);
-                using (DataSet ds = db.ExecuteDataSet(cmd))
-                {
-                    foreach (DataRow row in ds.Tables[0].Rows)
-                    {
-                        list.Add(new TicketCategory
-                        {
-                            CategoryId = Convert.ToInt32(row["CategoryId"]),
-                            CategoryName = row["CategoryName"].ToString()
-                        });
-                    }
-                }
-            }
-            return list;
-        }
-
-        public List<TicketPriority> GetPriorityById(int priorityId)
-        {
-            var list = new List<TicketPriority>();
-            using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverTicketPriorityGetById"))
-            {
-                db.AddInParameter(cmd, "@PriorityId", DbType.Int32, priorityId);
-                using (DataSet ds = db.ExecuteDataSet(cmd))
-                {
-                    foreach (DataRow row in ds.Tables[0].Rows)
-                    {
-                        list.Add(new TicketPriority
-                        {
-                            PriorityId = Convert.ToInt32(row["PriorityId"]),
-                            PriorityName = row["PriorityName"].ToString(),
-                            Sequence = Convert.ToInt32(row["Sequence"])
-                        });
-                    }
-                }
-            }
-            return list;
-        }
-
         public List<TicketRole> GetRoles()
         {
             var list = new List<TicketRole>();

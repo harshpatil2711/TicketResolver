@@ -880,3 +880,1231 @@ System.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted
    at TicketResolver.Controllers.TicketController.AddComment(Int32 ticketId, String commentText, Boolean isInternalNote) in D:\C#Practice\TicketResolver\TicketResolver\Controllers\TicketController.cs:line 292
 ClientConnectionId:0de4439e-ca3f-425b-a1fa-f14565157952
 Error Number:547,State:0,Class:16
+2026-07-30 16:08:53.327 +05:30 [INF] Application started
+2026-07-30 16:08:53.656 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 16:08:53.656 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 16:10:36.608 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 16:10:54.088 +05:30 [ERR] TicketController.AddComment: Failed to add comment
+System.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_TicketResolverTicketComment_Ticket". The conflict occurred in database "Training_DB_Harsh_Patil", table "dbo.TicketResolverTicket", column 'TicketId'.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteScalar()
+   at Microsoft.Practices.EnterpriseLibrary.Data.Database.DoExecuteScalar(IDbCommand command)
+   at Microsoft.Practices.EnterpriseLibrary.Data.Database.ExecuteScalar(DbCommand command)
+   at TicketResolver.DAL.CommentDAL.Insert(Int32 ticketId, Int32 userId, String commentText, Boolean isInternalNote) in D:\C#Practice\TicketResolver\BusinessLayer\DAL\CommentDAL.cs:line 22
+   at TicketResolver.Controllers.TicketController.AddComment(Int32 ticketId, String commentText, Boolean isInternalNote, HttpPostedFileBase file) in D:\C#Practice\TicketResolver\TicketResolver\Controllers\TicketController.cs:line 292
+ClientConnectionId:3011f563-a31c-4e13-8f37-2b621da989a4
+Error Number:547,State:0,Class:16
+2026-07-30 16:12:14.756 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 16:12:26.038 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 17:30:38.356 +05:30 [INF] Application started
+2026-07-30 17:30:39.290 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:42.403 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:42.823 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:42.853 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:42.880 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:42.899 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:42.929 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:42.950 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:42.969 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:42.992 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:43.021 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:43.050 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:43.072 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:43.094 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:43.117 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:43.139 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:43.160 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:43.179 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:43.200 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:43.231 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:43.251 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:44.392 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:44.427 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:44.466 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:44.491 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:44.515 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:44.543 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:44.567 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:44.606 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:44.643 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:44.678 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:44.717 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:44.743 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:45.070 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:45.094 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:45.119 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:45.146 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:45.172 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:45.195 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:45.228 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:45.254 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.345 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.376 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.402 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.432 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.469 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.501 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.525 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.553 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.586 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.612 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.639 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.660 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.683 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.714 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.738 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.764 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.800 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.841 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.868 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:50.891 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:54.475 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:54.972 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.000 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.035 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.061 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.088 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.110 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.132 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.160 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.190 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.218 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.245 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.270 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.300 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.326 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.359 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.389 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.415 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.438 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:30:55.467 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:07.329 +05:30 [INF] Application started
+2026-07-30 17:31:08.135 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:08.427 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:08.497 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:08.532 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:08.563 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:08.807 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:08.856 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:08.898 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:08.947 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:08.987 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:09.019 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:09.051 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:09.076 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:09.099 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:09.128 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:09.151 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:09.175 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:09.199 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:09.220 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:09.241 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.341 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.370 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.401 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.430 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.454 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.481 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.518 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.551 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.575 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.604 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.630 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.659 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.688 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.713 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.741 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.779 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.816 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.840 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.873 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:10.901 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:15.987 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.481 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.522 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.551 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.584 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.613 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.651 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.673 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.702 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.733 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.759 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.801 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.823 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.846 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.877 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.900 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.930 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.950 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:16.980 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:17.001 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.098 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.178 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.203 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.233 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.254 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.279 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.310 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.334 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.365 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.388 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.415 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.441 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.462 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.491 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.518 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.548 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.577 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.603 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.632 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:31:47.654 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:32:09.418 +05:30 [INF] Application started
+2026-07-30 17:34:59.727 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:34:59.759 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 17:35:12.701 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:35:12.712 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 17:35:23.809 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:35:23.822 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 17:35:35.058 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:35:35.068 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 17:35:42.465 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:35:42.478 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 17:38:02.767 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 17:38:21.550 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 17:38:28.326 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 17:39:36.931 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:36.960 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:36.998 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.024 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.052 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.081 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.106 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.131 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.154 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.204 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.230 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.251 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.283 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.313 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.338 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.362 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.386 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.408 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.447 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:37.468 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:38.585 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:38.634 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:38.710 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:38.742 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:38.770 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:38.819 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:38.847 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:38.876 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:38.922 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:38.958 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:38.991 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:39.030 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:39.068 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:39.099 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:39.140 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:39.175 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:39.208 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:39.239 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:39.270 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:39.309 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.181 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.217 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.250 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.278 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.315 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.350 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.379 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.407 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.440 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.464 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.500 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.544 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.576 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.603 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.634 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.681 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.715 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.739 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.774 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:43.801 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:48.890 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:49.019 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:49.045 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:49.072 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:49.097 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:49.133 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:49.494 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:49.836 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:49.866 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:49.892 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:49.918 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:49.951 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:49.979 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:50.022 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:50.049 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:50.079 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:50.107 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:50.139 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:50.167 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:39:50.204 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:04.927 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.116 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.166 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.204 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.233 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.257 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.299 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.342 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.384 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.490 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.530 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.583 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.650 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.691 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.726 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.761 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.822 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.858 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.902 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:05.942 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.074 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.107 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.133 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.159 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.187 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.220 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.251 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.283 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.311 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.344 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.367 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.397 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.420 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.442 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.463 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.516 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.545 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.579 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.614 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:40:07.649 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:47:28.006 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 17:48:34.504 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 17:49:11.944 +05:30 [INF] Application started
+2026-07-30 17:49:59.785 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 17:50:27.646 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 17:57:58.526 +05:30 [INF] Application started
+2026-07-30 17:58:11.058 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 18:06:50.952 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:06:51.018 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 18:07:08.706 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:07:08.727 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): A public action method 'AddComment' was not found on controller 'TicketResolver.Controllers.TicketController'.
+   at System.Web.Mvc.Controller.HandleUnknownAction(String actionName)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1d(IAsyncResult asyncResult, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Controller.EndExecuteCore(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.<BeginExecute>b__15(IAsyncResult asyncResult, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Controller.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__5(IAsyncResult asyncResult, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.MvcHandler.EndProcessRequest(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.EndProcessRequest(IAsyncResult result)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 18:11:06.260 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:11:06.616 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): A public action method 'AddComment' was not found on controller 'TicketResolver.Controllers.TicketController'.
+   at System.Web.Mvc.Controller.HandleUnknownAction(String actionName)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1d(IAsyncResult asyncResult, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Controller.EndExecuteCore(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.<BeginExecute>b__15(IAsyncResult asyncResult, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Controller.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__5(IAsyncResult asyncResult, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.MvcHandler.EndProcessRequest(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.EndProcessRequest(IAsyncResult result)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 18:12:40.333 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:12:40.350 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 18:12:45.623 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:12:45.635 +05:30 [ERR] Unhandled exception
+System.Web.HttpException (0x80004005): Maximum request length exceeded.
+   at System.Web.HttpRequest.GetEntireRawContent()
+   at System.Web.HttpRequest.GetMultipartContent()
+   at System.Web.HttpRequest.FillInFormCollection()
+   at System.Web.HttpRequest.EnsureForm()
+   at System.Web.HttpRequest.get_Form()
+   at System.Web.HttpRequestWrapper.get_Form()
+   at System.Web.Mvc.HttpRequestExtensions.GetHttpMethodOverride(HttpRequestBase request)
+   at System.Web.Mvc.AcceptVerbsAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.HttpPostAttribute.IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
+   at System.Web.Mvc.ActionMethodSelectorBase.IsValidMethodSelector(ReadOnlyCollection`1 attributes, ControllerContext controllerContext, MethodInfo method)
+   at System.Web.Mvc.ActionMethodSelectorBase.RunSelectionFilters(ControllerContext controllerContext, List`1 methodInfos)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethods(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ActionMethodSelectorBase.FindActionMethod(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.FindAction(ControllerContext controllerContext, String actionName)
+   at System.Web.Mvc.ControllerActionInvoker.FindAction(ControllerContext controllerContext, ControllerDescriptor controllerDescriptor, String actionName)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeAction(ControllerContext controllerContext, String actionName, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1c(AsyncCallback asyncCallback, Object asyncState, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecuteCore(AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.<BeginExecute>b__14(AsyncCallback asyncCallback, Object callbackState, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.Controller.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.BeginExecute(RequestContext requestContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(AsyncCallback asyncCallback, Object asyncState, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 18:16:25.348 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.382 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.415 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.448 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.482 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.498 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.532 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.565 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.598 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.639 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.649 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.681 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.712 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.740 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.771 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.802 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.833 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.871 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.902 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.934 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:25.956 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:39.632 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:39.682 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:39.733 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:39.782 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:39.872 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:39.918 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:39.978 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:40.029 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:40.079 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:40.109 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:40.149 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:40.200 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:40.240 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:40.290 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:40.330 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:40.361 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:40.431 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:40.481 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:40.509 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:40.560 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:16:40.582 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:27:08.086 +05:30 [INF] Application started
+2026-07-30 18:28:41.191 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:28:45.249 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:28:46.468 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:28:48.079 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:10.577 +05:30 [INF] Application started
+2026-07-30 18:29:10.903 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:10.903 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.228 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.286 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.310 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.347 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.362 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.394 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.410 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.428 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.458 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.477 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.516 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.537 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.560 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.596 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.610 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.628 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.661 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.677 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:11.713 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:12.813 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:12.846 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:12.878 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:12.904 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:12.928 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:12.945 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:12.978 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:12.995 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:13.028 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:13.045 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:13.073 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:13.094 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:13.600 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:13.630 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:13.663 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:13.694 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:13.725 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:13.751 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:13.772 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:13.794 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:18.870 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:18.895 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:18.945 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:18.978 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:19.017 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:19.057 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:19.095 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:19.148 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:19.191 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:19.228 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:19.309 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:19.339 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:19.370 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:19.400 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:19.415 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:19.447 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:19.462 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:19.478 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:19.500 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:19.531 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:22.003 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:31.760 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:31.796 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:31.828 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:31.862 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:31.895 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:31.913 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:31.945 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:31.980 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:32.022 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:32.057 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:32.085 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:32.117 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:32.149 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:32.178 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:32.220 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:32.252 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:32.291 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:32.329 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:32.362 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:29:32.395 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:31:48.650 +05:30 [INF] Application started
+2026-07-30 18:38:13.027 +05:30 [INF] Application started
+2026-07-30 18:48:29.918 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:48:44.986 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+2026-07-30 18:51:58.723 +05:30 [INF] Application started
+2026-07-30 19:06:55.350 +05:30 [INF] Application started
+2026-07-30 19:07:08.886 +05:30 [ERR] Unhandled exception
+System.InvalidOperationException: The SessionStateTempDataProvider class requires session state to be enabled.
+   at System.Web.Mvc.SessionStateTempDataProvider.SaveTempData(ControllerContext controllerContext, IDictionary`2 values)
+   at System.Web.Mvc.TempDataDictionary.Save(ControllerContext controllerContext, ITempDataProvider tempDataProvider)
+   at System.Web.Mvc.Controller.PossiblySaveTempData()
+   at System.Web.Mvc.Controller.EndExecuteCore(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.<BeginExecute>b__15(IAsyncResult asyncResult, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Controller.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__5(IAsyncResult asyncResult, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.MvcHandler.EndProcessRequest(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.EndProcessRequest(IAsyncResult result)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 19:07:41.759 +05:30 [ERR] Unhandled exception
+System.InvalidOperationException: The SessionStateTempDataProvider class requires session state to be enabled.
+   at System.Web.Mvc.SessionStateTempDataProvider.SaveTempData(ControllerContext controllerContext, IDictionary`2 values)
+   at System.Web.Mvc.TempDataDictionary.Save(ControllerContext controllerContext, ITempDataProvider tempDataProvider)
+   at System.Web.Mvc.Controller.PossiblySaveTempData()
+   at System.Web.Mvc.Controller.EndExecuteCore(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.<BeginExecute>b__15(IAsyncResult asyncResult, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Controller.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__5(IAsyncResult asyncResult, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.MvcHandler.EndProcessRequest(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.EndProcessRequest(IAsyncResult result)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 19:07:57.051 +05:30 [INF] Application started
+2026-07-30 19:08:14.995 +05:30 [ERR] Unhandled exception
+System.InvalidOperationException: The SessionStateTempDataProvider class requires session state to be enabled.
+   at System.Web.Mvc.SessionStateTempDataProvider.SaveTempData(ControllerContext controllerContext, IDictionary`2 values)
+   at System.Web.Mvc.TempDataDictionary.Save(ControllerContext controllerContext, ITempDataProvider tempDataProvider)
+   at System.Web.Mvc.Controller.PossiblySaveTempData()
+   at System.Web.Mvc.Controller.EndExecuteCore(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.<BeginExecute>b__15(IAsyncResult asyncResult, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Controller.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__5(IAsyncResult asyncResult, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.MvcHandler.EndProcessRequest(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.EndProcessRequest(IAsyncResult result)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 19:09:49.273 +05:30 [INF] Application started
+2026-07-30 19:10:03.459 +05:30 [ERR] Unhandled exception
+System.InvalidOperationException: The SessionStateTempDataProvider class requires session state to be enabled.
+   at System.Web.Mvc.SessionStateTempDataProvider.SaveTempData(ControllerContext controllerContext, IDictionary`2 values)
+   at System.Web.Mvc.TempDataDictionary.Save(ControllerContext controllerContext, ITempDataProvider tempDataProvider)
+   at System.Web.Mvc.Controller.PossiblySaveTempData()
+   at System.Web.Mvc.Controller.EndExecuteCore(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.<BeginExecute>b__15(IAsyncResult asyncResult, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Controller.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__5(IAsyncResult asyncResult, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.MvcHandler.EndProcessRequest(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.EndProcessRequest(IAsyncResult result)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2026-07-30 19:10:59.574 +05:30 [INF] Application started
+2026-07-30 19:15:09.577 +05:30 [INF] Application started
+2026-07-30 19:18:38.938 +05:30 [ERR] TicketController.Create: Failed to create ticket
+System.Data.SqlClient.SqlException (0x80131904): Violation of UNIQUE KEY constraint 'UQ_TicketResolverTicket_TicketNumber'. Cannot insert duplicate key in object 'dbo.TicketResolverTicket'. The duplicate key value is (TKT000002).
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteScalar()
+   at Microsoft.Practices.EnterpriseLibrary.Data.Database.DoExecuteScalar(IDbCommand command)
+   at Microsoft.Practices.EnterpriseLibrary.Data.Database.ExecuteScalar(DbCommand command)
+   at TicketResolver.DAL.TicketDAL.Insert(String ticketNumber, String subject, String description, Int32 categoryId, Int32 priorityId, Int32 createdBy) in D:\C#Practice\TicketResolver\BusinessLayer\DAL\TicketDAL.cs:line 30
+   at TicketResolver.Controllers.TicketController.Create(TicketCreateViewModel model, HttpPostedFileBase[] files)
+ClientConnectionId:7682c806-1f3f-4443-97a1-40f19de2d38a
+Error Number:2627,State:1,Class:14
+2026-07-30 19:21:07.883 +05:30 [ERR] TicketController.Create: Failed to create ticket
+System.Data.SqlClient.SqlException (0x80131904): Violation of UNIQUE KEY constraint 'UQ_TicketResolverTicket_TicketNumber'. Cannot insert duplicate key in object 'dbo.TicketResolverTicket'. The duplicate key value is (TKT000002).
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteScalar()
+   at Microsoft.Practices.EnterpriseLibrary.Data.Database.DoExecuteScalar(IDbCommand command)
+   at Microsoft.Practices.EnterpriseLibrary.Data.Database.ExecuteScalar(DbCommand command)
+   at TicketResolver.DAL.TicketDAL.Insert(String ticketNumber, String subject, String description, Int32 categoryId, Int32 priorityId, Int32 createdBy) in D:\C#Practice\TicketResolver\BusinessLayer\DAL\TicketDAL.cs:line 30
+   at TicketResolver.Controllers.TicketController.Create(TicketCreateViewModel model, HttpPostedFileBase[] files)
+ClientConnectionId:7682c806-1f3f-4443-97a1-40f19de2d38a
+Error Number:2627,State:1,Class:14
+2026-07-30 19:21:35.649 +05:30 [INF] Application started
+2026-07-30 19:26:24.564 +05:30 [INF] Application started

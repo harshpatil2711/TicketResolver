@@ -1,3 +1,4 @@
+
 /*
 ***********************************************************************************************
     Date            Modified By         Purpose of Modification
@@ -48,4 +49,3 @@ BEGIN
     LEFT JOIN TicketResolverUser ua ON t.AssignedTo = ua.UserId
     WHERE t.TicketId = @TicketId AND t.IsActive = 1;
 END
-GO

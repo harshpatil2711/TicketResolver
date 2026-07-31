@@ -9,7 +9,7 @@ using TicketResolver.ViewModels;
 
 namespace TicketResolver.Controllers
 {
-    [RoleAuthorize(1, 2)]
+    [RoleAuthorize(1)]
     public class UserController : Controller
     {
         private readonly AuthDAL authDAL = new AuthDAL();
