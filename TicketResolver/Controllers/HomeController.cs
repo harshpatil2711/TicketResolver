@@ -58,7 +58,6 @@ namespace TicketResolver.Controllers
                     ClosedTickets = Convert.ToInt32(row["ClosedTickets"]),
                     ReopenedTickets = Convert.ToInt32(row["ReopenedTickets"]),
                     RecentTickets = GetRecentTickets(),
-                    UnassignedTickets = GetUnassignedTickets(),
                     Priorities = masterDAL.GetPriorities(),
                     Statuses = masterDAL.GetStatuses()
                 };
@@ -72,7 +71,7 @@ namespace TicketResolver.Controllers
             }
         }
 
-        public JsonResult GetChartData(int? priorityId, int? statusId)
+        public JsonResult GetChartData(string groupBy)
         {
             try
             {
@@ -83,8 +82,8 @@ namespace TicketResolver.Controllers
                 else if (CurrentRoleId == 2)
                     assignedTo = CurrentUserId;
 
-                var ds = ticketDAL.Search(null, null, priorityId, statusId, assignedTo, createdBy, 1, 500);
-                var groups = statusId.HasValue
+                var ds = ticketDAL.Search(null, null, null, null, assignedTo, createdBy, 1, 500);
+                var groups = groupBy == "Priority"
                     ? ds.Tables[0].Rows.Cast<DataRow>().GroupBy(r => r["PriorityName"].ToString())
                     : ds.Tables[0].Rows.Cast<DataRow>().GroupBy(r => r["StatusName"].ToString());
 
@@ -101,50 +100,40 @@ namespace TicketResolver.Controllers
             }
         }
 
-        private System.Collections.Generic.List<TicketListItemViewModel> GetUnassignedTickets()
-        {
-            if (CurrentRoleId != 1) return new System.Collections.Generic.List<TicketListItemViewModel>();
-
-            var ds = ticketDAL.Search(null, null, null, 1, null, null, 1, 5);
-            return ds.Tables[0].Rows.Cast<DataRow>().Select(r => new TicketListItemViewModel
-            {
-                TicketId = Convert.ToInt32(r["TicketId"]),
-                TicketNumber = r["TicketNumber"].ToString(),
-                Subject = r["Subject"].ToString(),
-                CategoryName = r["CategoryName"].ToString(),
-                PriorityName = r["PriorityName"].ToString(),
-                StatusName = r["StatusName"].ToString(),
-                CreatedByName = r["CreatedByName"].ToString(),
-                CreatedDate = Convert.ToDateTime(r["CreatedDate"])
-            }).ToList();
-        }
-
         private System.Collections.Generic.List<TicketListItemViewModel> GetRecentTickets()
         {
-            int? createdBy = null;
-            int? assignedTo = null;
-            var role = CurrentRoleId;
-
-            if (role == 3)
-                createdBy = CurrentUserId;
-            else if (role == 2)
-                assignedTo = CurrentUserId;
-
-            var ds = ticketDAL.Search(null, null, null, null, assignedTo, createdBy, 1, 5);
-            return ds.Tables[0].Rows.Cast<DataRow>().Select(r => new TicketListItemViewModel
+            try
             {
-                TicketId = Convert.ToInt32(r["TicketId"]),
-                TicketNumber = r["TicketNumber"].ToString(),
-                Subject = r["Subject"].ToString(),
-                CategoryName = r["CategoryName"].ToString(),
-                PriorityName = r["PriorityName"].ToString(),
-                PrioritySequence = Convert.ToInt32(r["PrioritySequence"]),
-                StatusName = r["StatusName"].ToString(),
-                StatusId = Convert.ToInt32(r["StatusIdVal"]),
-                CreatedByName = r["CreatedByName"].ToString(),
-                AssignedToName = r["AssignedToName"].ToString(),
-                CreatedDate = Convert.ToDateTime(r["CreatedDate"])
-            }).ToList();
+                int? createdBy = null;
+                int? assignedTo = null;
+                var role = CurrentRoleId;
+
+                if (role == 3)
+                    createdBy = CurrentUserId;
+                else if (role == 2)
+                    assignedTo = CurrentUserId;
+
+                var ds = ticketDAL.Search(null, null, null, null, assignedTo, createdBy, 1, 5);
+                return ds.Tables[0].Rows.Cast<DataRow>().Select(r => new TicketListItemViewModel
+                {
+                    TicketId = Convert.ToInt32(r["TicketId"]),
+                    TicketNumber = r["TicketNumber"].ToString(),
+                    Subject = r["Subject"].ToString(),
+                    CategoryName = r["CategoryName"].ToString(),
+                    PriorityName = r["PriorityName"].ToString(),
+                    PrioritySequence = Convert.ToInt32(r["PrioritySequence"]),
+                    StatusName = r["StatusName"].ToString(),
+                    StatusId = Convert.ToInt32(r["StatusIdVal"]),
+                    CreatedByName = r["CreatedByName"].ToString(),
+                    AssignedToName = r["AssignedToName"].ToString(),
+                    CreatedDate = Convert.ToDateTime(r["CreatedDate"])
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("HomeController.GetRecentTickets", "Failed to load recent tickets", ex);
+                return new System.Collections.Generic.List<TicketListItemViewModel>();
+            }
         }
     }
 }

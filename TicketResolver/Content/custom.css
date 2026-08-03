@@ -9,6 +9,8 @@ body {
     background-color: #f4f6f9;
     display: flex;
     min-height: 100vh;
+    overflow-x: hidden;
+    max-width: 100vw;
 }
 
 /* Sidebar */
@@ -60,6 +62,8 @@ body {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    max-width: 100%;
 }
 
 /* Top Navbar */
@@ -71,6 +75,7 @@ body {
     justify-content: space-between;
     padding: 0 30px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    max-width: 100%;
 }
 
 .user-menu {
@@ -89,7 +94,16 @@ body {
 .content-container {
     padding: 25px 30px;
     flex-grow: 1;
+    min-width: 0;
+    max-width: 100%;
 }
+
+/* Input elements default responsive constraints */
+.form-select, .form-control {
+    width: 100%;
+    max-width: 100%;
+}
+
 
 /* Page Header */
 .page-header {
@@ -170,6 +184,8 @@ body {
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     margin-bottom: 25px;
+    width: 100%;
+    overflow: hidden; /* prevent inner content from bleeding out */
 }
 
 .card-header-custom {
@@ -261,8 +277,10 @@ body {
 }
 
 .auth-card {
-    width: 420px;
-    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+    margin: 15px;
+    padding: 40px 20px;
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -288,3 +306,282 @@ body {
     font-size: 0.9rem;
     color: #888;
 }
+
+/* Ensure table container cards scroll horizontally when overflow occurs */
+.card-custom:has(.custom-table), .card-custom:has(table) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Responsive Styles (Bootstrap 5 Breakpoints) */
+
+/* Large / Medium devices (tablets and below, < 992px) */
+@media (max-width: 991.98px) {
+    body {
+        flex-direction: column;
+    }
+
+    /* Sidebar transforms into a horizontal top navigation bar */
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        flex-direction: column;
+    }
+
+    .sidebar-brand {
+        padding: 15px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-menu {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        margin-top: 0;
+        padding: 0;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+    }
+
+    .sidebar-menu::-webkit-scrollbar {
+        display: none; /* Safari/Chrome */
+    }
+
+    .sidebar-menu li {
+        flex: 0 0 auto;
+    }
+
+    .sidebar-menu li a {
+        padding: 15px 20px;
+        font-size: 0.9rem;
+        display: block;
+        text-align: center;
+    }
+
+    .sidebar-menu li a i {
+        margin-right: 6px;
+        display: inline-block;
+    }
+
+    /* Main layout adjustment */
+    .main-wrapper {
+        width: 100%;
+    }
+
+    /* Dashboard grid stacking */
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    /* Ensure tables don't squeeze too much on smaller screens */
+    .custom-table {
+        min-width: 800px;
+    }
+}
+
+/* Medium / Small devices (phones and small tablets, < 768px) */
+@media (max-width: 767.98px) {
+    .content-container {
+        padding: 12px;
+    }
+
+    .navbar-top {
+        padding: 0 12px;
+    }
+
+    /* Fix Bootstrap .row negative margin overflow on mobile */
+    .card-custom .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .card-custom .row > [class*="col-"] {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Override inline padding on form wrapper divs inside cards */
+    .card-custom > div[style*="padding"] {
+        padding: 14px !important;
+    }
+
+    /* Ensure all selects and inputs stay fully within the card */
+    .form-select,
+    .form-control,
+    select,
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="file"],
+    textarea {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    /* Convert tables into cards for mobile view */
+    .custom-table,
+    .custom-table thead,
+    .custom-table tbody,
+    .custom-table tr,
+    .custom-table td {
+        display: block;
+    }
+
+    .custom-table {
+        min-width: auto !important; /* Override min-width from larger screens */
+        border: none;
+    }
+
+    .custom-table thead {
+        display: none; /* Hide standard headers */
+    }
+
+    .custom-table tr {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin: 12px;
+        padding: 12px 16px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    }
+
+    .custom-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.85rem;
+    }
+
+    .custom-table td:last-child {
+        border-bottom: none;
+    }
+
+    /* Target the text alignment within cells so content is pushed to the right,
+       while labels remain aligned left */
+    .custom-table td > * {
+        text-align: right;
+    }
+
+    /* Disable pseudo-element labels for empty/no-data messages */
+    .custom-table td:has(.empty-msg)::before,
+    .custom-table td.empty-msg::before,
+    .custom-table td[colspan]::before,
+    .custom-table td.text-center::before {
+        content: none !important;
+    }
+
+    .custom-table td:has(.empty-msg),
+    .custom-table td.empty-msg,
+    .custom-table td[colspan],
+    .custom-table td.text-center {
+        justify-content: center;
+        text-align: center;
+        display: block;
+    }
+
+    /* 1. Recent Tickets Table (Dashboard) */
+    .dashboard-layout .custom-table td:nth-child(1)::before { content: "#"; font-weight: 600; color: #64748b; }
+    .dashboard-layout .custom-table td:nth-child(2)::before { content: "Ticket #"; font-weight: 600; color: #64748b; }
+    .dashboard-layout .custom-table td:nth-child(3)::before { content: "Name"; font-weight: 600; color: #64748b; }
+    .dashboard-layout .custom-table td:nth-child(4)::before { content: "Subject"; font-weight: 600; color: #64748b; }
+    .dashboard-layout .custom-table td:nth-child(5)::before { content: "Assigned To"; font-weight: 600; color: #64748b; }
+    .dashboard-layout .custom-table td:nth-child(6)::before { content: "Updated"; font-weight: 600; color: #64748b; }
+    .dashboard-layout .custom-table td:nth-child(7)::before { content: "Action"; font-weight: 600; color: #64748b; }
+    .dashboard-layout .custom-table td:nth-child(8)::before { content: "Status"; font-weight: 600; color: #64748b; }
+
+    /* 2. Unassigned Tickets Table (Dashboard) */
+    .content-container > .card-custom > .custom-table td:nth-child(1)::before { content: "#"; font-weight: 600; color: #64748b; }
+    .content-container > .card-custom > .custom-table td:nth-child(2)::before { content: "Ticket #"; font-weight: 600; color: #64748b; }
+    .content-container > .card-custom > .custom-table td:nth-child(3)::before { content: "Name"; font-weight: 600; color: #64748b; }
+    .content-container > .card-custom > .custom-table td:nth-child(4)::before { content: "Subject"; font-weight: 600; color: #64748b; }
+    .content-container > .card-custom > .custom-table td:nth-child(5)::before { content: "Priority"; font-weight: 600; color: #64748b; }
+    .content-container > .card-custom > .custom-table td:nth-child(6)::before { content: "Status"; font-weight: 600; color: #64748b; }
+    .content-container > .card-custom > .custom-table td:nth-child(7)::before { content: "Created"; font-weight: 600; color: #64748b; }
+    .content-container > .card-custom > .custom-table td:nth-child(8)::before { content: "Action"; font-weight: 600; color: #64748b; }
+
+    /* 3. Tickets Search Table (Tickets Page) */
+    #ticketTableContainer .custom-table td:nth-child(1)::before { content: "#"; font-weight: 600; color: #64748b; }
+    #ticketTableContainer .custom-table td:nth-child(2)::before { content: "Ticket #"; font-weight: 600; color: #64748b; }
+    #ticketTableContainer .custom-table td:nth-child(3)::before { content: "Subject"; font-weight: 600; color: #64748b; }
+    #ticketTableContainer .custom-table td:nth-child(4)::before { content: "Category"; font-weight: 600; color: #64748b; }
+    #ticketTableContainer .custom-table td:nth-child(5)::before { content: "Priority"; font-weight: 600; color: #64748b; }
+    #ticketTableContainer .custom-table td:nth-child(6)::before { content: "Status"; font-weight: 600; color: #64748b; }
+    #ticketTableContainer .custom-table td:nth-child(7)::before { content: "Created By"; font-weight: 600; color: #64748b; }
+    #ticketTableContainer .custom-table td:nth-child(8)::before { content: "Assigned To"; font-weight: 600; color: #64748b; }
+    #ticketTableContainer .custom-table td:nth-child(9)::before { content: "Created"; font-weight: 600; color: #64748b; }
+    #ticketTableContainer .custom-table td:nth-child(10)::before { content: "Action"; font-weight: 600; color: #64748b; }
+
+    /* 4. Agents/Users Table (Agents Page) */
+    #userTableContainer .custom-table td:nth-child(1)::before { content: "Name"; font-weight: 600; color: #64748b; }
+    #userTableContainer .custom-table td:nth-child(2)::before { content: "Email"; font-weight: 600; color: #64748b; }
+    #userTableContainer .custom-table td:nth-child(3)::before { content: "Mobile"; font-weight: 600; color: #64748b; }
+    #userTableContainer .custom-table td:nth-child(4)::before { content: "Role"; font-weight: 600; color: #64748b; }
+    #userTableContainer .custom-table td:nth-child(5)::before { content: "Status"; font-weight: 600; color: #64748b; }
+    #userTableContainer .custom-table td:nth-child(6)::before { content: "Created"; font-weight: 600; color: #64748b; }
+    #userTableContainer .custom-table td:nth-child(7)::before { content: "Action"; font-weight: 600; color: #64748b; }
+
+    /* 5. Master Data Categories Table (Settings Page) */
+    .card-custom:has(.edit-category) .custom-table td:nth-child(1)::before { content: "Name"; font-weight: 600; color: #64748b; }
+    .card-custom:has(.edit-category) .custom-table td:nth-child(2)::before { content: "Action"; font-weight: 600; color: #64748b; }
+}
+
+/* Extra small devices (portrait phones, < 576px) */
+@media (max-width: 575.98px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+
+    .page-header div {
+        display: flex;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .page-header div .btn {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+    }
+
+    /* Stats grid layout for mobile */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .stat-card {
+        padding: 12px 10px;
+    }
+
+    .stat-title {
+        font-size: 0.7rem;
+    }
+
+    .stat-value {
+        font-size: 1.25rem;
+    }
+
+    .user-menu {
+        font-size: 0.85rem;
+        gap: 12px;
+    }
+
+    /* Wrap comment headers nicely on narrow devices */
+    #commentsContainer .d-flex.justify-content-between {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
+}
+

@@ -285,29 +285,37 @@ namespace TicketResolver.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Logout()
         {
-            if (Request.Cookies["jwt_token"] != null)
+            try
             {
-                var token = Request.Cookies["jwt_token"].Value;
-                try
+                if (Request.Cookies["jwt_token"] != null)
                 {
-                    var principal = JwtHelper.ValidateToken(token);
-                    var userIdClaim = principal.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
-                    if (userIdClaim != null)
+                    var token = Request.Cookies["jwt_token"].Value;
+                    try
                     {
-                        int userId = int.Parse(userIdClaim.Value);
-                        authDAL.DeactivateAllRefreshTokens(userId);
+                        var principal = JwtHelper.ValidateToken(token);
+                        var userIdClaim = principal.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                        if (userIdClaim != null)
+                        {
+                            int userId = int.Parse(userIdClaim.Value);
+                            authDAL.DeactivateAllRefreshTokens(userId);
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    AppLogger.Error("AuthController.Logout", "Failed to deactivate refresh tokens during logout", ex);
+                    catch (Exception ex)
+                    {
+                        AppLogger.Error("AuthController.Logout", "Failed to deactivate refresh tokens during logout", ex);
+                    }
+
+                    Response.Cookies["jwt_token"].Expires = DateTime.UtcNow.AddDays(-1);
+                    Response.Cookies["refresh_token"].Expires = DateTime.UtcNow.AddDays(-1);
                 }
 
-                Response.Cookies["jwt_token"].Expires = DateTime.UtcNow.AddDays(-1);
-                Response.Cookies["refresh_token"].Expires = DateTime.UtcNow.AddDays(-1);
+                return RedirectToAction("Login");
             }
-
-            return RedirectToAction("Login");
+            catch (Exception ex)
+            {
+                AppLogger.Error("AuthController.Logout", "Failed during logout", ex);
+                return RedirectToAction("Login");
+            }
         }
 
         [HttpGet]

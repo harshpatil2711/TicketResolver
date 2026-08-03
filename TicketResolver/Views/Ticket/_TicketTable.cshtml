@@ -1,57 +1,46 @@
 @model TicketResolver.ViewModels.TicketSearchViewModel
 
+<input type="hidden" id="ticketcount" value="@Model.TotalCount" />
+<input type="hidden" id="sortColumn" value="@Model.SortColumn" />
+<input type="hidden" id="sortDirection" value="@Model.SortDirection" />
+
 <div class="card-custom">
     <div class="card-header-custom">@Model.TotalCount Ticket(s) found</div>
-    <table class="custom-table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Ticket #</th>
-                <th>Subject</th>
-                <th>Category</th>
-                <th>Priority</th>
-                <th>Status</th>
-                <th>Created By</th>
-                <th>Assigned To</th>
-                <th>Created</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.Results.Count == 0)
-            {
-                <tr><td colspan="10" class="empty-msg">No tickets found.</td></tr>
-            }
-            @foreach (var ticket in Model.Results)
-            {
+    <div class="table-responsive">
+        <table class="custom-table">
+            <thead>
                 <tr>
-                    <td>@ticket.TicketId</td>
-                    <td><a href="@Url.Action("Details", new { id = ticket.TicketId })" class="fw-bold text-decoration-none" style="color:#2b3e50;">@ticket.TicketNumber</a></td>
-                    <td>@ticket.Subject</td>
-                    <td>@ticket.CategoryName</td>
-                    <td>@ticket.PriorityName</td>
-                    <td><span class="badge bg-secondary">@ticket.StatusName</span></td>
-                    <td>@ticket.CreatedByName</td>
-                    <td>@ticket.AssignedToName</td>
-                    <td class="small text-muted">@ticket.CreatedDate.ToString("dd-MMM-yyyy")</td>
-                    <td><a href="@Url.Action("Details", new { id = ticket.TicketId })" class="btn btn-sm btn-outline-secondary"><i class="fa-regular fa-eye"></i></a></td>
+                    <th scope="col" class="sortable-th" data-sort="TicketNumber">Ticket # <span class="sort-icon ms-1">&#8597;</span></th>
+                    <th scope="col" class="sortable-th" data-sort="Subject">Subject <span class="sort-icon ms-1">&#8597;</span></th>
+                    <th scope="col">Category</th>
+                    <th scope="col" class="sortable-th" data-sort="Priority">Priority <span class="sort-icon ms-1">&#8597;</span></th>
+                    <th scope="col" class="sortable-th" data-sort="Status">Status <span class="sort-icon ms-1">&#8597;</span></th>
+                    <th scope="col">Created By</th>
+                    <th scope="col">Assigned To</th>
+                    <th scope="col" class="sortable-th" data-sort="Created">Created <span class="sort-icon ms-1">&#8597;</span></th>
+                    <th scope="col">Action</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-    @if (Model.TotalCount > Model.PageSize)
-    {
-        <div style="padding:12px 20px;background:#fafafa;">
-            <nav>
-                <ul class="pagination pagination-sm mb-0 justify-content-center">
-                    @for (int i = 1; i <= Math.Ceiling((double)Model.TotalCount / Model.PageSize); i++)
-                    {
-                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                            <a class="page-link" href="#" data-page="@i">@i</a>
-                        </li>
-                    }
-                </ul>
-            </nav>
-        </div>
-    }
+            </thead>
+            <tbody>
+                @if (Model.Results.Count == 0)
+                {
+                    <tr><td colspan="9" class="empty-msg">No tickets found.</td></tr>
+                }
+                @foreach (var ticket in Model.Results)
+                {
+                    <tr>
+                        <td><a href="@Url.Action("Details", new { id = ticket.TicketId })" class="fw-bold text-decoration-none" style="color:#2b3e50;">@ticket.TicketNumber</a></td>
+                        <td>@ticket.Subject</td>
+                        <td>@ticket.CategoryName</td>
+                        <td>@ticket.PriorityName</td>
+                        <td><span class="badge bg-secondary">@ticket.StatusName</span></td>
+                        <td>@ticket.CreatedByName</td>
+                        <td>@ticket.AssignedToName</td>
+                        <td class="small text-muted">@ticket.CreatedDate.ToString("dd-MMM-yyyy")</td>
+                        <td><a href="@Url.Action("Details", new { id = ticket.TicketId })" class="btn btn-sm btn-outline-secondary"><i class="fa-regular fa-eye"></i></a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>

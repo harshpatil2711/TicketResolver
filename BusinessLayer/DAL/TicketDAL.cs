@@ -85,7 +85,7 @@ namespace TicketResolver.DAL
             }
         }
 
-        public DataSet Search(string searchTerm, int? categoryId, int? priorityId, int? statusId, int? assignedTo, int? createdBy, int pageNumber, int pageSize)
+        public DataSet Search(string searchTerm, int? categoryId, int? priorityId, int? statusId, int? assignedTo, int? createdBy, int pageNumber, int pageSize, string sortColumn = "CreatedDate", string sortDirection = "DESC", bool? isUnassigned = null)
         {
             using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverTicketSearch"))
             {
@@ -97,6 +97,9 @@ namespace TicketResolver.DAL
                 db.AddInParameter(cmd, "@CreatedBy", DbType.Int32, createdBy ?? (object)DBNull.Value);
                 db.AddInParameter(cmd, "@PageNumber", DbType.Int32, pageNumber);
                 db.AddInParameter(cmd, "@PageSize", DbType.Int32, pageSize);
+                db.AddInParameter(cmd, "@SortColumn", DbType.String, sortColumn);
+                db.AddInParameter(cmd, "@SortDirection", DbType.String, sortDirection);
+                db.AddInParameter(cmd, "@IsUnassigned", DbType.Boolean, isUnassigned ?? (object)DBNull.Value);
                 return db.ExecuteDataSet(cmd);
             }
         }

@@ -2,8 +2,6 @@
 @{
     ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var role = ((System.Security.Claims.ClaimsPrincipal)User).FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
-    var isAdmin = role == "Administrator";
 }
 
 <div class="page-header">
@@ -82,22 +80,10 @@
 
     <div class="card-custom">
         <div class="card-header-custom d-flex justify-content-between align-items-center">
-            <span>Ticket Status</span>
+            <span>Ticket Analysis</span>
             <div class="d-flex gap-2">
-                <select id="chartPriority" class="form-select form-select-sm" style="width:auto;">
-                    <option value="">All Priorities</option>
-                    @foreach (var p in Model.Priorities)
-                    {
-                        <option value="@p.PriorityId">@p.PriorityName</option>
-                    }
-                </select>
-                <select id="chartStatus" class="form-select form-select-sm" style="width:auto;">
-                    <option value="">All Statuses</option>
-                    @foreach (var s in Model.Statuses)
-                    {
-                        <option value="@s.StatusId">@s.StatusName</option>
-                    }
-                </select>
+                <button type="button" id="btnChartStatus" class="btn btn-sm btn-dark">Status wise</button>
+                <button type="button" id="btnChartPriority" class="btn btn-sm btn-outline-secondary">Priority wise</button>
             </div>
         </div>
         <div style="min-height:240px;text-align:center;">
@@ -106,49 +92,6 @@
         <div class="chart-legend" id="chartLegend"></div>
     </div>
 </div>
-
-@if (isAdmin)
-{
-    <div class="card-custom" style="margin-top:25px;">
-        <div class="card-header-custom d-flex justify-content-between align-items-center">
-            <span>Unassigned Tickets</span>
-            <a href="@Url.Action("Index", "Ticket")" class="btn btn-sm btn-outline-secondary">View All</a>
-        </div>
-        <table class="custom-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Ticket #</th>
-                    <th>Name</th>
-                    <th>Subject</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>Created</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.UnassignedTickets.Count == 0)
-                {
-                    <tr><td colspan="8"><div class="empty-msg">No unassigned tickets.</div></td></tr>
-                }
-                @foreach (var ticket in Model.UnassignedTickets)
-                {
-                    <tr>
-                        <td>@ticket.TicketId</td>
-                        <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" style="color:#2b3e50;font-weight:600;text-decoration:none;">@ticket.TicketNumber</a></td>
-                        <td>@ticket.CreatedByName</td>
-                        <td>@ticket.Subject</td>
-                        <td>@ticket.PriorityName</td>
-                        <td><span class="badge bg-secondary">@ticket.StatusName</span></td>
-                        <td class="small" style="color:#888;">@ticket.CreatedDate.ToString("dd-MMM-yyyy")</td>
-                        <td><a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId })" class="btn btn-sm btn-outline-secondary"><i class="fa-regular fa-eye"></i></a></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
 
 @section scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>

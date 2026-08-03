@@ -56,7 +56,7 @@ namespace TicketResolver.Controllers
                 IsActive = isActive,
                 PageNumber = page,
                 PageSize = 10,
-                TotalCount = ds.Tables[1].Rows.Count > 0 ? Convert.ToInt32(ds.Tables[1].Rows[0]["TotalCount"]) : 0,
+                TotalCount = ds.Tables[0].Rows.Count > 0 ? Convert.ToInt32(ds.Tables[0].Rows[0]["TotalCount"]) : 0,
                 Results = ds.Tables[0].Rows.Cast<DataRow>().Select(r => new UserListItemViewModel
                 {
                     UserId = Convert.ToInt32(r["UserId"]),

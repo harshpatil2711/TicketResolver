@@ -14,10 +14,13 @@ namespace TicketResolver.Helpers
             try { logDAL.Insert("ERROR", source, message, ex?.ToString(), ex?.StackTrace); } catch { }
         }
 
-        public static void Warning(string source, string message)
+        public static void Warning(string source, string message, Exception ex = null)
         {
-            Log.Warning("{Source}: {Message}", source, message);
-            try { logDAL.Insert("WARNING", source, message); } catch { }
+            if (ex != null)
+                Log.Warning(ex, "{Source}: {Message}", source, message);
+            else
+                Log.Warning("{Source}: {Message}", source, message);
+            try { logDAL.Insert("WARNING", source, message, ex?.ToString(), ex?.StackTrace); } catch { }
         }
 
         public static void Information(string source, string message)

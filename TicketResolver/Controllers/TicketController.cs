@@ -29,11 +29,11 @@ namespace TicketResolver.Controllers
         private string CurrentRole => ((ClaimsPrincipal)User).FindFirst(ClaimTypes.Role).Value;
 
         [HttpGet]
-        public ActionResult Index(string searchTerm, int? categoryId, int? priorityId, int? statusId, int page = 1)
+        public ActionResult Index(string searchTerm, int? categoryId, int? priorityId, int? statusId, int page = 1, int size = 10, string sortColumn = "Created", string sortDirection = "DESC", bool? isUnassigned = null)
         {
             try
             {
-                var model = BuildTicketSearchModel(searchTerm, categoryId, priorityId, statusId, page);
+                var model = BuildTicketSearchModel(searchTerm, categoryId, priorityId, statusId, page, size, sortColumn, sortDirection, isUnassigned);
                 return View(model);
             }
             catch (Exception ex)
@@ -49,7 +49,7 @@ namespace TicketResolver.Controllers
         {
             try
             {
-                var model = BuildTicketSearchModel(input.SearchTerm, input.CategoryId, input.PriorityId, input.StatusId, input.PageNumber);
+                var model = BuildTicketSearchModel(input.SearchTerm, input.CategoryId, input.PriorityId, input.StatusId, input.PageNumber, input.PageSize, input.SortColumn, input.SortDirection, input.IsUnassigned);
                 return PartialView("_TicketTable", model);
             }
             catch (Exception ex)
@@ -59,16 +59,17 @@ namespace TicketResolver.Controllers
             }
         }
 
-        private TicketSearchViewModel BuildTicketSearchModel(string searchTerm, int? categoryId, int? priorityId, int? statusId, int page)
+        private TicketSearchViewModel BuildTicketSearchModel(string searchTerm, int? categoryId, int? priorityId, int? statusId, int page, int size = 10, string sortColumn = "Created", string sortDirection = "DESC", bool? isUnassigned = null)
         {
             int? createdBy = null;
             int? assignedTo = null;
+            var isAdmin = CurrentRole == "Administrator";
             if (CurrentRole == "Employee")
                 createdBy = CurrentUserId;
             else if (CurrentRole == "Support Executive")
                 assignedTo = CurrentUserId;
 
-            var ds = ticketDAL.Search(searchTerm, categoryId, priorityId, statusId, assignedTo, createdBy, page, 10);
+            var ds = ticketDAL.Search(searchTerm, categoryId, priorityId, statusId, assignedTo, createdBy, page, size, sortColumn, sortDirection, isAdmin ? isUnassigned : null);
 
             return new TicketSearchViewModel
             {
@@ -77,8 +78,11 @@ namespace TicketResolver.Controllers
                 PriorityId = priorityId,
                 StatusId = statusId,
                 PageNumber = page,
-                PageSize = 10,
-                TotalCount = ds.Tables[1].Rows.Count > 0 ? Convert.ToInt32(ds.Tables[1].Rows[0]["TotalCount"]) : 0,
+                PageSize = size,
+                SortColumn = sortColumn,
+                SortDirection = sortDirection,
+                IsUnassigned = isAdmin ? isUnassigned : null,
+                TotalCount = ds.Tables[0].Rows.Count > 0 ? Convert.ToInt32(ds.Tables[0].Rows[0]["TotalCount"]) : 0,
                 Results = ds.Tables[0].Rows.Cast<DataRow>().Select(r => new TicketListItemViewModel
                 {
                     TicketId = Convert.ToInt32(r["TicketId"]),
@@ -270,8 +274,9 @@ namespace TicketResolver.Controllers
                 TempData["SuccessMessage"] = "Ticket updated successfully.";
                 return RedirectToAction("Details", new { id = model.TicketId });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                AppLogger.Error("TicketController.Edit", $"Failed to update ticket id={model.TicketId}", ex);
                 ModelState.AddModelError("", "An error occurred while updating the ticket.");
                 model.Categories = masterDAL.GetCategories();
                 model.Priorities = masterDAL.GetPriorities();
@@ -416,8 +421,9 @@ namespace TicketResolver.Controllers
                 TempData["SuccessMessage"] = "Ticket assigned successfully.";
                 return RedirectToAction("Details", new { id = model.TicketId });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                AppLogger.Error("TicketController.Assign", $"Failed to assign ticket id={model.TicketId}", ex);
                 ModelState.AddModelError("", "An error occurred while assigning the ticket.");
                 model.SupportExecutives = GetSupportExecutives();
                 return View(model);
@@ -491,18 +497,19 @@ namespace TicketResolver.Controllers
             }
         }
 
-        public ActionResult Export(string searchTerm, int? categoryId, int? priorityId, int? statusId)
+        public ActionResult Export(string searchTerm, int? categoryId, int? priorityId, int? statusId, bool? isUnassigned)
         {
             try
             {
                 int? createdBy = null;
                 int? assignedTo = null;
+                var isAdmin = CurrentRole == "Administrator";
                 if (CurrentRole == "Employee")
                     createdBy = CurrentUserId;
                 else if (CurrentRole == "Support Executive")
                     assignedTo = CurrentUserId;
 
-                var ds = ticketDAL.Search(searchTerm, categoryId, priorityId, statusId, assignedTo, createdBy, 1, 9999);
+                var ds = ticketDAL.Search(searchTerm, categoryId, priorityId, statusId, assignedTo, createdBy, 1, 9999, "CreatedDate", "DESC", isAdmin ? isUnassigned : null);
                 var csv = new System.Text.StringBuilder();
                 csv.AppendLine("Ticket#,Subject,Category,Priority,Status,CreatedBy,AssignedTo,CreatedDate");
 

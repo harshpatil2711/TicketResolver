@@ -2,13 +2,15 @@
 @{
     ViewBag.Title = "Tickets";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var role = ((System.Security.Claims.ClaimsPrincipal)User).FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+    var isAdmin = role == "Administrator";
 }
 
 <div class="page-header">
     <h5 class="page-title">Tickets</h5>
     <div>
         <a href="@Url.Action("Create")" class="btn btn-green"><i class="fa-solid fa-plus"></i> Create Ticket</a>
-        <a href="@Url.Action("Export", new { searchTerm = Model.SearchTerm, categoryId = Model.CategoryId, priorityId = Model.PriorityId, statusId = Model.StatusId })" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-download"></i></a>
+        <a href="@Url.Action("Export", new { searchTerm = Model.SearchTerm, categoryId = Model.CategoryId, priorityId = Model.PriorityId, statusId = Model.StatusId, isUnassigned = Model.IsUnassigned })" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-download"></i></a>
     </div>
 </div>
 
@@ -16,6 +18,7 @@
     <div class="card-header-custom">Search & Filter</div>
     <form id="searchForm" style="padding:15px 20px;">
         @Html.AntiForgeryToken()
+        <input type="hidden" id="page" name="PageNumber" value="@Model.PageNumber" />
         <div class="row g-2">
             <div class="col-md-3">
                 <input type="text" id="searchTerm" name="searchTerm" class="form-control form-control-sm" placeholder="Search ticket # or subject" value="@Model.SearchTerm" />
@@ -29,10 +32,19 @@
             <div class="col-md-2">
                 @Html.DropDownList("statusId", new SelectList(Model.Statuses, "StatusId", "StatusName", Model.StatusId), "All Statuses", new { @class = "form-select form-select-sm" })
             </div>
+            @if (isAdmin)
+            {
+                <div class="col-md-1">
+                    <select id="isUnassigned" name="isUnassigned" class="form-select form-select-sm" title="Assignment filter">
+                        <option value="">All</option>
+                        <option value="true" @(Model.IsUnassigned == true ? "selected" : "")>Unassigned</option>
+                    </select>
+                </div>
+            }
             <div class="col-md-1">
                 <button type="submit" class="btn btn-sm w-100 text-white" style="background-color:#2b3e50;"><i class="fa-solid fa-search"></i></button>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
                 <a href="#" id="clearBtn" class="btn btn-sm btn-outline-secondary w-100">Clear</a>
             </div>
         </div>
@@ -41,6 +53,23 @@
 
 <div id="ticketTableContainer" data-url="@Url.Action("Index", "Ticket")">
     @Html.Partial("_TicketTable", Model)
+</div>
+
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-2" style="padding:12px 20px;background:#fafafa;border:1px solid #dee2e6;border-top:0;border-radius:0 0 8px 8px;">
+    <div class="d-flex align-items-center gap-2">
+        <select id="size" name="PageSize" class="form-select form-select-sm" style="width:auto;" title="Page size">
+            <option value="5" @(Model.PageSize == 5 ? "selected" : "")>5</option>
+            <option value="10" @(Model.PageSize == 10 ? "selected" : "")>10</option>
+            <option value="25" @(Model.PageSize == 25 ? "selected" : "")>25</option>
+            <option value="50" @(Model.PageSize == 50 ? "selected" : "")>50</option>
+        </select>
+        <div class="text-muted small fw-semibold" id="datashown"></div>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <button type="button" id="prevbtn" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-chevron-left me-1"></i>Prev</button>
+        <div id="buttonlist" class="d-inline-flex gap-1"></div>
+        <button type="button" id="nextbtn" class="btn btn-sm btn-outline-secondary">Next<i class="fa-solid fa-chevron-right ms-1"></i></button>
+    </div>
 </div>
 
 @if (TempData["SuccessMessage"] != null)

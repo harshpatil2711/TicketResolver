@@ -46,7 +46,7 @@ namespace TicketResolver
                 }
                 catch (Exception ex)
                 {
-                    AppLogger.Warning("Global.PostAuthenticateRequest", "JWT validation failed, attempting refresh token");
+                    AppLogger.Warning("Global.PostAuthenticateRequest", "JWT validation failed, attempting refresh token", ex);
                     var refreshCookie = Request.Cookies["refresh_token"];
                     if (refreshCookie != null && !string.IsNullOrEmpty(refreshCookie.Value))
                     {

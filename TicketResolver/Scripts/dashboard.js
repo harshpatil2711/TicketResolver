@@ -1,14 +1,23 @@
 var pieChart;
+var currentGroupBy = 'Status';
+
+function updateButtonState() {
+    $('#btnChartStatus').removeClass('btn-dark').addClass('btn-outline-secondary');
+    $('#btnChartPriority').removeClass('btn-dark').addClass('btn-outline-secondary');
+    if (currentGroupBy === 'Priority') {
+        $('#btnChartPriority').removeClass('btn-outline-secondary').addClass('btn-dark');
+    } else {
+        $('#btnChartStatus').removeClass('btn-outline-secondary').addClass('btn-dark');
+    }
+}
 
 function loadChart() {
-    var priorityId = $('#chartPriority').val();
-    var statusId = $('#chartStatus').val();
-    $.getJSON('/Home/GetChartData', { priorityId: priorityId, statusId: statusId }, function (data) {
+    $.getJSON('/Home/GetChartData', { groupBy: currentGroupBy }, function (data) {
         if (pieChart) pieChart.destroy();
         var container = $('#ticketPieChart').parent();
         $('#chartLegend').empty();
-        if (data.length === 0) {
-            container.html('<p class="text-muted pt-5">No tickets match these filters.</p>');
+        if (!data || data.error || data.length === 0) {
+            container.html('<p class="text-muted pt-5">No data to display.</p>');
             return;
         }
         container.html('<canvas id="ticketPieChart" height="180"></canvas>');
@@ -35,7 +44,18 @@ function loadChart() {
 }
 
 $(document).ready(function () {
+    updateButtonState();
     loadChart();
-    $('#chartPriority').change(loadChart);
-    $('#chartStatus').change(loadChart);
+
+    $('#btnChartStatus').on('click', function () {
+        currentGroupBy = 'Status';
+        updateButtonState();
+        loadChart();
+    });
+
+    $('#btnChartPriority').on('click', function () {
+        currentGroupBy = 'Priority';
+        updateButtonState();
+        loadChart();
+    });
 });

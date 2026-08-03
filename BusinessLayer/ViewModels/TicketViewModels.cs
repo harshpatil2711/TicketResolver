@@ -14,6 +14,9 @@ namespace TicketResolver.ViewModels
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
         public int TotalCount { get; set; }
+        public string SortColumn { get; set; } = "Created";
+        public string SortDirection { get; set; } = "DESC";
+        public bool? IsUnassigned { get; set; }
         public List<TicketListItemViewModel> Results { get; set; }
 
         public List<TicketCategory> Categories { get; set; }
@@ -137,7 +140,6 @@ namespace TicketResolver.ViewModels
         public int ClosedTickets { get; set; }
         public int ReopenedTickets { get; set; }
         public List<TicketListItemViewModel> RecentTickets { get; set; }
-        public List<TicketListItemViewModel> UnassignedTickets { get; set; }
         public List<TicketPriority> Priorities { get; set; }
         public List<TicketStatus> Statuses { get; set; }
     }

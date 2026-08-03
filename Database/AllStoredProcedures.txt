@@ -1,13 +1,12 @@
-======================================================================================
-PROCEDURE: TicketResolverLogInsert
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverLogInsert
+--======================================================================================
 
 -- ============================================================
 -- SECTION: Log
 -- ============================================================
 
 /*
-
 ***********************************************************************************************
     Date            Modified By         Purpose of Modification
 
@@ -43,9 +42,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverOtpGetLatest
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverOtpGetLatest
+--======================================================================================
 
 -- ============================================================
 -- SECTION: Auth
@@ -84,9 +83,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverOtpInsert
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverOtpInsert
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -126,9 +125,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverOtpInvalidatePrevious
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverOtpInvalidatePrevious
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -164,9 +163,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverOtpVerify
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverOtpVerify
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -220,9 +219,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverRefreshTokenDeactivateAll
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverRefreshTokenDeactivateAll
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -256,9 +255,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverRefreshTokenGetByTokenHash
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverRefreshTokenGetByTokenHash
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -294,9 +293,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverRefreshTokenInsert
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverRefreshTokenInsert
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -334,9 +333,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverRefreshTokenRevoke
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverRefreshTokenRevoke
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -371,9 +370,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverRefreshTokenRotate
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverRefreshTokenRotate
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -422,9 +421,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverRefreshTokenUpdateLastUsed
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverRefreshTokenUpdateLastUsed
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -458,9 +457,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverRoleGetAll
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverRoleGetAll
+--======================================================================================
 /*
 ***********************************************************************************************
     Date            Modified By         Purpose of Modification
@@ -484,9 +483,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverRoleGetById
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverRoleGetById
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -511,9 +510,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketAssign
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketAssign
+--======================================================================================
 
 -- ============================================================
 -- SECTION: Ticket
@@ -569,9 +568,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketAttachmentDelete
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketAttachmentDelete
+--======================================================================================
 
 -- ============================================================
 -- SECTION: Attachment
@@ -611,9 +610,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketAttachmentGetById
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketAttachmentGetById
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -643,9 +642,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketAttachmentGetByTicketId
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketAttachmentGetByTicketId
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -677,9 +676,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketAttachmentInsert
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketAttachmentInsert
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -719,9 +718,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketCategoryDelete
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketCategoryDelete
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -755,9 +754,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketCategoryGetAll
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketCategoryGetAll
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -782,9 +781,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketCategoryInsert
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketCategoryInsert
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -824,9 +823,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketCategoryUpdate
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketCategoryUpdate
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -867,9 +866,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketCommentGetByTicketId
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketCommentGetByTicketId
+--======================================================================================
 
 -- ============================================================
 -- SECTION: Comment
@@ -915,9 +914,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketCommentInsert
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketCommentInsert
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -956,9 +955,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketDashboardStats
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketDashboardStats
+--======================================================================================
 
 -- ============================================================
 -- SECTION: Dashboard
@@ -1030,9 +1029,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketDelete
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketDelete
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -1068,9 +1067,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketGenerateNumber
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketGenerateNumber
+--======================================================================================
 CREATE PROCEDURE TicketResolverTicketGenerateNumber
 AS
 BEGIN
@@ -1098,9 +1097,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketGetById
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketGetById
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -1154,9 +1153,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketInsert
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketInsert
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -1204,45 +1203,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketPriorityDelete
-======================================================================================
-
-/*
-***********************************************************************************************
-    Date            Modified By         Purpose of Modification
-
-1   28 Jul 2026    Initial Creation    Soft delete priority
-
-***********************************************************************************************
-*/
-
-CREATE PROCEDURE TicketResolverTicketPriorityDelete
-    @PriorityId INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRY
-        BEGIN TRANSACTION;
-
-        UPDATE TicketResolverTicketPriority
-        SET IsActive = 0,
-            ModifiedDate = GETDATE()
-        WHERE PriorityId = @PriorityId AND IsActive = 1;
-
-        COMMIT TRANSACTION;
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRANSACTION;
-        THROW;
-    END CATCH
-END
-
-
-======================================================================================
-PROCEDURE: TicketResolverTicketPriorityGetAll
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketPriorityGetAll
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -1268,226 +1231,89 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketPriorityInsert
-======================================================================================
-
-/*
-***********************************************************************************************
-    Date            Modified By         Purpose of Modification
-
-1   28 Jul 2026    Initial Creation    Insert new priority
-
-***********************************************************************************************
-*/
-
-CREATE PROCEDURE TicketResolverTicketPriorityInsert
-    @PriorityName NVARCHAR(50),
-    @Sequence     INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRY
-        BEGIN TRANSACTION;
-
-        IF EXISTS (SELECT 1 FROM TicketResolverTicketPriority WHERE PriorityName = @PriorityName AND IsActive = 1)
-        BEGIN
-            RAISERROR('Priority already exists.', 16, 1);
-            RETURN;
-        END
-
-        IF EXISTS (SELECT 1 FROM TicketResolverTicketPriority WHERE Sequence = @Sequence AND IsActive = 1)
-        BEGIN
-            RAISERROR('Priority sequence already exists.', 16, 1);
-            RETURN;
-        END
-
-        INSERT INTO TicketResolverTicketPriority (PriorityName, Sequence)
-        VALUES (@PriorityName, @Sequence);
-
-        SELECT SCOPE_IDENTITY() AS PriorityId;
-
-        COMMIT TRANSACTION;
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRANSACTION;
-        THROW;
-    END CATCH
-END
-
-
-======================================================================================
-PROCEDURE: TicketResolverTicketPriorityUpdate
-======================================================================================
-
-/*
-***********************************************************************************************
-    Date            Modified By         Purpose of Modification
-
-1   28 Jul 2026    Initial Creation    Update priority
-
-***********************************************************************************************
-*/
-
-CREATE PROCEDURE TicketResolverTicketPriorityUpdate
-    @PriorityId   INT,
-    @PriorityName NVARCHAR(50),
-    @Sequence     INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRY
-        BEGIN TRANSACTION;
-
-        IF EXISTS (SELECT 1 FROM TicketResolverTicketPriority WHERE PriorityName = @PriorityName AND PriorityId != @PriorityId AND IsActive = 1)
-        BEGIN
-            RAISERROR('Priority name already exists.', 16, 1);
-            RETURN;
-        END
-
-        IF EXISTS (SELECT 1 FROM TicketResolverTicketPriority WHERE Sequence = @Sequence AND PriorityId != @PriorityId AND IsActive = 1)
-        BEGIN
-            RAISERROR('Priority sequence already exists.', 16, 1);
-            RETURN;
-        END
-
-        UPDATE TicketResolverTicketPriority
-        SET PriorityName = @PriorityName,
-            Sequence = @Sequence,
-            ModifiedDate = GETDATE()
-        WHERE PriorityId = @PriorityId AND IsActive = 1;
-
-        COMMIT TRANSACTION;
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRANSACTION;
-        THROW;
-    END CATCH
-END
-
-
-======================================================================================
-PROCEDURE: TicketResolverTicketSearch
-======================================================================================
-
-/*
-***********************************************************************************************
-    Date            Modified By         Purpose of Modification
-
-1   28 Jul 2026    Initial Creation    Search tickets with filters (Admin)
-
-***********************************************************************************************
-*/
-
-CREATE PROCEDURE TicketResolverTicketSearch
-    @SearchTerm  NVARCHAR(200) = NULL,
-    @CategoryId  INT = NULL,
-    @PriorityId  INT = NULL,
-    @StatusId    INT = NULL,
-    @AssignedTo  INT = NULL,
-    @CreatedBy   INT = NULL,
-    @PageNumber  INT = 1,
-    @PageSize    INT = 10
+--======================================================================================
+--PROCEDURE: TicketResolverTicketSearch
+--======================================================================================
+CREATE   PROCEDURE TicketResolverTicketSearch
+    @SearchTerm    NVARCHAR(200) = NULL,
+    @CategoryId    INT = NULL,
+    @PriorityId    INT = NULL,
+    @StatusId      INT = NULL,
+    @AssignedTo    INT = NULL,
+    @CreatedBy     INT = NULL,
+    @PageNumber    INT = 1,
+    @PageSize      INT = 10,
+    @SortColumn    NVARCHAR(50) = 'CreatedDate',
+    @SortDirection VARCHAR(4) = 'DESC',
+    @IsUnassigned  BIT = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
 
     DECLARE @Skip INT = (@PageNumber - 1) * @PageSize;
+    DECLARE @OrderBy NVARCHAR(100);
+    DECLARE @Sql NVARCHAR(MAX);
 
-    SELECT 
-        t.TicketId,
-        t.TicketNumber,
-        t.Subject,
-        c.CategoryName,
-        p.PriorityName,
-        p.Sequence AS PrioritySequence,
-        s.StatusName,
-        s.StatusId AS StatusIdVal,
-        uc.FirstName + ' ' + uc.LastName AS CreatedByName,
-        CASE 
-            WHEN t.AssignedTo IS NOT NULL 
-            THEN ua.FirstName + ' ' + ua.LastName 
-            ELSE 'Unassigned' 
-        END AS AssignedToName,
-        t.CreatedDate,
-        t.ResolvedDate,
-        t.ClosedDate
-    FROM TicketResolverTicket t
-    INNER JOIN TicketResolverTicketCategory c ON t.CategoryId = c.CategoryId
-    INNER JOIN TicketResolverTicketPriority p ON t.PriorityId = p.PriorityId
-    INNER JOIN TicketResolverTicketStatus s ON t.StatusId = s.StatusId
-    INNER JOIN TicketResolverUser uc ON t.CreatedBy = uc.UserId
-    LEFT JOIN TicketResolverUser ua ON t.AssignedTo = ua.UserId
-    WHERE 
-        t.IsActive = 1
-        AND (@SearchTerm IS NULL OR 
-             t.TicketNumber LIKE '%' + @SearchTerm + '%' OR 
-             t.Subject LIKE '%' + @SearchTerm + '%')
-        AND (@CategoryId IS NULL OR t.CategoryId = @CategoryId)
-        AND (@PriorityId IS NULL OR t.PriorityId = @PriorityId)
-        AND (@StatusId IS NULL OR t.StatusId = @StatusId)
-        AND (@AssignedTo IS NULL OR t.AssignedTo = @AssignedTo)
-        AND (@CreatedBy IS NULL OR t.CreatedBy = @CreatedBy)
-    ORDER BY t.CreatedDate DESC
-    OFFSET @Skip ROWS
-    FETCH NEXT @PageSize ROWS ONLY;
+    SET @OrderBy = CASE @SortColumn
+        WHEN 'TicketNumber' THEN 't.TicketNumber'
+        WHEN 'Subject'      THEN 't.Subject'
+        WHEN 'Priority'     THEN 'p.Sequence'
+        WHEN 'Status'       THEN 's.StatusName'
+        ELSE 't.CreatedDate'
+    END;
 
-    SELECT COUNT(*) AS TotalCount
-    FROM TicketResolverTicket t
-    WHERE 
-        t.IsActive = 1
-        AND (@SearchTerm IS NULL OR 
-             t.TicketNumber LIKE '%' + @SearchTerm + '%' OR 
-             t.Subject LIKE '%' + @SearchTerm + '%')
-        AND (@CategoryId IS NULL OR t.CategoryId = @CategoryId)
-        AND (@PriorityId IS NULL OR t.PriorityId = @PriorityId)
-        AND (@StatusId IS NULL OR t.StatusId = @StatusId)
-        AND (@AssignedTo IS NULL OR t.AssignedTo = @AssignedTo)
-        AND (@CreatedBy IS NULL OR t.CreatedBy = @CreatedBy);
+    SET @SortDirection = CASE WHEN UPPER(@SortDirection) = 'ASC' THEN 'ASC' ELSE 'DESC' END;
+
+    SET @Sql = N'
+        SELECT 
+            t.TicketId,
+            t.TicketNumber,
+            t.Subject,
+            c.CategoryName,
+            p.PriorityName,
+            p.Sequence AS PrioritySequence,
+            s.StatusName,
+            s.StatusId AS StatusIdVal,
+            uc.FirstName + '' '' + uc.LastName AS CreatedByName,
+            CASE 
+                WHEN t.AssignedTo IS NOT NULL 
+                THEN ua.FirstName + '' '' + ua.LastName 
+                ELSE ''Unassigned'' 
+            END AS AssignedToName,
+            t.CreatedDate,
+            t.ResolvedDate,
+            t.ClosedDate,
+            COUNT(*) OVER() AS TotalCount
+        FROM TicketResolverTicket t
+        INNER JOIN TicketResolverTicketCategory c ON t.CategoryId = c.CategoryId
+        INNER JOIN TicketResolverTicketPriority p ON t.PriorityId = p.PriorityId
+        INNER JOIN TicketResolverTicketStatus s ON t.StatusId = s.StatusId
+        INNER JOIN TicketResolverUser uc ON t.CreatedBy = uc.UserId
+        LEFT JOIN TicketResolverUser ua ON t.AssignedTo = ua.UserId
+        WHERE 
+            t.IsActive = 1
+            AND (@SearchTerm IS NULL OR 
+                 t.TicketNumber LIKE ''%'' + @SearchTerm + ''%'' OR 
+                 t.Subject LIKE ''%'' + @SearchTerm + ''%'')
+            AND (@CategoryId IS NULL OR t.CategoryId = @CategoryId)
+            AND (@PriorityId IS NULL OR t.PriorityId = @PriorityId)
+            AND (@StatusId IS NULL OR t.StatusId = @StatusId)
+            AND (@AssignedTo IS NULL OR t.AssignedTo = @AssignedTo)
+            AND (@CreatedBy IS NULL OR t.CreatedBy = @CreatedBy)
+            AND (@IsUnassigned IS NULL OR (@IsUnassigned = 1 AND t.AssignedTo IS NULL))
+        ORDER BY ' + @OrderBy + ' ' + @SortDirection + N'
+        OFFSET @Skip ROWS
+        FETCH NEXT @PageSize ROWS ONLY;';
+
+    EXEC sp_executesql @Sql,
+        N'@SearchTerm NVARCHAR(200), @CategoryId INT, @PriorityId INT, @StatusId INT, @AssignedTo INT, @CreatedBy INT, @Skip INT, @PageSize INT, @IsUnassigned BIT',
+        @SearchTerm, @CategoryId, @PriorityId, @StatusId, @AssignedTo, @CreatedBy, @Skip, @PageSize, @IsUnassigned;
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketStatusDelete
-======================================================================================
-
-/*
-***********************************************************************************************
-    Date            Modified By         Purpose of Modification
-
-1   28 Jul 2026    Initial Creation    Soft delete status
-
-***********************************************************************************************
-*/
-
-CREATE PROCEDURE TicketResolverTicketStatusDelete
-    @StatusId INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRY
-        BEGIN TRANSACTION;
-
-        UPDATE TicketResolverTicketStatus
-        SET IsActive = 0,
-            ModifiedDate = GETDATE()
-        WHERE StatusId = @StatusId AND IsActive = 1;
-
-        COMMIT TRANSACTION;
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRANSACTION;
-        THROW;
-    END CATCH
-END
-
-
-======================================================================================
-PROCEDURE: TicketResolverTicketStatusGetAll
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketStatusGetAll
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -1513,9 +1339,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketStatusGetById
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketStatusGetById
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -1541,9 +1367,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketStatusHistoryGetByTicketId
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketStatusHistoryGetByTicketId
+--======================================================================================
 CREATE PROCEDURE TicketResolverTicketStatusHistoryGetByTicketId
     @TicketId INT
 AS
@@ -1584,97 +1410,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketStatusInsert
-======================================================================================
-
-/*
-***********************************************************************************************
-    Date            Modified By         Purpose of Modification
-
-1   28 Jul 2026    Initial Creation    Insert new status
-
-***********************************************************************************************
-*/
-
-CREATE PROCEDURE TicketResolverTicketStatusInsert
-    @StatusName     NVARCHAR(50),
-    @IsTerminalState BIT = 0
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRY
-        BEGIN TRANSACTION;
-
-        IF EXISTS (SELECT 1 FROM TicketResolverTicketStatus WHERE StatusName = @StatusName AND IsActive = 1)
-        BEGIN
-            RAISERROR('Status already exists.', 16, 1);
-            RETURN;
-        END
-
-        INSERT INTO TicketResolverTicketStatus (StatusName, IsTerminalState)
-        VALUES (@StatusName, @IsTerminalState);
-
-        SELECT SCOPE_IDENTITY() AS StatusId;
-
-        COMMIT TRANSACTION;
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRANSACTION;
-        THROW;
-    END CATCH
-END
-
-
-======================================================================================
-PROCEDURE: TicketResolverTicketStatusUpdate
-======================================================================================
-
-/*
-***********************************************************************************************
-    Date            Modified By         Purpose of Modification
-
-1   28 Jul 2026    Initial Creation    Update status
-
-***********************************************************************************************
-*/
-
-CREATE PROCEDURE TicketResolverTicketStatusUpdate
-    @StatusId       INT,
-    @StatusName     NVARCHAR(50),
-    @IsTerminalState BIT = 0
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRY
-        BEGIN TRANSACTION;
-
-        IF EXISTS (SELECT 1 FROM TicketResolverTicketStatus WHERE StatusName = @StatusName AND StatusId != @StatusId AND IsActive = 1)
-        BEGIN
-            RAISERROR('Status name already exists.', 16, 1);
-            RETURN;
-        END
-
-        UPDATE TicketResolverTicketStatus
-        SET StatusName = @StatusName,
-            IsTerminalState = @IsTerminalState,
-            ModifiedDate = GETDATE()
-        WHERE StatusId = @StatusId AND IsActive = 1;
-
-        COMMIT TRANSACTION;
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRANSACTION;
-        THROW;
-    END CATCH
-END
-
-
-======================================================================================
-PROCEDURE: TicketResolverTicketUpdate
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketUpdate
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -1720,9 +1458,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverTicketUpdateStatus
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverTicketUpdateStatus
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -1773,9 +1511,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverUserCredentialGetByUserId
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverUserCredentialGetByUserId
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -1801,9 +1539,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverUserCredentialInsert
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverUserCredentialInsert
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -1838,9 +1576,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverUserCredentialUpdatePassword
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverUserCredentialUpdatePassword
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -1875,9 +1613,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverUserGetByEmail
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverUserGetByEmail
+--======================================================================================
 
 -- ============================================================
 -- SECTION: User
@@ -1914,9 +1652,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverUserGetById
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverUserGetById
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -1949,9 +1687,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverUserInsert
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverUserInsert
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -2001,20 +1739,10 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverUserSearch
-======================================================================================
-
-/*
-***********************************************************************************************
-    Date            Modified By         Purpose of Modification
-
-1   28 Jul 2026    Initial Creation    Search and paginate users
-
-***********************************************************************************************
-*/
-
-CREATE PROCEDURE TicketResolverUserSearch
+--======================================================================================
+--PROCEDURE: TicketResolverUserSearch
+--======================================================================================
+CREATE   PROCEDURE TicketResolverUserSearch
     @SearchTerm NVARCHAR(200) = NULL,
     @RoleId     INT = NULL,
     @IsActive   BIT = NULL,
@@ -2024,9 +1752,11 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+
     DECLARE @Skip INT = (@PageNumber - 1) * @PageSize;
 
-    SELECT 
+
+    SELECT
         u.UserId,
         u.RoleId,
         r.RoleName,
@@ -2035,35 +1765,27 @@ BEGIN
         u.Email,
         u.Mobile,
         u.CreatedDate,
-        u.IsActive
+        u.IsActive,
+        COUNT(*) OVER() AS TotalCount
     FROM TicketResolverUser u
-    INNER JOIN TicketResolverRole r ON u.RoleId = r.RoleId
-    WHERE 
-        (@SearchTerm IS NULL OR 
-         u.FirstName LIKE '%' + @SearchTerm + '%' OR 
-         u.LastName LIKE '%' + @SearchTerm + '%' OR 
-         u.Email LIKE '%' + @SearchTerm + '%')
+    INNER JOIN TicketResolverRole r
+        ON u.RoleId = r.RoleId
+    WHERE
+        (@SearchTerm IS NULL
+            OR u.FirstName LIKE '%' + @SearchTerm + '%'
+            OR u.LastName LIKE '%' + @SearchTerm + '%'
+            OR u.Email LIKE '%' + @SearchTerm + '%')
         AND (@RoleId IS NULL OR u.RoleId = @RoleId)
         AND (@IsActive IS NULL OR u.IsActive = @IsActive)
     ORDER BY u.CreatedDate DESC
     OFFSET @Skip ROWS
     FETCH NEXT @PageSize ROWS ONLY;
-
-    SELECT COUNT(*) AS TotalCount
-    FROM TicketResolverUser u
-    WHERE 
-        (@SearchTerm IS NULL OR 
-         u.FirstName LIKE '%' + @SearchTerm + '%' OR 
-         u.LastName LIKE '%' + @SearchTerm + '%' OR 
-         u.Email LIKE '%' + @SearchTerm + '%')
-        AND (@RoleId IS NULL OR u.RoleId = @RoleId)
-        AND (@IsActive IS NULL OR u.IsActive = @IsActive);
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverUserSetActiveStatus
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverUserSetActiveStatus
+--======================================================================================
 
 /*
 ***********************************************************************************************
@@ -2098,9 +1820,9 @@ BEGIN
 END
 
 
-======================================================================================
-PROCEDURE: TicketResolverUserUpdate
-======================================================================================
+--======================================================================================
+--PROCEDURE: TicketResolverUserUpdate
+--======================================================================================
 
 /*
 ***********************************************************************************************
