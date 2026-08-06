@@ -201,7 +201,14 @@ namespace TicketResolver.Controllers
                     }
 
                     int roleId = Convert.ToInt32(TempData["RegRoleId"] ?? 3);
-                    int userId = authDAL.InsertUser(roleId, firstName, lastName, email, mobile);
+                    int userId = authDAL.InsertUser(new UserCreateViewModel
+                    {
+                        RoleId = roleId,
+                        FirstName = firstName,
+                        LastName = lastName,
+                        Email = email,
+                        Mobile = mobile
+                    });
                     var passwordHash = PasswordHelper.HashPassword(password);
                     authDAL.InsertUserCredential(userId, passwordHash);
 

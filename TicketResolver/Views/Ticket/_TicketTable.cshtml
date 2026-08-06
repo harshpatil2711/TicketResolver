@@ -1,4 +1,8 @@
 @model TicketResolver.ViewModels.TicketSearchViewModel
+@{
+    var role = ((System.Security.Claims.ClaimsPrincipal)User).FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+    var isAdmin = role == "Administrator";
+}
 
 <input type="hidden" id="ticketcount" value="@Model.TotalCount" />
 <input type="hidden" id="sortColumn" value="@Model.SortColumn" />
@@ -37,7 +41,13 @@
                         <td>@ticket.CreatedByName</td>
                         <td>@ticket.AssignedToName</td>
                         <td class="small text-muted">@ticket.CreatedDate.ToString("dd-MMM-yyyy")</td>
-                        <td><a href="@Url.Action("Details", new { id = ticket.TicketId })" class="btn btn-sm btn-outline-secondary"><i class="fa-regular fa-eye"></i></a></td>
+                        <td>
+                            <a href="@Url.Action("Details", new { id = ticket.TicketId })" class="btn btn-sm btn-outline-secondary"><i class="fa-regular fa-eye"></i></a>
+                            @if (isAdmin)
+                            {
+                                <button type="button" class="btn btn-sm btn-outline-danger delete-ticket" data-id="@ticket.TicketId" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>

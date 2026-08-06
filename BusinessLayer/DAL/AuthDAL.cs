@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.Common;
 using Microsoft.Practices.EnterpriseLibrary.Data;
 using TicketResolver.Models;
+using TicketResolver.ViewModels;
 
 namespace TicketResolver.DAL
 {
@@ -80,15 +81,15 @@ namespace TicketResolver.DAL
             }
         }
 
-        public int InsertUser(int roleId, string firstName, string lastName, string email, string mobile)
+        public int InsertUser(UserCreateViewModel model)
         {
             using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverUserInsert"))
             {
-                db.AddInParameter(cmd, "@RoleId", DbType.Int32, roleId);
-                db.AddInParameter(cmd, "@FirstName", DbType.String, firstName);
-                db.AddInParameter(cmd, "@LastName", DbType.String, lastName);
-                db.AddInParameter(cmd, "@Email", DbType.String, email);
-                db.AddInParameter(cmd, "@Mobile", DbType.String, mobile);
+                db.AddInParameter(cmd, "@RoleId", DbType.Int32, model.RoleId);
+                db.AddInParameter(cmd, "@FirstName", DbType.String, model.FirstName);
+                db.AddInParameter(cmd, "@LastName", DbType.String, model.LastName);
+                db.AddInParameter(cmd, "@Email", DbType.String, model.Email);
+                db.AddInParameter(cmd, "@Mobile", DbType.String, model.Mobile);
                 return Convert.ToInt32(db.ExecuteScalar(cmd));
             }
         }
@@ -159,15 +160,6 @@ namespace TicketResolver.DAL
             }
         }
 
-        public void RevokeRefreshToken(int refreshTokenId)
-        {
-            using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverRefreshTokenRevoke"))
-            {
-                db.AddInParameter(cmd, "@RefreshTokenId", DbType.Int32, refreshTokenId);
-                db.ExecuteNonQuery(cmd);
-            }
-        }
-
         public int RotateRefreshToken(int oldRefreshTokenId, string newTokenHash, DateTime newExpiryDate)
         {
             using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverRefreshTokenRotate"))
@@ -228,8 +220,6 @@ namespace TicketResolver.DAL
                         DataRow row = ds.Tables[0].Rows[0];
                         return new OtpVerifyResult
                         {
-                            OtpId = row["OtpId"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["OtpId"]),
-                            UserId = row["UserId"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["UserId"]),
                             IsValid = Convert.ToBoolean(row["IsValid"])
                         };
                     }
@@ -239,51 +229,41 @@ namespace TicketResolver.DAL
         }
         public DataSet GetSupportExecutives()
         {
-            return SearchUsers(null, 2, true, 1, 9999);
+            return SearchUsers(new UserSearchViewModel { RoleId = 2, IsActive = true, PageNumber = 1, PageSize = 9999 });
         }
 
-        public DataSet SearchUsers(string searchTerm, int? roleId, bool? isActive, int pageNumber, int pageSize)
+        public DataSet SearchUsers(UserSearchViewModel model)
         {
             using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverUserSearch"))
             {
-                db.AddInParameter(cmd, "@SearchTerm", DbType.String, searchTerm ?? (object)DBNull.Value);
-                db.AddInParameter(cmd, "@RoleId", DbType.Int32, roleId ?? (object)DBNull.Value);
-                db.AddInParameter(cmd, "@IsActive", DbType.Boolean, isActive ?? (object)DBNull.Value);
-                db.AddInParameter(cmd, "@PageNumber", DbType.Int32, pageNumber);
-                db.AddInParameter(cmd, "@PageSize", DbType.Int32, pageSize);
+                db.AddInParameter(cmd, "@SearchTerm", DbType.String, model.SearchTerm ?? (object)DBNull.Value);
+                db.AddInParameter(cmd, "@RoleId", DbType.Int32, model.RoleId ?? (object)DBNull.Value);
+                db.AddInParameter(cmd, "@IsActive", DbType.Boolean, model.IsActive ?? (object)DBNull.Value);
+                db.AddInParameter(cmd, "@PageNumber", DbType.Int32, model.PageNumber);
+                db.AddInParameter(cmd, "@PageSize", DbType.Int32, model.PageSize);
                 return db.ExecuteDataSet(cmd);
             }
         }
 
-        public void UpdateUser(int userId, int roleId, string firstName, string lastName, string email, string mobile)
+        public void UpdateUser(UserEditViewModel model)
         {
             using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverUserUpdate"))
             {
-                db.AddInParameter(cmd, "@UserId", DbType.Int32, userId);
-                db.AddInParameter(cmd, "@RoleId", DbType.Int32, roleId);
-                db.AddInParameter(cmd, "@FirstName", DbType.String, firstName);
-                db.AddInParameter(cmd, "@LastName", DbType.String, lastName);
-                db.AddInParameter(cmd, "@Email", DbType.String, email);
-                db.AddInParameter(cmd, "@Mobile", DbType.String, mobile);
+                db.AddInParameter(cmd, "@UserId", DbType.Int32, model.UserId);
+                db.AddInParameter(cmd, "@RoleId", DbType.Int32, model.RoleId);
+                db.AddInParameter(cmd, "@FirstName", DbType.String, model.FirstName);
+                db.AddInParameter(cmd, "@LastName", DbType.String, model.LastName);
+                db.AddInParameter(cmd, "@Email", DbType.String, model.Email);
+                db.AddInParameter(cmd, "@Mobile", DbType.String, model.Mobile);
+                db.AddInParameter(cmd, "@IsActive", DbType.Boolean, model.IsActive);
                 db.ExecuteNonQuery(cmd);
             }
         }
 
-        public void SetActiveStatus(int userId, bool isActive)
-        {
-            using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverUserSetActiveStatus"))
-            {
-                db.AddInParameter(cmd, "@UserId", DbType.Int32, userId);
-                db.AddInParameter(cmd, "@IsActive", DbType.Boolean, isActive);
-                db.ExecuteNonQuery(cmd);
-            }
-        }
     }
 
     public class OtpVerifyResult
     {
-        public int? OtpId { get; set; }
-        public int? UserId { get; set; }
         public bool IsValid { get; set; }
     }
 }

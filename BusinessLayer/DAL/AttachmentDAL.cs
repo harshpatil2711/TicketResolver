@@ -71,15 +71,5 @@ namespace TicketResolver.DAL
             }
             return list;
         }
-
-        public void Delete(int attachmentId, int modifiedBy)
-        {
-            using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverTicketAttachmentDelete"))
-            {
-                db.AddInParameter(cmd, "@AttachmentId", DbType.Int32, attachmentId);
-                db.AddInParameter(cmd, "@ModifiedBy", DbType.Int32, modifiedBy);
-                db.ExecuteNonQuery(cmd);
-            }
-        }
     }
 }

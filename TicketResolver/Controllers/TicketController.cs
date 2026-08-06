@@ -69,40 +69,41 @@ namespace TicketResolver.Controllers
             else if (CurrentRole == "Support Executive")
                 assignedTo = CurrentUserId;
 
-            var ds = ticketDAL.Search(searchTerm, categoryId, priorityId, statusId, assignedTo, createdBy, page, size, sortColumn, sortDirection, isAdmin ? isUnassigned : null);
-
-            return new TicketSearchViewModel
+            var model = new TicketSearchViewModel
             {
                 SearchTerm = searchTerm,
                 CategoryId = categoryId,
                 PriorityId = priorityId,
                 StatusId = statusId,
+                AssignedTo = assignedTo,
+                CreatedBy = createdBy,
                 PageNumber = page,
                 PageSize = size,
                 SortColumn = sortColumn,
                 SortDirection = sortDirection,
-                IsUnassigned = isAdmin ? isUnassigned : null,
-                TotalCount = ds.Tables[0].Rows.Count > 0 ? Convert.ToInt32(ds.Tables[0].Rows[0]["TotalCount"]) : 0,
-                Results = ds.Tables[0].Rows.Cast<DataRow>().Select(r => new TicketListItemViewModel
-                {
-                    TicketId = Convert.ToInt32(r["TicketId"]),
-                    TicketNumber = r["TicketNumber"].ToString(),
-                    Subject = r["Subject"].ToString(),
-                    CategoryName = r["CategoryName"].ToString(),
-                    PriorityName = r["PriorityName"].ToString(),
-                    PrioritySequence = Convert.ToInt32(r["PrioritySequence"]),
-                    StatusName = r["StatusName"].ToString(),
-                    StatusId = Convert.ToInt32(r["StatusIdVal"]),
-                    CreatedByName = r["CreatedByName"].ToString(),
-                    AssignedToName = r["AssignedToName"].ToString(),
-                    CreatedDate = Convert.ToDateTime(r["CreatedDate"]),
-                    ResolvedDate = r["ResolvedDate"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(r["ResolvedDate"]),
-                    ClosedDate = r["ClosedDate"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(r["ClosedDate"])
-                }).ToList(),
-                Categories = masterDAL.GetCategories(),
-                Priorities = masterDAL.GetPriorities(),
-                Statuses = masterDAL.GetStatuses()
+                IsUnassigned = isAdmin ? isUnassigned : null
             };
+
+            var ds = ticketDAL.Search(model);
+
+            model.TotalCount = ds.Tables[0].Rows.Count > 0 ? Convert.ToInt32(ds.Tables[0].Rows[0]["TotalCount"]) : 0;
+            model.Results = ds.Tables[0].Rows.Cast<DataRow>().Select(r => new TicketListItemViewModel
+            {
+                TicketId = Convert.ToInt32(r["TicketId"]),
+                TicketNumber = r["TicketNumber"].ToString(),
+                Subject = r["Subject"].ToString(),
+                CategoryName = r["CategoryName"].ToString(),
+                PriorityName = r["PriorityName"].ToString(),
+                StatusName = r["StatusName"].ToString(),
+                CreatedByName = r["CreatedByName"].ToString(),
+                AssignedToName = r["AssignedToName"].ToString(),
+                CreatedDate = Convert.ToDateTime(r["CreatedDate"])
+            }).ToList();
+            model.Categories = masterDAL.GetCategories();
+            model.Priorities = masterDAL.GetPriorities();
+            model.Statuses = masterDAL.GetStatuses();
+
+            return model;
         }
 
         [HttpGet]
@@ -138,16 +139,16 @@ namespace TicketResolver.Controllers
             try
             {
                 var ticketNumber = ticketDAL.GenerateTicketNumber();
-                var ticketId = ticketDAL.Insert(ticketNumber, model.Subject, model.Description, model.CategoryId, model.PriorityId, CurrentUserId);
+                model.TicketNumber = ticketNumber;
+                model.CreatedBy = CurrentUserId;
+                var ticketId = ticketDAL.Insert(model);
 
                 if (files != null)
                 {
-                    var uploadDir = Server.MapPath("~/Uploads");
                     foreach (var file in files)
                     {
                         if (file == null || file.ContentLength == 0) continue;
-                        var storedName = AttachmentHelper.SaveFile(file, uploadDir);
-                        attachmentDAL.Insert(ticketId, null, Path.GetFileName(file.FileName), storedName, CurrentUserId);
+                        SaveAttachment(ticketId, null, file);
                     }
                 }
 
@@ -180,14 +181,10 @@ namespace TicketResolver.Controllers
                     TicketNumber = row["TicketNumber"].ToString(),
                     Subject = row["Subject"].ToString(),
                     Description = row["Description"].ToString(),
-                    CategoryId = Convert.ToInt32(row["CategoryId"]),
-                    PriorityId = Convert.ToInt32(row["PriorityId"]),
                     StatusId = Convert.ToInt32(row["StatusId"]),
                     CreatedBy = Convert.ToInt32(row["CreatedBy"]),
                     CreatedDate = Convert.ToDateTime(row["CreatedDate"]),
                     ResolvedDate = row["ResolvedDate"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(row["ResolvedDate"]),
-                    ClosedDate = row["ClosedDate"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(row["ClosedDate"]),
-                    IsActive = Convert.ToBoolean(row["IsActive"]),
                     CategoryName = row["CategoryName"].ToString(),
                     PriorityName = row["PriorityName"].ToString(),
                     StatusName = row["StatusName"].ToString(),
@@ -198,8 +195,7 @@ namespace TicketResolver.Controllers
                     Comments = commentDAL.GetByTicketId(Convert.ToInt32(row["TicketId"]), CurrentUserId, GetRoleId()),
                     Attachments = attachmentDAL.GetByTicketId(Convert.ToInt32(row["TicketId"])),
                     History = historyDAL.GetByTicketId(Convert.ToInt32(row["TicketId"])),
-                    Statuses = masterDAL.GetStatuses(),
-                    SupportExecutives = GetSupportExecutives()
+                    Statuses = masterDAL.GetStatuses()
                 };
 
                 return View(model);
@@ -223,9 +219,9 @@ namespace TicketResolver.Controllers
                 if (ticket.CreatedBy != CurrentUserId && CurrentRole != "Administrator")
                     return RedirectToAction("AccessDenied", "Auth");
 
-                if (ticket.StatusId == 6 && CurrentRole == "Employee")
+                if (CurrentRole == "Employee" && (ticket.StatusId != 1 || ticket.AssignedTo.HasValue))
                 {
-                    TempData["ErrorMessage"] = "Cannot edit a closed ticket.";
+                    TempData["ErrorMessage"] = "You can only edit a ticket that is still New and unassigned.";
                     return RedirectToAction("Details", new { id });
                 }
 
@@ -262,15 +258,27 @@ namespace TicketResolver.Controllers
             try
             {
                 var ticket = ticketDAL.GetById(model.TicketId);
-                if (ticket != null && ticket.StatusId == 6 && CurrentRole == "Employee")
+                if (ticket == null)
+                    return HttpNotFound();
+
+                if (ticket.CreatedBy != CurrentUserId && CurrentRole != "Administrator")
+                    return RedirectToAction("AccessDenied", "Auth");
+
+                if (CurrentRole == "Employee" && (ticket.StatusId != 1 || ticket.AssignedTo.HasValue))
                 {
-                    ModelState.AddModelError("", "Cannot edit a closed ticket.");
+                    ModelState.AddModelError("", "You can only edit a ticket that is still New and unassigned.");
                     model.Categories = masterDAL.GetCategories();
                     model.Priorities = masterDAL.GetPriorities();
                     return View(model);
                 }
 
-                ticketDAL.Update(model.TicketId, model.Subject, model.Description, model.CategoryId, model.PriorityId, CurrentUserId);
+                model.ModifiedBy = CurrentUserId;
+                var affected = ticketDAL.Update(model);
+                if (affected == 0)
+                {
+                    TempData["ErrorMessage"] = "Cannot edit this ticket — it must be in New status and, for employees, unassigned.";
+                    return RedirectToAction("Details", new { id = model.TicketId });
+                }
                 TempData["SuccessMessage"] = "Ticket updated successfully.";
                 return RedirectToAction("Details", new { id = model.TicketId });
             }
@@ -286,6 +294,7 @@ namespace TicketResolver.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RoleAuthorize(1)]
         public ActionResult Delete(int id)
         {
             try
@@ -310,9 +319,7 @@ namespace TicketResolver.Controllers
 
                 if (file != null && file.ContentLength > 0)
                 {
-                    var uploadDir = Server.MapPath("~/Uploads");
-                    var storedName = AttachmentHelper.SaveFile(file, uploadDir);
-                    attachmentDAL.Insert(ticketId, commentId, Path.GetFileName(file.FileName), storedName, CurrentUserId);
+                    SaveAttachment(ticketId, commentId, file);
                 }
 
                 return Json(new { success = true });
@@ -321,27 +328,6 @@ namespace TicketResolver.Controllers
             {
                 AppLogger.Error("TicketController.AddComment", "Failed to add comment", ex);
                 return Json(new { success = false, error = "Could not add comment." });
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult UploadAttachment(int ticketId, HttpPostedFileBase file)
-        {
-            if (file == null || file.ContentLength == 0)
-                return Json(new { success = false, error = "No file selected." });
-
-            try
-            {
-                var uploadDir = Server.MapPath("~/Uploads");
-                var storedName = AttachmentHelper.SaveFile(file, uploadDir);
-                attachmentDAL.Insert(ticketId, null, Path.GetFileName(file.FileName), storedName, CurrentUserId);
-                return Json(new { success = true });
-            }
-            catch (Exception ex)
-            {
-                AppLogger.Error("TicketController.UploadAttachment", "Failed to upload file", ex);
-                return Json(new { success = false, error = "Could not upload file." });
             }
         }
 
@@ -365,6 +351,7 @@ namespace TicketResolver.Controllers
         }
 
         [HttpGet]
+        [RoleAuthorize(1, 2)]
         public ActionResult Assign(int id)
         {
             try
@@ -372,9 +359,6 @@ namespace TicketResolver.Controllers
                 var ticket = ticketDAL.GetById(id);
                 if (ticket == null)
                     return HttpNotFound();
-
-                if (CurrentRole != "Administrator" && CurrentRole != "Support Executive")
-                    return RedirectToAction("AccessDenied", "Auth");
 
                 var model = new TicketAssignViewModel
                 {
@@ -394,6 +378,7 @@ namespace TicketResolver.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RoleAuthorize(1, 2)]
         public ActionResult Assign(TicketAssignViewModel model)
         {
             if (!ModelState.IsValid)
@@ -404,7 +389,8 @@ namespace TicketResolver.Controllers
 
             try
             {
-                ticketDAL.Assign(model.TicketId, model.AssignedTo, CurrentUserId, model.ChangeReason);
+                model.AssignedBy = CurrentUserId;
+                ticketDAL.Assign(model);
 
                 var ticket = ticketDAL.GetById(model.TicketId);
                 var assignee = authDAL.GetUserById(model.AssignedTo);
@@ -501,15 +487,29 @@ namespace TicketResolver.Controllers
         {
             try
             {
+                var isAdmin = CurrentRole == "Administrator";
                 int? createdBy = null;
                 int? assignedTo = null;
-                var isAdmin = CurrentRole == "Administrator";
                 if (CurrentRole == "Employee")
                     createdBy = CurrentUserId;
                 else if (CurrentRole == "Support Executive")
                     assignedTo = CurrentUserId;
 
-                var ds = ticketDAL.Search(searchTerm, categoryId, priorityId, statusId, assignedTo, createdBy, 1, 9999, "CreatedDate", "DESC", isAdmin ? isUnassigned : null);
+                var model = new TicketSearchViewModel
+                {
+                    SearchTerm = searchTerm,
+                    CategoryId = categoryId,
+                    PriorityId = priorityId,
+                    StatusId = statusId,
+                    AssignedTo = assignedTo,
+                    CreatedBy = createdBy,
+                    PageNumber = 1,
+                    PageSize = 9999,
+                    SortColumn = "CreatedDate",
+                    SortDirection = "DESC",
+                    IsUnassigned = isAdmin ? isUnassigned : null
+                };
+                var ds = ticketDAL.Search(model);
                 var csv = new System.Text.StringBuilder();
                 csv.AppendLine("Ticket#,Subject,Category,Priority,Status,CreatedBy,AssignedTo,CreatedDate");
 
@@ -543,6 +543,13 @@ namespace TicketResolver.Controllers
                 case "Support Executive": return 2;
                 default: return 3;
             }
+        }
+
+        private void SaveAttachment(int ticketId, int? commentId, HttpPostedFileBase file)
+        {
+            var uploadDir = Server.MapPath("~/Uploads");
+            var storedName = AttachmentHelper.SaveFile(file, uploadDir);
+            attachmentDAL.Insert(ticketId, commentId, Path.GetFileName(file.FileName), storedName, CurrentUserId);
         }
 
         private System.Collections.Generic.List<UserListItem> GetSupportExecutives()

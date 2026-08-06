@@ -9,7 +9,10 @@
 <div class="page-header">
     <h5 class="page-title">Tickets</h5>
     <div>
-        <a href="@Url.Action("Create")" class="btn btn-green"><i class="fa-solid fa-plus"></i> Create Ticket</a>
+        @if (role != "Support Executive")
+        {
+            <a href="@Url.Action("Create")" class="btn btn-green"><i class="fa-solid fa-plus"></i> Create Ticket</a>
+        }
         <a href="@Url.Action("Export", new { searchTerm = Model.SearchTerm, categoryId = Model.CategoryId, priorityId = Model.PriorityId, statusId = Model.StatusId, isUnassigned = Model.IsUnassigned })" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-download"></i></a>
     </div>
 </div>

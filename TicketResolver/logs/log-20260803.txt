@@ -17,3 +17,20 @@
 2026-08-03 15:54:56.305 +05:30 [INF] Application started
 2026-08-03 15:57:39.248 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
 2026-08-03 16:33:02.783 +05:30 [INF] Application started
+2026-08-03 18:41:42.771 +05:30 [INF] Application started
+2026-08-03 18:41:43.124 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException: IDX10223: Lifetime validation failed. The token is expired. ValidTo: '[PII is hidden. For more details, see https://aka.ms/IdentityModel/PII.]', Current time: '[PII is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.
+   at Microsoft.IdentityModel.Tokens.Validators.ValidateLifetime(Nullable`1 notBefore, Nullable`1 expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
+   at System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.ValidateLifetime(Nullable`1 notBefore, Nullable`1 expires, JwtSecurityToken jwtToken, TokenValidationParameters validationParameters)
+   at System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.ValidateTokenPayload(JwtSecurityToken jwtToken, TokenValidationParameters validationParameters)
+   at System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.ValidateToken(String token, TokenValidationParameters validationParameters, SecurityToken& validatedToken)
+   at TicketResolver.Helpers.JwtHelper.ValidateToken(String token) in D:\C#Practice\TicketResolver\BusinessLayer\Helpers\JwtHelper.cs:line 77
+   at TicketResolver.MvcApplication.Application_PostAuthenticateRequest() in D:\C#Practice\TicketResolver\TicketResolver\Global.asax.cs:line 40
+2026-08-03 18:41:55.735 +05:30 [WRN] Global.PostAuthenticateRequest: JWT validation failed, attempting refresh token
+Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException: IDX10223: Lifetime validation failed. The token is expired. ValidTo: '[PII is hidden. For more details, see https://aka.ms/IdentityModel/PII.]', Current time: '[PII is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.
+   at Microsoft.IdentityModel.Tokens.Validators.ValidateLifetime(Nullable`1 notBefore, Nullable`1 expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
+   at System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.ValidateLifetime(Nullable`1 notBefore, Nullable`1 expires, JwtSecurityToken jwtToken, TokenValidationParameters validationParameters)
+   at System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.ValidateTokenPayload(JwtSecurityToken jwtToken, TokenValidationParameters validationParameters)
+   at System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.ValidateToken(String token, TokenValidationParameters validationParameters, SecurityToken& validatedToken)
+   at TicketResolver.Helpers.JwtHelper.ValidateToken(String token) in D:\C#Practice\TicketResolver\BusinessLayer\Helpers\JwtHelper.cs:line 77
+   at TicketResolver.MvcApplication.Application_PostAuthenticateRequest() in D:\C#Practice\TicketResolver\TicketResolver\Global.asax.cs:line 40

@@ -106,7 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DAL\AuthDAL.cs" />
-    <Compile Include="DAL\UserDAL.cs" />
+    
     <Compile Include="DAL\TicketDAL.cs" />
     <Compile Include="DAL\CommentDAL.cs" />
     <Compile Include="DAL\AttachmentDAL.cs" />
@@ -122,9 +122,9 @@
     <Compile Include="Helpers\OtpHelper.cs" />
     <Compile Include="Helpers\AttachmentHelper.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Models\UserCredential.cs" />
+    
     <Compile Include="Models\RefreshToken.cs" />
-    <Compile Include="Models\OtpVerification.cs" />
+    
     <Compile Include="Models\Ticket.cs" />
     <Compile Include="Models\TicketCategory.cs" />
     <Compile Include="Models\TicketComment.cs" />
@@ -133,11 +133,11 @@
     <Compile Include="Models\TicketPriority.cs" />
     <Compile Include="Models\TicketRole.cs" />
     <Compile Include="Models\TicketStatus.cs" />
-    <Compile Include="Models\Log.cs" />
+    
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
     <Compile Include="ViewModels\VerifyOtpViewModel.cs" />
-    <Compile Include="ViewModels\AuthResponseViewModel.cs" />
+    
     <Compile Include="ViewModels\TicketViewModels.cs" />
     <Compile Include="ViewModels\ProfileViewModels.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />

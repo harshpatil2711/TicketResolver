@@ -78,7 +78,15 @@ namespace TicketResolver.Controllers
             try
             {
                 var current = authDAL.GetUserById(CurrentUserId);
-                authDAL.UpdateUser(CurrentUserId, current.RoleId, model.FirstName, model.LastName, model.Email, model.Mobile);
+                authDAL.UpdateUser(new UserEditViewModel
+                {
+                    UserId = CurrentUserId,
+                    RoleId = current.RoleId,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email,
+                    Mobile = model.Mobile
+                });
                 TempData["SuccessMessage"] = "Profile updated successfully.";
                 return RedirectToAction("Index");
             }

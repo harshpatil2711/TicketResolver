@@ -47,30 +47,32 @@ namespace TicketResolver.Controllers
 
         private UserSearchViewModel BuildUserSearchModel(string searchTerm, int? roleId, bool? isActive, int page)
         {
-            var ds = authDAL.SearchUsers(searchTerm, roleId, isActive, page, 10);
-
-            return new UserSearchViewModel
+            var model = new UserSearchViewModel
             {
                 SearchTerm = searchTerm,
                 RoleId = roleId,
                 IsActive = isActive,
                 PageNumber = page,
-                PageSize = 10,
-                TotalCount = ds.Tables[0].Rows.Count > 0 ? Convert.ToInt32(ds.Tables[0].Rows[0]["TotalCount"]) : 0,
-                Results = ds.Tables[0].Rows.Cast<DataRow>().Select(r => new UserListItemViewModel
-                {
-                    UserId = Convert.ToInt32(r["UserId"]),
-                    RoleId = Convert.ToInt32(r["RoleId"]),
-                    RoleName = r["RoleName"].ToString(),
-                    FirstName = r["FirstName"].ToString(),
-                    LastName = r["LastName"].ToString(),
-                    Email = r["Email"].ToString(),
-                    Mobile = r["Mobile"].ToString(),
-                    CreatedDate = Convert.ToDateTime(r["CreatedDate"]),
-                    IsActive = Convert.ToBoolean(r["IsActive"])
-                }).ToList(),
-                Roles = masterDAL.GetRoles()
+                PageSize = 10
             };
+            var ds = authDAL.SearchUsers(model);
+
+            model.TotalCount = ds.Tables[0].Rows.Count > 0 ? Convert.ToInt32(ds.Tables[0].Rows[0]["TotalCount"]) : 0;
+            model.Results = ds.Tables[0].Rows.Cast<DataRow>().Select(r => new UserListItemViewModel
+            {
+                UserId = Convert.ToInt32(r["UserId"]),
+                RoleId = Convert.ToInt32(r["RoleId"]),
+                RoleName = r["RoleName"].ToString(),
+                FirstName = r["FirstName"].ToString(),
+                LastName = r["LastName"].ToString(),
+                Email = r["Email"].ToString(),
+                Mobile = r["Mobile"].ToString(),
+                CreatedDate = Convert.ToDateTime(r["CreatedDate"]),
+                IsActive = Convert.ToBoolean(r["IsActive"])
+            }).ToList();
+            model.Roles = masterDAL.GetRoles();
+
+            return model;
         }
 
         [RoleAuthorize(1)]
@@ -103,7 +105,7 @@ namespace TicketResolver.Controllers
 
             try
             {
-                var userId = authDAL.InsertUser(model.RoleId, model.FirstName, model.LastName, model.Email, model.Mobile);
+                var userId = authDAL.InsertUser(model);
                 var hash = PasswordHelper.HashPassword(model.Password);
                 authDAL.InsertUserCredential(userId, hash);
                 TempData["SuccessMessage"] = "User created successfully.";
@@ -158,7 +160,7 @@ namespace TicketResolver.Controllers
 
             try
             {
-                authDAL.UpdateUser(model.UserId, model.RoleId, model.FirstName, model.LastName, model.Email, model.Mobile);
+                authDAL.UpdateUser(model);
                 TempData["SuccessMessage"] = "User updated successfully.";
                 return RedirectToAction("Index");
             }
@@ -168,22 +170,6 @@ namespace TicketResolver.Controllers
                 ModelState.AddModelError("", ex.Message);
                 model.Roles = masterDAL.GetRoles();
                 return View(model);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult ToggleActive(int id, bool isActive)
-        {
-            try
-            {
-                authDAL.SetActiveStatus(id, isActive);
-                return Json(new { success = true });
-            }
-            catch (Exception ex)
-            {
-                AppLogger.Error("UserController.ToggleActive", $"Failed to toggle active status for id={id}", ex);
-                return Json(new { success = false });
             }
         }
     }

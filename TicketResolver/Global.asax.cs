@@ -40,6 +40,18 @@ namespace TicketResolver
                     var principal = JwtHelper.ValidateToken(cookie.Value);
                     if (principal != null)
                     {
+                        var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
+                        if (userIdClaim == null)
+                            return;
+
+                        var user = new DAL.AuthDAL().GetUserById(int.Parse(userIdClaim.Value));
+                        if (user == null || !user.IsActive)
+                        {
+                            var expiredCookie = new HttpCookie("jwt_token") { Expires = DateTime.Now.AddDays(-1) };
+                            Response.Cookies.Add(expiredCookie);
+                            return;
+                        }
+
                         HttpContext.Current.User = principal;
                         Thread.CurrentPrincipal = principal;
                     }
@@ -103,10 +115,22 @@ namespace TicketResolver
         protected void Application_Error()
         {
             var ex = Server.GetLastError();
+            var httpEx = ex as HttpException;
+            if (httpEx != null && httpEx.GetHttpCode() == 404)
+            {
+                Server.ClearError();
+                Response.StatusCode = 404;
+                Response.Redirect("~/Home/NotFound");
+                return;
+            }
+
             if (ex != null)
             {
                 Log.Error(ex, "Unhandled exception");
             }
+
+            Server.ClearError();
+            Response.Redirect("~/Home/Error");
         }
 
         protected void Application_End()

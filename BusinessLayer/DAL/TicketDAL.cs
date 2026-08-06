@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Common;
 using Microsoft.Practices.EnterpriseLibrary.Data;
 using TicketResolver.Models;
+using TicketResolver.ViewModels;
 
 namespace TicketResolver.DAL
 {
@@ -17,31 +18,33 @@ namespace TicketResolver.DAL
                        .Tables[0].Rows[0]["TicketNumber"].ToString();
         }
 
-        public int Insert(string ticketNumber, string subject, string description, int categoryId, int priorityId, int createdBy)
+        public int Insert(TicketCreateViewModel model)
         {
             using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverTicketInsert"))
             {
-                db.AddInParameter(cmd, "@TicketNumber", DbType.String, ticketNumber);
-                db.AddInParameter(cmd, "@Subject", DbType.String, subject);
-                db.AddInParameter(cmd, "@Description", DbType.String, description);
-                db.AddInParameter(cmd, "@CategoryId", DbType.Int32, categoryId);
-                db.AddInParameter(cmd, "@PriorityId", DbType.Int32, priorityId);
-                db.AddInParameter(cmd, "@CreatedBy", DbType.Int32, createdBy);
+                db.AddInParameter(cmd, "@TicketNumber", DbType.String, model.TicketNumber);
+                db.AddInParameter(cmd, "@Subject", DbType.String, model.Subject);
+                db.AddInParameter(cmd, "@Description", DbType.String, model.Description);
+                db.AddInParameter(cmd, "@CategoryId", DbType.Int32, model.CategoryId);
+                db.AddInParameter(cmd, "@PriorityId", DbType.Int32, model.PriorityId);
+                db.AddInParameter(cmd, "@CreatedBy", DbType.Int32, model.CreatedBy);
                 return Convert.ToInt32(db.ExecuteScalar(cmd));
             }
         }
 
-        public void Update(int ticketId, string subject, string description, int categoryId, int priorityId, int modifiedBy)
+        public int Update(TicketEditViewModel model)
         {
             using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverTicketUpdate"))
             {
-                db.AddInParameter(cmd, "@TicketId", DbType.Int32, ticketId);
-                db.AddInParameter(cmd, "@Subject", DbType.String, subject);
-                db.AddInParameter(cmd, "@Description", DbType.String, description);
-                db.AddInParameter(cmd, "@CategoryId", DbType.Int32, categoryId);
-                db.AddInParameter(cmd, "@PriorityId", DbType.Int32, priorityId);
-                db.AddInParameter(cmd, "@ModifiedBy", DbType.Int32, modifiedBy);
+                db.AddInParameter(cmd, "@TicketId", DbType.Int32, model.TicketId);
+                db.AddInParameter(cmd, "@Subject", DbType.String, model.Subject);
+                db.AddInParameter(cmd, "@Description", DbType.String, model.Description);
+                db.AddInParameter(cmd, "@CategoryId", DbType.Int32, model.CategoryId);
+                db.AddInParameter(cmd, "@PriorityId", DbType.Int32, model.PriorityId);
+                db.AddInParameter(cmd, "@ModifiedBy", DbType.Int32, model.ModifiedBy);
+                db.AddOutParameter(cmd, "@AffectedRows", DbType.Int32, 4);
                 db.ExecuteNonQuery(cmd);
+                return Convert.ToInt32(cmd.Parameters["@AffectedRows"].Value);
             }
         }
 
@@ -85,21 +88,21 @@ namespace TicketResolver.DAL
             }
         }
 
-        public DataSet Search(string searchTerm, int? categoryId, int? priorityId, int? statusId, int? assignedTo, int? createdBy, int pageNumber, int pageSize, string sortColumn = "CreatedDate", string sortDirection = "DESC", bool? isUnassigned = null)
+        public DataSet Search(TicketSearchViewModel model)
         {
             using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverTicketSearch"))
             {
-                db.AddInParameter(cmd, "@SearchTerm", DbType.String, searchTerm ?? (object)DBNull.Value);
-                db.AddInParameter(cmd, "@CategoryId", DbType.Int32, categoryId ?? (object)DBNull.Value);
-                db.AddInParameter(cmd, "@PriorityId", DbType.Int32, priorityId ?? (object)DBNull.Value);
-                db.AddInParameter(cmd, "@StatusId", DbType.Int32, statusId ?? (object)DBNull.Value);
-                db.AddInParameter(cmd, "@AssignedTo", DbType.Int32, assignedTo ?? (object)DBNull.Value);
-                db.AddInParameter(cmd, "@CreatedBy", DbType.Int32, createdBy ?? (object)DBNull.Value);
-                db.AddInParameter(cmd, "@PageNumber", DbType.Int32, pageNumber);
-                db.AddInParameter(cmd, "@PageSize", DbType.Int32, pageSize);
-                db.AddInParameter(cmd, "@SortColumn", DbType.String, sortColumn);
-                db.AddInParameter(cmd, "@SortDirection", DbType.String, sortDirection);
-                db.AddInParameter(cmd, "@IsUnassigned", DbType.Boolean, isUnassigned ?? (object)DBNull.Value);
+                db.AddInParameter(cmd, "@SearchTerm", DbType.String, model.SearchTerm ?? (object)DBNull.Value);
+                db.AddInParameter(cmd, "@CategoryId", DbType.Int32, model.CategoryId ?? (object)DBNull.Value);
+                db.AddInParameter(cmd, "@PriorityId", DbType.Int32, model.PriorityId ?? (object)DBNull.Value);
+                db.AddInParameter(cmd, "@StatusId", DbType.Int32, model.StatusId ?? (object)DBNull.Value);
+                db.AddInParameter(cmd, "@AssignedTo", DbType.Int32, model.AssignedTo ?? (object)DBNull.Value);
+                db.AddInParameter(cmd, "@CreatedBy", DbType.Int32, model.CreatedBy ?? (object)DBNull.Value);
+                db.AddInParameter(cmd, "@PageNumber", DbType.Int32, model.PageNumber);
+                db.AddInParameter(cmd, "@PageSize", DbType.Int32, model.PageSize);
+                db.AddInParameter(cmd, "@SortColumn", DbType.String, model.SortColumn);
+                db.AddInParameter(cmd, "@SortDirection", DbType.String, model.SortDirection);
+                db.AddInParameter(cmd, "@IsUnassigned", DbType.Boolean, model.IsUnassigned ?? (object)DBNull.Value);
                 return db.ExecuteDataSet(cmd);
             }
         }
@@ -116,14 +119,14 @@ namespace TicketResolver.DAL
             }
         }
 
-        public void Assign(int ticketId, int assignedTo, int assignedBy, string changeReason)
+        public void Assign(TicketAssignViewModel model)
         {
             using (DbCommand cmd = db.GetStoredProcCommand("TicketResolverTicketAssign"))
             {
-                db.AddInParameter(cmd, "@TicketId", DbType.Int32, ticketId);
-                db.AddInParameter(cmd, "@AssignedTo", DbType.Int32, assignedTo);
-                db.AddInParameter(cmd, "@AssignedBy", DbType.Int32, assignedBy);
-                db.AddInParameter(cmd, "@ChangeReason", DbType.String, changeReason ?? (object)DBNull.Value);
+                db.AddInParameter(cmd, "@TicketId", DbType.Int32, model.TicketId);
+                db.AddInParameter(cmd, "@AssignedTo", DbType.Int32, model.AssignedTo);
+                db.AddInParameter(cmd, "@AssignedBy", DbType.Int32, model.AssignedBy);
+                db.AddInParameter(cmd, "@ChangeReason", DbType.String, model.ChangeReason ?? (object)DBNull.Value);
                 db.ExecuteNonQuery(cmd);
             }
         }

@@ -41,6 +41,20 @@ namespace TicketResolver.Controllers
             }
         }
 
+        [AllowAnonymous]
+        public ActionResult Error()
+        {
+            Response.StatusCode = 500;
+            return View("Error");
+        }
+
+        [AllowAnonymous]
+        public ActionResult NotFound()
+        {
+            Response.StatusCode = 404;
+            return View("NotFound");
+        }
+
         public ActionResult Index()
         {
             try
@@ -82,7 +96,14 @@ namespace TicketResolver.Controllers
                 else if (CurrentRoleId == 2)
                     assignedTo = CurrentUserId;
 
-                var ds = ticketDAL.Search(null, null, null, null, assignedTo, createdBy, 1, 500);
+                var model = new TicketSearchViewModel
+                {
+                    AssignedTo = assignedTo,
+                    CreatedBy = createdBy,
+                    PageNumber = 1,
+                    PageSize = 500
+                };
+                var ds = ticketDAL.Search(model);
                 var groups = groupBy == "Priority"
                     ? ds.Tables[0].Rows.Cast<DataRow>().GroupBy(r => r["PriorityName"].ToString())
                     : ds.Tables[0].Rows.Cast<DataRow>().GroupBy(r => r["StatusName"].ToString());
@@ -113,7 +134,14 @@ namespace TicketResolver.Controllers
                 else if (role == 2)
                     assignedTo = CurrentUserId;
 
-                var ds = ticketDAL.Search(null, null, null, null, assignedTo, createdBy, 1, 5);
+                var model = new TicketSearchViewModel
+                {
+                    AssignedTo = assignedTo,
+                    CreatedBy = createdBy,
+                    PageNumber = 1,
+                    PageSize = 5
+                };
+                var ds = ticketDAL.Search(model);
                 return ds.Tables[0].Rows.Cast<DataRow>().Select(r => new TicketListItemViewModel
                 {
                     TicketId = Convert.ToInt32(r["TicketId"]),
@@ -121,9 +149,7 @@ namespace TicketResolver.Controllers
                     Subject = r["Subject"].ToString(),
                     CategoryName = r["CategoryName"].ToString(),
                     PriorityName = r["PriorityName"].ToString(),
-                    PrioritySequence = Convert.ToInt32(r["PrioritySequence"]),
                     StatusName = r["StatusName"].ToString(),
-                    StatusId = Convert.ToInt32(r["StatusIdVal"]),
                     CreatedByName = r["CreatedByName"].ToString(),
                     AssignedToName = r["AssignedToName"].ToString(),
                     CreatedDate = Convert.ToDateTime(r["CreatedDate"])

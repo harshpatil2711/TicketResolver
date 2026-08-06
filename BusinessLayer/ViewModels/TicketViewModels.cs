@@ -11,6 +11,8 @@ namespace TicketResolver.ViewModels
         public int? CategoryId { get; set; }
         public int? PriorityId { get; set; }
         public int? StatusId { get; set; }
+        public int? AssignedTo { get; set; }
+        public int? CreatedBy { get; set; }
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
         public int TotalCount { get; set; }
@@ -31,14 +33,10 @@ namespace TicketResolver.ViewModels
         public string Subject { get; set; }
         public string CategoryName { get; set; }
         public string PriorityName { get; set; }
-        public int PrioritySequence { get; set; }
         public string StatusName { get; set; }
-        public int StatusId { get; set; }
         public string CreatedByName { get; set; }
         public string AssignedToName { get; set; }
         public DateTime CreatedDate { get; set; }
-        public DateTime? ResolvedDate { get; set; }
-        public DateTime? ClosedDate { get; set; }
     }
 
     public class TicketCreateViewModel
@@ -55,6 +53,9 @@ namespace TicketResolver.ViewModels
 
         [Required]
         public int PriorityId { get; set; }
+
+        public string TicketNumber { get; set; }
+        public int CreatedBy { get; set; }
 
         public List<TicketCategory> Categories { get; set; }
         public List<TicketPriority> Priorities { get; set; }
@@ -77,6 +78,8 @@ namespace TicketResolver.ViewModels
         [Required]
         public int PriorityId { get; set; }
 
+        public int ModifiedBy { get; set; }
+
         public List<TicketCategory> Categories { get; set; }
         public List<TicketPriority> Priorities { get; set; }
     }
@@ -87,9 +90,7 @@ namespace TicketResolver.ViewModels
         public string TicketNumber { get; set; }
         public string Subject { get; set; }
         public string Description { get; set; }
-        public int CategoryId { get; set; }
         public string CategoryName { get; set; }
-        public int PriorityId { get; set; }
         public string PriorityName { get; set; }
         public int StatusId { get; set; }
         public string StatusName { get; set; }
@@ -100,14 +101,11 @@ namespace TicketResolver.ViewModels
         public string AssignedToName { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? ResolvedDate { get; set; }
-        public DateTime? ClosedDate { get; set; }
-        public bool IsActive { get; set; }
 
         public List<TicketComment> Comments { get; set; }
         public List<TicketAttachment> Attachments { get; set; }
         public List<TicketStatusHistory> History { get; set; }
         public List<TicketStatus> Statuses { get; set; }
-        public List<UserListItem> SupportExecutives { get; set; }
     }
 
     public class TicketAssignViewModel
@@ -118,6 +116,8 @@ namespace TicketResolver.ViewModels
 
         [Required]
         public int AssignedTo { get; set; }
+
+        public int AssignedBy { get; set; }
 
         public string ChangeReason { get; set; }
         public List<UserListItem> SupportExecutives { get; set; }
@@ -140,7 +140,5 @@ namespace TicketResolver.ViewModels
         public int ClosedTickets { get; set; }
         public int ReopenedTickets { get; set; }
         public List<TicketListItemViewModel> RecentTickets { get; set; }
-        public List<TicketPriority> Priorities { get; set; }
-        public List<TicketStatus> Statuses { get; set; }
     }
 }

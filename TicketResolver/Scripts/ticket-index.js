@@ -158,4 +158,31 @@ $(function () {
         $('#page').val(1);
         FetchData();
     });
+
+    // ── Delete Ticket (admin only) ────────────────────────────────────
+    $(document).on('click', '.delete-ticket', function () {
+        var id = $(this).data('id');
+        Swal.fire({
+            title: 'Confirm Delete',
+            text: 'Are you sure? This will permanently delete the ticket.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Delete'
+        }).then(function (r) {
+            if (!r.isConfirmed) return;
+            $.post('/Ticket/Delete', {
+                id: id,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            }).done(function (result) {
+                if (result && result.success) {
+                    FetchData();
+                } else {
+                    Swal.fire('Error', (result && result.error) || 'Delete failed.', 'error');
+                }
+            }).fail(function () {
+                Swal.fire('Error', 'Delete failed.', 'error');
+            });
+        });
+    });
 });
