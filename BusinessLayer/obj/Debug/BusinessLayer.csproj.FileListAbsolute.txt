@@ -34,4 +34,3 @@ D:\C#Practice\TicketResolver\BusinessLayer\bin\Debug\System.Memory.xml
 D:\C#Practice\TicketResolver\BusinessLayer\bin\Debug\System.Buffers.xml
 D:\C#Practice\TicketResolver\BusinessLayer\obj\Debug\BusinessLayer.dll
 D:\C#Practice\TicketResolver\BusinessLayer\obj\Debug\BusinessLayer.pdb
-D:\C#Practice\TicketResolver\BusinessLayer\obj\Debug\BusinessLayer.csprojResolveAssemblyReference.cache

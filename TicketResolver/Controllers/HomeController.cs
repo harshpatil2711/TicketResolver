@@ -71,9 +71,7 @@ namespace TicketResolver.Controllers
                     ResolvedTickets = Convert.ToInt32(row["ResolvedTickets"]),
                     ClosedTickets = Convert.ToInt32(row["ClosedTickets"]),
                     ReopenedTickets = Convert.ToInt32(row["ReopenedTickets"]),
-                    RecentTickets = GetRecentTickets(),
-                    Priorities = masterDAL.GetPriorities(),
-                    Statuses = masterDAL.GetStatuses()
+                    RecentTickets = GetRecentTickets()
                 };
 
                 return View(model);
